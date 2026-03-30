@@ -1,6 +1,5 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   // Proxy API requests to backend in development
   // In production, Traefik handles routing
   async rewrites() {
