@@ -1,11 +1,12 @@
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=("../.env", ".env"),
         env_file_encoding="utf-8",
         extra="ignore",
     )
@@ -18,7 +19,12 @@ class Settings(BaseSettings):
     # Backend
     backend_host: str = "0.0.0.0"
     backend_port: int = 8000
-    cors_origins: list[str] = ["http://localhost:3000", "http://localhost:80"]
+    cors_origins: str = "http://localhost:3000,http://localhost:80"
+
+    @property
+    def cors_origins_list(self) -> list[str]:
+        """Parse comma-separated CORS origins into a list."""
+        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
 
     # Redis
     redis_url: str = "redis://redis:6379/0"
