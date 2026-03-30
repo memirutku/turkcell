@@ -1,0 +1,232 @@
+[
+  {
+    "id": "cust-001",
+    "name": "Ahmet Yilmaz",
+    "tc_kimlik_no": "12345678901",
+    "phone_number": "05321234567",
+    "email": "ahmet.yilmaz@email.com",
+    "tariff_id": "tariff-001",
+    "registration_date": "2023-06-15",
+    "address_city": "Istanbul",
+    "bills": [
+      {
+        "id": "bill-001-202601",
+        "customer_id": "cust-001",
+        "period": "2026-01",
+        "billing_date": "2026-02-01",
+        "due_date": "2026-02-15",
+        "base_amount_tl": "299.00",
+        "kdv_amount_tl": "59.80",
+        "oiv_amount_tl": "44.85",
+        "total_amount_tl": "403.65",
+        "line_items": [
+          {"description": "Platinum Esneyebilen 20GB Tarife Ucreti", "amount_tl": "299.00", "category": "base"},
+          {"description": "KDV (%20)", "amount_tl": "59.80", "category": "tax"},
+          {"description": "OIV (%15)", "amount_tl": "44.85", "category": "tax"}
+        ],
+        "is_paid": true
+      },
+      {
+        "id": "bill-001-202602",
+        "customer_id": "cust-001",
+        "period": "2026-02",
+        "billing_date": "2026-03-01",
+        "due_date": "2026-03-15",
+        "base_amount_tl": "349.00",
+        "kdv_amount_tl": "69.80",
+        "oiv_amount_tl": "52.35",
+        "total_amount_tl": "471.15",
+        "line_items": [
+          {"description": "Platinum Esneyebilen 20GB Tarife Ucreti", "amount_tl": "299.00", "category": "base"},
+          {"description": "3GB Asim Ucreti", "amount_tl": "50.00", "category": "overage"},
+          {"description": "KDV (%20)", "amount_tl": "69.80", "category": "tax"},
+          {"description": "OIV (%15)", "amount_tl": "52.35", "category": "tax"}
+        ],
+        "is_paid": true
+      },
+      {
+        "id": "bill-001-202603",
+        "customer_id": "cust-001",
+        "period": "2026-03",
+        "billing_date": "2026-04-01",
+        "due_date": "2026-04-15",
+        "base_amount_tl": "299.00",
+        "kdv_amount_tl": "59.80",
+        "oiv_amount_tl": "44.85",
+        "total_amount_tl": "403.65",
+        "line_items": [
+          {"description": "Platinum Esneyebilen 20GB Tarife Ucreti", "amount_tl": "299.00", "category": "base"},
+          {"description": "KDV (%20)", "amount_tl": "59.80", "category": "tax"},
+          {"description": "OIV (%15)", "amount_tl": "44.85", "category": "tax"}
+        ],
+        "is_paid": false
+      }
+    ],
+    "usage": {
+      "customer_id": "cust-001",
+      "period": "2026-03",
+      "data_used_gb": 18.5,
+      "data_limit_gb": 20,
+      "voice_used_minutes": 1250,
+      "voice_limit_minutes": 2000,
+      "sms_used": 45,
+      "sms_limit": 1000,
+      "data_overage_gb": 0.0,
+      "voice_overage_minutes": 0
+    }
+  },
+  {
+    "id": "cust-002",
+    "name": "Elif Demir",
+    "tc_kimlik_no": "98765432109",
+    "phone_number": "05551234567",
+    "email": "elif.demir@email.com",
+    "tariff_id": "tariff-003",
+    "registration_date": "2024-01-20",
+    "address_city": "Ankara",
+    "bills": [
+      {
+        "id": "bill-002-202601",
+        "customer_id": "cust-002",
+        "period": "2026-01",
+        "billing_date": "2026-02-01",
+        "due_date": "2026-02-15",
+        "base_amount_tl": "179.00",
+        "kdv_amount_tl": "35.80",
+        "oiv_amount_tl": "26.85",
+        "total_amount_tl": "241.65",
+        "line_items": [
+          {"description": "Silver 5GB Tarife Ucreti", "amount_tl": "129.00", "category": "base"},
+          {"description": "2GB Asim Ucreti", "amount_tl": "50.00", "category": "overage"},
+          {"description": "KDV (%20)", "amount_tl": "35.80", "category": "tax"},
+          {"description": "OIV (%15)", "amount_tl": "26.85", "category": "tax"}
+        ],
+        "is_paid": true
+      },
+      {
+        "id": "bill-002-202602",
+        "customer_id": "cust-002",
+        "period": "2026-02",
+        "billing_date": "2026-03-01",
+        "due_date": "2026-03-15",
+        "base_amount_tl": "229.00",
+        "kdv_amount_tl": "45.80",
+        "oiv_amount_tl": "34.35",
+        "total_amount_tl": "309.15",
+        "line_items": [
+          {"description": "Silver 5GB Tarife Ucreti", "amount_tl": "129.00", "category": "base"},
+          {"description": "5GB Asim Ucreti", "amount_tl": "100.00", "category": "overage"},
+          {"description": "KDV (%20)", "amount_tl": "45.80", "category": "tax"},
+          {"description": "OIV (%15)", "amount_tl": "34.35", "category": "tax"}
+        ],
+        "is_paid": true
+      },
+      {
+        "id": "bill-002-202603",
+        "customer_id": "cust-002",
+        "period": "2026-03",
+        "billing_date": "2026-04-01",
+        "due_date": "2026-04-15",
+        "base_amount_tl": "189.00",
+        "kdv_amount_tl": "37.80",
+        "oiv_amount_tl": "28.35",
+        "total_amount_tl": "255.15",
+        "line_items": [
+          {"description": "Silver 5GB Tarife Ucreti", "amount_tl": "129.00", "category": "base"},
+          {"description": "3GB Asim Ucreti", "amount_tl": "60.00", "category": "overage"},
+          {"description": "KDV (%20)", "amount_tl": "37.80", "category": "tax"},
+          {"description": "OIV (%15)", "amount_tl": "28.35", "category": "tax"}
+        ],
+        "is_paid": false
+      }
+    ],
+    "usage": {
+      "customer_id": "cust-002",
+      "period": "2026-03",
+      "data_used_gb": 8.2,
+      "data_limit_gb": 5,
+      "voice_used_minutes": 320,
+      "voice_limit_minutes": 500,
+      "sms_used": 15,
+      "sms_limit": 250,
+      "data_overage_gb": 3.2,
+      "voice_overage_minutes": 0
+    }
+  },
+  {
+    "id": "cust-003",
+    "name": "Mehmet Kaya",
+    "tc_kimlik_no": "45678901234",
+    "phone_number": "05421234567",
+    "email": "mehmet.kaya@email.com",
+    "tariff_id": "tariff-004",
+    "registration_date": "2022-09-10",
+    "address_city": "Izmir",
+    "bills": [
+      {
+        "id": "bill-003-202601",
+        "customer_id": "cust-003",
+        "period": "2026-01",
+        "billing_date": "2026-02-01",
+        "due_date": "2026-02-15",
+        "base_amount_tl": "249.00",
+        "kdv_amount_tl": "49.80",
+        "oiv_amount_tl": "37.35",
+        "total_amount_tl": "336.15",
+        "line_items": [
+          {"description": "Dijital Hayat 15GB Tarife Ucreti", "amount_tl": "249.00", "category": "base"},
+          {"description": "KDV (%20)", "amount_tl": "49.80", "category": "tax"},
+          {"description": "OIV (%15)", "amount_tl": "37.35", "category": "tax"}
+        ],
+        "is_paid": true
+      },
+      {
+        "id": "bill-003-202602",
+        "customer_id": "cust-003",
+        "period": "2026-02",
+        "billing_date": "2026-03-01",
+        "due_date": "2026-03-15",
+        "base_amount_tl": "249.00",
+        "kdv_amount_tl": "49.80",
+        "oiv_amount_tl": "37.35",
+        "total_amount_tl": "336.15",
+        "line_items": [
+          {"description": "Dijital Hayat 15GB Tarife Ucreti", "amount_tl": "249.00", "category": "base"},
+          {"description": "KDV (%20)", "amount_tl": "49.80", "category": "tax"},
+          {"description": "OIV (%15)", "amount_tl": "37.35", "category": "tax"}
+        ],
+        "is_paid": true
+      },
+      {
+        "id": "bill-003-202603",
+        "customer_id": "cust-003",
+        "period": "2026-03",
+        "billing_date": "2026-04-01",
+        "due_date": "2026-04-15",
+        "base_amount_tl": "279.00",
+        "kdv_amount_tl": "55.80",
+        "oiv_amount_tl": "41.85",
+        "total_amount_tl": "376.65",
+        "line_items": [
+          {"description": "Dijital Hayat 15GB Tarife Ucreti", "amount_tl": "249.00", "category": "base"},
+          {"description": "Ek Paket: Sosyal Medya Paketi", "amount_tl": "30.00", "category": "base"},
+          {"description": "KDV (%20)", "amount_tl": "55.80", "category": "tax"},
+          {"description": "OIV (%15)", "amount_tl": "41.85", "category": "tax"}
+        ],
+        "is_paid": false
+      }
+    ],
+    "usage": {
+      "customer_id": "cust-003",
+      "period": "2026-03",
+      "data_used_gb": 12.8,
+      "data_limit_gb": 15,
+      "voice_used_minutes": 980,
+      "voice_limit_minutes": 1500,
+      "sms_used": 200,
+      "sms_limit": 750,
+      "data_overage_gb": 0.0,
+      "voice_overage_minutes": 0
+    }
+  }
+]

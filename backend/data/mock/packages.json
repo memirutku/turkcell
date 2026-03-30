@@ -1,0 +1,52 @@
+[
+  {
+    "id": "pkg-001",
+    "name": "Akilli Yurt Disi Paketi",
+    "category": "yurt_disi",
+    "price_tl": "149.00",
+    "duration_days": 30,
+    "description": "Yurt disinda rahat iletisim. 5GB data, 100 dakika arama ve 50 SMS iceriri.",
+    "features": ["5GB yurt disi data", "100 dakika yurt disi arama", "50 SMS", "40+ ulkede gecerli"],
+    "is_active": true
+  },
+  {
+    "id": "pkg-002",
+    "name": "Ek 10GB Internet Paketi",
+    "category": "ek_data",
+    "price_tl": "49.00",
+    "duration_days": 30,
+    "description": "Mevcut tarifenize ek 10GB yuksek hizli internet.",
+    "features": ["10GB ek internet", "Tum tarifelere uyumlu", "Aninda aktif"],
+    "is_active": true
+  },
+  {
+    "id": "pkg-003",
+    "name": "Sosyal Medya Paketi",
+    "category": "sosyal_medya",
+    "price_tl": "29.00",
+    "duration_days": 30,
+    "description": "Instagram, Twitter, TikTok ve YouTube icin sinirsiz kullanim.",
+    "features": ["Sinirsiz sosyal medya", "Instagram, Twitter, TikTok", "YouTube dahil", "Tarifenizden yemez"],
+    "is_active": true
+  },
+  {
+    "id": "pkg-004",
+    "name": "Entertainment Plus Paketi",
+    "category": "eglence",
+    "price_tl": "39.00",
+    "duration_days": 30,
+    "description": "TV+, Fizy ve BiP ozel iceriklerine erisim.",
+    "features": ["TV+ erisimi", "Fizy Premium", "BiP ozel icerikler", "Reklamsiz deneyim"],
+    "is_active": true
+  },
+  {
+    "id": "pkg-005",
+    "name": "Hafta Sonu Internet Paketi",
+    "category": "ek_data",
+    "price_tl": "19.00",
+    "duration_days": 7,
+    "description": "Hafta sonu 5GB ek internet. Cumartesi-Pazar gecerli.",
+    "features": ["5GB hafta sonu interneti", "Cumartesi 00:00 - Pazar 23:59", "Her hafta yenilenir"],
+    "is_active": true
+  }
+]

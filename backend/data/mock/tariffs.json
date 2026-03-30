@@ -1,0 +1,57 @@
+[
+  {
+    "id": "tariff-001",
+    "name": "Platinum Esneyebilen 20GB",
+    "data_gb": 20,
+    "voice_minutes": 2000,
+    "sms_count": 1000,
+    "monthly_price_tl": "299.00",
+    "description": "Turkcell'in en kapsamli tarife paketi. Yuksek veri limiti, sinirli dakika ve SMS ile tum iletisim ihtiyaclarinizi karsilar.",
+    "features": ["20GB yuksek hizli internet", "2000 dakika tum yonlere", "1000 SMS", "Platinum musterilere ozel firsatlar", "Yurt disi 1GB hediye"],
+    "is_active": true
+  },
+  {
+    "id": "tariff-002",
+    "name": "Gold 10GB",
+    "data_gb": 10,
+    "voice_minutes": 1000,
+    "sms_count": 500,
+    "monthly_price_tl": "199.00",
+    "description": "Orta duzeyde kullanim icin ideal. Dengeli veri, dakika ve SMS hakki sunar.",
+    "features": ["10GB yuksek hizli internet", "1000 dakika tum yonlere", "500 SMS", "BiP mesajlasma ucretsiz"],
+    "is_active": true
+  },
+  {
+    "id": "tariff-003",
+    "name": "Silver 5GB",
+    "data_gb": 5,
+    "voice_minutes": 500,
+    "sms_count": 250,
+    "monthly_price_tl": "129.00",
+    "description": "Hafif kullanicilar icin ekonomik tarife. Temel iletisim ihtiyaclarini karsilar.",
+    "features": ["5GB yuksek hizli internet", "500 dakika tum yonlere", "250 SMS"],
+    "is_active": true
+  },
+  {
+    "id": "tariff-004",
+    "name": "Dijital Hayat 15GB",
+    "data_gb": 15,
+    "voice_minutes": 1500,
+    "sms_count": 750,
+    "monthly_price_tl": "249.00",
+    "description": "Dijital yasam tarzi icin tasarlandi. Sosyal medya ve streaming icin ekstra veri iceriri.",
+    "features": ["15GB yuksek hizli internet", "1500 dakika tum yonlere", "750 SMS", "Sosyal medya paketi dahil", "TV+ 3 ay hediye"],
+    "is_active": true
+  },
+  {
+    "id": "tariff-005",
+    "name": "Ekonomik 3GB",
+    "data_gb": 3,
+    "voice_minutes": 300,
+    "sms_count": 100,
+    "monthly_price_tl": "79.00",
+    "description": "En uygun fiyatli tarife. Temel arama ve mesajlasma icin yeterli.",
+    "features": ["3GB internet", "300 dakika tum yonlere", "100 SMS"],
+    "is_active": true
+  }
+]
