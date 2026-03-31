@@ -59,7 +59,7 @@ Requirements for initial MVP release. Each maps to roadmap phases.
 - [ ] **VOICE-03**: Full voice conversation loop — kullanıcı sürekli sesli konuşabilir
 - [ ] **VOICE-04**: Voice Activity Detection (VAD) — kullanıcının konuşmasının bittiğini algılar
 - [x] **VOICE-05**: WebSocket üzerinden streaming ses iletimi (browser ↔ backend)
-- [ ] **VOICE-06**: Ses işleme sırasında görsel geri bildirim (dalga formu / animasyon)
+- [x] **VOICE-06**: Ses işleme sırasında görsel geri bildirim (dalga formu / animasyon)
 - [ ] **VOICE-07**: Uçtan uca ses döngüsü latency'si 3 saniyenin altında hedeflenir
 
 ### Agentic Actions
@@ -81,7 +81,7 @@ Requirements for initial MVP release. Each maps to roadmap phases.
 ### Frontend UI
 
 - [x] **UI-01**: Modern chat arayüzü (mesaj baloncukları, kullanıcı/asistan ayrımı)
-- [ ] **UI-02**: Ses kayıt butonu ve ses dalgası animasyonu
+- [x] **UI-02**: Ses kayıt butonu ve ses dalgası animasyonu
 - [x] **UI-03**: Responsive tasarım (mobil tarayıcıda çalışır)
 - [x] **UI-04**: Markdown rendering (yapılandırılmış yanıtlar, tablolar)
 - [x] **UI-05**: Fatura detayları için zengin UI kartları (tablo/card)
@@ -160,7 +160,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | VOICE-03 | Phase 8 | Pending |
 | VOICE-04 | Phase 8 | Pending |
 | VOICE-05 | Phase 7 | Complete |
-| VOICE-06 | Phase 7 | Pending |
+| VOICE-06 | Phase 7 | Complete |
 | VOICE-07 | Phase 8 | Pending |
 | AGENT-01 | Phase 9 | Pending |
 | AGENT-02 | Phase 9 | Pending |
@@ -173,7 +173,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | A11Y-03 | Phase 10 | Pending |
 | A11Y-04 | Phase 10 | Pending |
 | UI-01 | Phase 3 | Complete |
-| UI-02 | Phase 7 | Pending |
+| UI-02 | Phase 7 | Complete |
 | UI-03 | Phase 3 | Complete |
 | UI-04 | Phase 3 | Complete |
 | UI-05 | Phase 6 | Complete |

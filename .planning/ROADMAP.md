@@ -128,9 +128,9 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [x] 07-01: TBD
-- [x] 07-02: TBD
-- [ ] 07-03: TBD
+- [x] 07-01: Voice services backend (Gemini STT + AWS Polly TTS)
+- [x] 07-02: Voice WebSocket endpoint
+- [x] 07-03: Voice UI frontend (mic button, waveform, state machine)
 
 ### Phase 8: Full Voice Conversation
 **Goal**: Users can have a continuous hands-free voice conversation without manually pressing buttons for each turn
