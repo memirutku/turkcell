@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import chat, health, mock_bss, rag
+from app.api.routes import chat, health, mock_bss, rag, voice
 from app.config import get_settings
 from app.logging.pii_filter import PIILoggingFilter
 from app.services.billing_context import BillingContextService
@@ -12,6 +12,9 @@ from app.services.chat_service import ChatService
 from app.services.mock_bss import MockBSSService
 from app.services.rag_service import RAGService
 from app.services.recommendation_service import TariffRecommendationService
+from app.services.stt_service import STTService, MockSTTService
+from app.services.tts_service import TTSService, MockTTSService
+from app.services.voice_service import VoiceService
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +77,36 @@ async def lifespan(app: FastAPI):
         app.state.chat_service = None
         logger.warning("GEMINI_API_KEY not set -- Chat service disabled")
 
+    # Voice services (Phase 7)
+    if settings.gemini_api_key:
+        stt_service = STTService(settings)
+        logger.info("STT service initialized (Gemini multimodal)")
+    else:
+        stt_service = MockSTTService()
+        logger.warning("GEMINI_API_KEY not set -- using mock STT")
+
+    if settings.aws_access_key_id and settings.aws_secret_access_key:
+        tts_service = TTSService(settings)
+        logger.info("TTS service initialized (Polly Burcu neural)")
+    else:
+        tts_service = None
+        logger.warning("AWS credentials not set -- TTS disabled, STT via Gemini still available")
+
+    if settings.gemini_api_key and app.state.chat_service:
+        app.state.voice_service = VoiceService(
+            stt_service=stt_service,
+            tts_service=tts_service,
+            chat_service=app.state.chat_service,
+        )
+        logger.info(
+            "Voice service initialized (STT: %s, TTS: %s)",
+            "Gemini" if isinstance(stt_service, STTService) else "Mock",
+            "Polly" if tts_service else "disabled",
+        )
+    else:
+        app.state.voice_service = None
+        logger.warning("Chat service not available -- Voice service disabled")
+
     yield
 
     # Cleanup on shutdown
@@ -102,3 +135,4 @@ app.include_router(health.router, prefix="/api", tags=["health"])
 app.include_router(mock_bss.router, prefix="/api/mock", tags=["mock-bss"])
 app.include_router(rag.router, prefix="/api", tags=["rag"])
 app.include_router(chat.router, prefix="/api", tags=["chat"])
+app.include_router(voice.router, tags=["voice"])

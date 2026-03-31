@@ -128,8 +128,8 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [x] 07-01-PLAN.md -- Voice services backend: STT (Gemini multimodal), TTS (Polly Burcu neural), VoiceService orchestration (Wave 1)
-- [ ] 07-02: TBD
+- [x] 07-01: TBD
+- [x] 07-02: TBD
 - [ ] 07-03: TBD
 
 ### Phase 8: Full Voice Conversation
@@ -190,7 +190,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 4. PII Masking & KVKK Compliance | 1/2 | In progress | - |
 | 5. Billing & Tariff Q&A | 0/2 | Not started | - |
 | 6. Personalized Recommendations & Rich UI | 2/2 | Complete | 2026-03-31 |
-| 7. Voice Input & Output | 1/3 | In progress | - |
+| 7. Voice Input & Output | 2/3 | In Progress|  |
 | 8. Full Voice Conversation | 0/2 | Not started | - |
 | 9. Agentic Capabilities | 0/3 | Not started | - |
 | 10. Accessibility & Hardening | 0/2 | Not started | - |

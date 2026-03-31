@@ -1,10 +1,14 @@
-"""Tests for voice services: STT, TTS, and VoiceService orchestration."""
+"""Tests for voice services: STT, TTS, VoiceService orchestration, and WebSocket endpoint."""
 
 import io
+import json
 import shutil
 
 import pytest
+from starlette.testclient import TestClient
 from unittest.mock import AsyncMock, MagicMock, patch
+
+from app.main import app
 
 
 # -- STTService tests --
@@ -182,3 +186,119 @@ class TestVoiceService:
         # that the method exists and is callable. Real conversion
         # requires valid audio binary.
         assert callable(VoiceService._convert_to_wav)
+
+
+# -- WebSocket endpoint tests (synchronous, using Starlette TestClient) --
+
+
+def _make_mock_voice_service():
+    """Create a mock VoiceService that returns predetermined results."""
+    mock = AsyncMock()
+    mock.process_voice = AsyncMock(return_value={
+        "transcribed_text": "test metin",
+        "response_text": "Merhaba",
+        "tokens": ["Merhaba"],
+        "audio_response": b"fake-mp3",
+    })
+    return mock
+
+
+class TestVoiceWebSocket:
+    """WebSocket integration tests for /ws/voice endpoint."""
+
+    def test_voice_websocket_init(self):
+        """WebSocket connects and sends init JSON without error."""
+        original = getattr(app.state, "voice_service", None)
+        app.state.voice_service = _make_mock_voice_service()
+        try:
+            client = TestClient(app)
+            with client.websocket_connect("/ws/voice") as ws:
+                ws.send_json({"type": "init", "session_id": "test-sess", "customer_id": "cust-001"})
+                # If init succeeds, no error is sent back.
+                # Send audio to trigger a response so we know init worked.
+                ws.send_bytes(b"fake-audio-data" * 10)
+                data = ws.receive_json()
+                assert data["type"] == "transcription"
+        finally:
+            app.state.voice_service = original
+
+    def test_voice_websocket_no_init_error(self):
+        """WebSocket sends audio before init, receives error."""
+        original = getattr(app.state, "voice_service", None)
+        app.state.voice_service = _make_mock_voice_service()
+        try:
+            client = TestClient(app)
+            with client.websocket_connect("/ws/voice") as ws:
+                # Send audio without init first
+                ws.send_bytes(b"fake-audio-data" * 10)
+                data = ws.receive_json()
+                assert data["type"] == "error"
+                assert "Oturum baslatilmadi" in data["message"]
+        finally:
+            app.state.voice_service = original
+
+    def test_voice_websocket_flow(self):
+        """Full WebSocket flow: init -> audio -> transcription -> tokens -> response_end -> audio -> audio_done."""
+        original = getattr(app.state, "voice_service", None)
+        app.state.voice_service = _make_mock_voice_service()
+        try:
+            client = TestClient(app)
+            with client.websocket_connect("/ws/voice") as ws:
+                # 1. Send init
+                ws.send_json({"type": "init", "session_id": "test-session", "customer_id": "cust-001"})
+
+                # 2. Send binary audio (must be > 100 bytes)
+                ws.send_bytes(b"fake-audio-data" * 10)
+
+                # 3. Receive transcription
+                data = ws.receive_json()
+                assert data["type"] == "transcription"
+                assert data["text"] == "test metin"
+
+                # 4. Receive token(s)
+                data = ws.receive_json()
+                assert data["type"] == "token"
+                assert data["content"] == "Merhaba"
+
+                # 5. Receive response_end
+                data = ws.receive_json()
+                assert data["type"] == "response_end"
+                assert data["full_text"] == "Merhaba"
+
+                # 6. Receive TTS audio bytes
+                audio_data = ws.receive_bytes()
+                assert audio_data == b"fake-mp3"
+
+                # 7. Receive audio_done signal
+                data = ws.receive_json()
+                assert data["type"] == "audio_done"
+        finally:
+            app.state.voice_service = original
+
+    def test_voice_websocket_no_voice_service(self):
+        """When voice_service is None, WebSocket receives error and closes."""
+        original = getattr(app.state, "voice_service", None)
+        app.state.voice_service = None
+        try:
+            client = TestClient(app)
+            with client.websocket_connect("/ws/voice") as ws:
+                data = ws.receive_json()
+                assert data["type"] == "error"
+                assert "Ses servisi kullanilamiyor" in data["message"]
+        finally:
+            app.state.voice_service = original
+
+    def test_voice_websocket_empty_audio(self):
+        """WebSocket sends very small binary (< 100 bytes), receives empty audio error."""
+        original = getattr(app.state, "voice_service", None)
+        app.state.voice_service = _make_mock_voice_service()
+        try:
+            client = TestClient(app)
+            with client.websocket_connect("/ws/voice") as ws:
+                ws.send_json({"type": "init", "session_id": "test-sess"})
+                ws.send_bytes(b"tiny")  # < 100 bytes
+                data = ws.receive_json()
+                assert data["type"] == "error"
+                assert "Ses algilanamadi" in data["message"]
+        finally:
+            app.state.voice_service = original
