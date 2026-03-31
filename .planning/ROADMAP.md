@@ -114,7 +114,7 @@ Plans:
 
 Plans:
 - [x] 06-01-PLAN.md — TariffRecommendationService with Decimal savings, structured SSE events, billing prompt extension (Wave 1)
-- [ ] 06-02-PLAN.md — Rich UI recommendation cards, usage gauges, savings display (Wave 2)
+- [x] 06-02-PLAN.md — Rich UI recommendation cards, usage gauges, savings display (Wave 2)
 
 ### Phase 7: Voice Input & Output
 **Goal**: Users can speak to the assistant using their microphone and hear responses read aloud in natural Turkish voice
@@ -189,7 +189,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 3. Core Chat & LLM Integration | 2/3 | In progress (checkpoint pending) | - |
 | 4. PII Masking & KVKK Compliance | 1/2 | In progress | - |
 | 5. Billing & Tariff Q&A | 0/2 | Not started | - |
-| 6. Personalized Recommendations & Rich UI | 1/2 | In progress | - |
+| 6. Personalized Recommendations & Rich UI | 2/2 | Complete | 2026-03-31 |
 | 7. Voice Input & Output | 0/3 | Not started | - |
 | 8. Full Voice Conversation | 0/2 | Not started | - |
 | 9. Agentic Capabilities | 0/3 | Not started | - |

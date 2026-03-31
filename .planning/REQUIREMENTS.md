@@ -84,7 +84,7 @@ Requirements for initial MVP release. Each maps to roadmap phases.
 - [ ] **UI-02**: Ses kayıt butonu ve ses dalgası animasyonu
 - [x] **UI-03**: Responsive tasarım (mobil tarayıcıda çalışır)
 - [x] **UI-04**: Markdown rendering (yapılandırılmış yanıtlar, tablolar)
-- [ ] **UI-05**: Fatura detayları için zengin UI kartları (tablo/card)
+- [x] **UI-05**: Fatura detayları için zengin UI kartları (tablo/card)
 
 ## v2 Requirements
 
@@ -176,7 +176,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-02 | Phase 7 | Pending |
 | UI-03 | Phase 3 | Complete |
 | UI-04 | Phase 3 | Complete |
-| UI-05 | Phase 6 | Pending |
+| UI-05 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 52 total
