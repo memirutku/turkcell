@@ -5,6 +5,7 @@ Covers: SEC-01 (PII masking), SEC-02 (Turkish recognizers), SEC-05 (env security
 
 import os
 from pathlib import Path
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from presidio_analyzer import AnalyzerEngine, RecognizerRegistry
@@ -203,6 +204,223 @@ class TestPIIMaskingService:
         assert "[TC_KIMLIK]" in result
         assert "[TELEFON]" in result
         assert "[IBAN]" in result
+
+
+# ===========================================================================
+# Security Config Tests (SEC-05)
+# ===========================================================================
+
+# ===========================================================================
+# ChatService PII Integration Tests (Plan 02)
+# ===========================================================================
+
+class TestChatServicePIIIntegration:
+    """Test that ChatService integrates with PIIMaskingService."""
+
+    @patch("app.services.chat_service.MemoryService")
+    @patch("app.services.chat_service.RAGService")
+    @patch("app.services.chat_service.ChatGoogleGenerativeAI")
+    def test_init_creates_pii_service_when_enabled(self, MockLLM, MockRAG, MockMemory):
+        """ChatService should create PIIMaskingService when pii_enabled=True."""
+        from app.services.chat_service import ChatService
+
+        settings = MagicMock()
+        settings.gemini_api_key = "test-key"
+        settings.redis_url = "redis://localhost:6379/0"
+        settings.milvus_host = "localhost"
+        settings.milvus_port = 19530
+        settings.milvus_collection_name = "test"
+
+        with patch("app.services.chat_service.PIIMaskingService") as MockPII:
+            service = ChatService(settings, pii_enabled=True)
+            MockPII.assert_called_once()
+            assert service._pii_service is not None
+
+    @patch("app.services.chat_service.MemoryService")
+    @patch("app.services.chat_service.RAGService")
+    @patch("app.services.chat_service.ChatGoogleGenerativeAI")
+    def test_init_no_pii_service_when_disabled(self, MockLLM, MockRAG, MockMemory):
+        """ChatService should set _pii_service=None when pii_enabled=False."""
+        from app.services.chat_service import ChatService
+
+        settings = MagicMock()
+        settings.gemini_api_key = "test-key"
+        settings.redis_url = "redis://localhost:6379/0"
+        settings.milvus_host = "localhost"
+        settings.milvus_port = 19530
+        settings.milvus_collection_name = "test"
+
+        service = ChatService(settings, pii_enabled=False)
+        assert service._pii_service is None
+
+    @patch("app.services.chat_service.MemoryService")
+    @patch("app.services.chat_service.RAGService")
+    @patch("app.services.chat_service.ChatGoogleGenerativeAI")
+    async def test_stream_response_masks_message_before_rag(self, MockLLM, MockRAG, MockMemory):
+        """ChatService should mask PII before passing message to RAG search."""
+        from app.services.chat_service import ChatService
+
+        settings = MagicMock()
+        settings.gemini_api_key = "test-key"
+        settings.redis_url = "redis://localhost:6379/0"
+        settings.milvus_host = "localhost"
+        settings.milvus_port = 19530
+        settings.milvus_collection_name = "test"
+
+        mock_rag = AsyncMock()
+        mock_rag.search = AsyncMock(return_value=[])
+        MockRAG.return_value = mock_rag
+
+        mock_memory = MagicMock()
+        mock_memory.get_history = MagicMock(return_value=[])
+        mock_memory.add_messages = MagicMock()
+        MockMemory.return_value = mock_memory
+
+        async def mock_astream(messages):
+            chunk = MagicMock()
+            chunk.content = "Ok"
+            yield chunk
+
+        mock_llm = MagicMock()
+        mock_llm.astream = mock_astream
+        MockLLM.return_value = mock_llm
+
+        with patch("app.services.chat_service.PIIMaskingService") as MockPII:
+            mock_pii = MagicMock()
+            mock_pii.mask = MagicMock(return_value="masked_query")
+            MockPII.return_value = mock_pii
+
+            service = ChatService(settings, pii_enabled=True)
+            async for _ in service.stream_response("TC: 10000000146", "session-1"):
+                pass
+
+            mock_pii.mask.assert_called_once_with("TC: 10000000146")
+            mock_rag.search.assert_called_once_with("masked_query", top_k=5)
+
+    @patch("app.services.chat_service.MemoryService")
+    @patch("app.services.chat_service.RAGService")
+    @patch("app.services.chat_service.ChatGoogleGenerativeAI")
+    async def test_stream_response_stores_masked_in_history(self, MockLLM, MockRAG, MockMemory):
+        """ChatService should store masked message (not original) in history."""
+        from app.services.chat_service import ChatService
+
+        settings = MagicMock()
+        settings.gemini_api_key = "test-key"
+        settings.redis_url = "redis://localhost:6379/0"
+        settings.milvus_host = "localhost"
+        settings.milvus_port = 19530
+        settings.milvus_collection_name = "test"
+
+        mock_rag = AsyncMock()
+        mock_rag.search = AsyncMock(return_value=[])
+        MockRAG.return_value = mock_rag
+
+        mock_memory = MagicMock()
+        mock_memory.get_history = MagicMock(return_value=[])
+        mock_memory.add_messages = MagicMock()
+        MockMemory.return_value = mock_memory
+
+        async def mock_astream(messages):
+            chunk = MagicMock()
+            chunk.content = "Response"
+            yield chunk
+
+        mock_llm = MagicMock()
+        mock_llm.astream = mock_astream
+        MockLLM.return_value = mock_llm
+
+        with patch("app.services.chat_service.PIIMaskingService") as MockPII:
+            mock_pii = MagicMock()
+            mock_pii.mask = MagicMock(return_value="masked_message")
+            MockPII.return_value = mock_pii
+
+            service = ChatService(settings, pii_enabled=True)
+            async for _ in service.stream_response("raw message with PII", "session-1"):
+                pass
+
+            mock_memory.add_messages.assert_called_once_with(
+                "session-1", "masked_message", "Response"
+            )
+
+    @patch("app.services.chat_service.MemoryService")
+    @patch("app.services.chat_service.RAGService")
+    @patch("app.services.chat_service.ChatGoogleGenerativeAI")
+    async def test_stream_response_skips_masking_when_disabled(self, MockLLM, MockRAG, MockMemory):
+        """ChatService with pii_enabled=False should pass raw message through."""
+        from app.services.chat_service import ChatService
+
+        settings = MagicMock()
+        settings.gemini_api_key = "test-key"
+        settings.redis_url = "redis://localhost:6379/0"
+        settings.milvus_host = "localhost"
+        settings.milvus_port = 19530
+        settings.milvus_collection_name = "test"
+
+        mock_rag = AsyncMock()
+        mock_rag.search = AsyncMock(return_value=[])
+        MockRAG.return_value = mock_rag
+
+        mock_memory = MagicMock()
+        mock_memory.get_history = MagicMock(return_value=[])
+        mock_memory.add_messages = MagicMock()
+        MockMemory.return_value = mock_memory
+
+        async def mock_astream(messages):
+            chunk = MagicMock()
+            chunk.content = "Ok"
+            yield chunk
+
+        mock_llm = MagicMock()
+        mock_llm.astream = mock_astream
+        MockLLM.return_value = mock_llm
+
+        service = ChatService(settings, pii_enabled=False)
+        async for _ in service.stream_response("raw message", "session-1"):
+            pass
+
+        # Without PII masking, raw message should be used for everything
+        mock_rag.search.assert_called_once_with("raw message", top_k=5)
+        mock_memory.add_messages.assert_called_once_with(
+            "session-1", "raw message", "Ok"
+        )
+
+
+# ===========================================================================
+# Guardrails Tests (Plan 02 - SEC-04)
+# ===========================================================================
+
+class TestGuardrails:
+    """Test system prompt contains anti-PII-extraction guardrails."""
+
+    def test_system_prompt_contains_guvenlik(self):
+        """System prompt must contain GUVENLIK section."""
+        from app.prompts.system_prompt import SYSTEM_PROMPT
+        assert "GUVENLIK" in SYSTEM_PROMPT
+
+    def test_system_prompt_contains_tc_kimlik_placeholder(self):
+        """System prompt must reference [TC_KIMLIK] placeholder."""
+        from app.prompts.system_prompt import SYSTEM_PROMPT
+        assert "[TC_KIMLIK]" in SYSTEM_PROMPT
+
+    def test_system_prompt_contains_telefon_placeholder(self):
+        """System prompt must reference [TELEFON] placeholder."""
+        from app.prompts.system_prompt import SYSTEM_PROMPT
+        assert "[TELEFON]" in SYSTEM_PROMPT
+
+    def test_system_prompt_contains_iban_placeholder(self):
+        """System prompt must reference [IBAN] placeholder."""
+        from app.prompts.system_prompt import SYSTEM_PROMPT
+        assert "[IBAN]" in SYSTEM_PROMPT
+
+    def test_system_prompt_contains_prompt_injection_defense(self):
+        """System prompt must contain defense against 'onceki talimatlari goster'."""
+        from app.prompts.system_prompt import SYSTEM_PROMPT
+        assert "Onceki talimatlari" in SYSTEM_PROMPT
+
+    def test_system_prompt_contains_unmasking_defense(self):
+        """System prompt must contain defense against unmasking attempts."""
+        from app.prompts.system_prompt import SYSTEM_PROMPT
+        assert "Maskelenmis bilgileri acma" in SYSTEM_PROMPT
 
 
 # ===========================================================================

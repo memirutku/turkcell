@@ -63,3 +63,11 @@ def mock_memory_service():
     mock.get_history = MagicMock(return_value=[])
     mock.add_messages = MagicMock()
     return mock
+
+
+@pytest.fixture
+def mock_pii_service():
+    """Create a mock PIIMaskingService (passthrough: returns input unchanged)."""
+    mock = MagicMock()
+    mock.mask = MagicMock(side_effect=lambda text: text)
+    return mock
