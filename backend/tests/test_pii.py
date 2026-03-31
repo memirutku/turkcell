@@ -427,6 +427,114 @@ class TestGuardrails:
 # Security Config Tests (SEC-05)
 # ===========================================================================
 
+# ===========================================================================
+# PII Logging Filter Tests (Plan 02 - SEC-03)
+# ===========================================================================
+
+class TestPIILoggingFilter:
+    """Test PIILoggingFilter sanitizes log records for PII patterns."""
+
+    def test_sanitizes_tc_kimlik_in_msg(self):
+        """TC Kimlik number in log msg should be replaced with [TC_KIMLIK]."""
+        import logging
+        from app.logging.pii_filter import PIILoggingFilter
+
+        pii_filter = PIILoggingFilter()
+        record = logging.LogRecord(
+            name="test", level=logging.INFO, pathname="", lineno=0,
+            msg="TC Kimlik: 10000000146", args=(), exc_info=None,
+        )
+        pii_filter.filter(record)
+        assert "10000000146" not in record.msg
+        assert "[TC_KIMLIK]" in record.msg
+
+    def test_sanitizes_phone_in_msg(self):
+        """Phone number in log msg should be replaced with [TELEFON]."""
+        import logging
+        from app.logging.pii_filter import PIILoggingFilter
+
+        pii_filter = PIILoggingFilter()
+        record = logging.LogRecord(
+            name="test", level=logging.INFO, pathname="", lineno=0,
+            msg="Telefon: 0532 123 45 67", args=(), exc_info=None,
+        )
+        pii_filter.filter(record)
+        assert "0532" not in record.msg
+        assert "[TELEFON]" in record.msg
+
+    def test_sanitizes_iban_in_msg(self):
+        """IBAN in log msg should be replaced with [IBAN]."""
+        import logging
+        from app.logging.pii_filter import PIILoggingFilter
+
+        pii_filter = PIILoggingFilter()
+        record = logging.LogRecord(
+            name="test", level=logging.INFO, pathname="", lineno=0,
+            msg="IBAN: TR330006100519786457841326", args=(), exc_info=None,
+        )
+        pii_filter.filter(record)
+        assert "TR330006100519786457841326" not in record.msg
+        assert "[IBAN]" in record.msg
+
+    def test_sanitizes_email_in_msg(self):
+        """Email in log msg should be replaced with [EMAIL]."""
+        import logging
+        from app.logging.pii_filter import PIILoggingFilter
+
+        pii_filter = PIILoggingFilter()
+        record = logging.LogRecord(
+            name="test", level=logging.INFO, pathname="", lineno=0,
+            msg="Email: ahmet@turkcell.com.tr", args=(), exc_info=None,
+        )
+        pii_filter.filter(record)
+        assert "ahmet@turkcell.com.tr" not in record.msg
+        assert "[EMAIL]" in record.msg
+
+    def test_sanitizes_args_tuple(self):
+        """PII in record.args should be sanitized."""
+        import logging
+        from app.logging.pii_filter import PIILoggingFilter
+
+        pii_filter = PIILoggingFilter()
+        record = logging.LogRecord(
+            name="test", level=logging.INFO, pathname="", lineno=0,
+            msg="User %s", args=("10000000146",), exc_info=None,
+        )
+        pii_filter.filter(record)
+        assert "10000000146" not in record.args[0]
+        assert "[TC_KIMLIK]" in record.args[0]
+
+    def test_filter_returns_true(self):
+        """Filter should always return True (never suppress records)."""
+        import logging
+        from app.logging.pii_filter import PIILoggingFilter
+
+        pii_filter = PIILoggingFilter()
+        record = logging.LogRecord(
+            name="test", level=logging.INFO, pathname="", lineno=0,
+            msg="Some log message", args=(), exc_info=None,
+        )
+        assert pii_filter.filter(record) is True
+
+    def test_no_pii_passes_unchanged(self):
+        """Text without PII should pass through unchanged."""
+        import logging
+        from app.logging.pii_filter import PIILoggingFilter
+
+        pii_filter = PIILoggingFilter()
+        original_msg = "Tarife degisikligi talebi alindi"
+        record = logging.LogRecord(
+            name="test", level=logging.INFO, pathname="", lineno=0,
+            msg=original_msg, args=(), exc_info=None,
+        )
+        pii_filter.filter(record)
+        assert record.msg == original_msg
+
+
+# ===========================================================================
+# Security Config Tests (SEC-05)
+# ===========================================================================
+
 class TestSecurityConfig:
     """Verify SEC-05: .env in .gitignore, .env.example exists."""
 
