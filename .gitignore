@@ -19,6 +19,7 @@ build/
 node_modules/
 .next/
 .pnpm-store/
+*.tsbuildinfo
 
 # Docker
 docker-compose.override.yml
