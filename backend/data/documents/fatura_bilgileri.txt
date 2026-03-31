@@ -1,0 +1,85 @@
+Fatura Okuma Rehberi
+
+Turkcell faturanız birkaç ana kalemden oluşmaktadır. Her faturada tarife ücreti (ana ücret), varsa aşım ücretleri ve yasal vergiler ayrı ayrı gösterilir. Faturanızı doğru okumak için bu kalemlerin ne anlama geldiğini bilmeniz önemlidir.
+
+Ana Ücret (Tarife Ücreti)
+
+Faturanızdaki ana ücret, kullandığınız tarifenin aylık sabit ücretidir. Bu tutar her ay aynı kalır ve tarifenizin içerdiği internet, konuşma dakikası ve SMS haklarını kapsar. Örneğin Platinum Esneyebilen 20GB tarifenin ana ücreti 299 TL, Gold 10GB tarifenin ana ücreti 199 TL, Silver 5GB tarifenin ana ücreti ise 129 TL'dir. Ek paket satın aldıysanız bunlar da ana ücret kategorisinde görünür.
+
+KDV Nedir?
+
+KDV (Katma Değer Vergisi), Türkiye'de tüm mal ve hizmet satışlarında uygulanan yasal bir vergidir. Telekomünikasyon hizmetlerinde KDV oranı %20'dir. Bu vergi fatura tutarınızın üzerine eklenir ve doğrudan Hazine'ye aktarılır. Faturanızda ayrı bir kalem olarak "KDV (%20)" şeklinde gösterilir. KDV tutarı, tarifenizin ana ücreti ve varsa aşım ücretlerinin toplamı üzerinden hesaplanır.
+
+ÖİV Nedir?
+
+ÖİV (Özel İletişim Vergisi), yalnızca telekomünikasyon ve iletişim hizmetlerine uygulanan özel bir vergidir. ÖİV oranı %15'tir. Bu vergi de faturanızda ayrı bir kalem olarak gösterilir. ÖİV, KDV gibi tüm iletişim ücretleri üzerinden hesaplanır. Hem ana ücret hem de aşım ücretleri ÖİV'e tabidir.
+
+Toplam Fatura Tutarı Nasıl Hesaplanır?
+
+Fatura toplamınız şu formülle hesaplanır: Ana Ücret + Aşım Ücretleri + KDV (%20) + ÖİV (%15) = Toplam Tutar. Örneğin 299 TL ana ücretli bir tarifede vergi öncesi tutar 299 TL, KDV yaklaşık 59,80 TL ve ÖİV yaklaşık 44,85 TL olur. Toplam fatura tutarı bu durumda 403,65 TL civarındadır. Aşım ücreti varsa toplam buna göre artar.
+
+Aşım Ücreti Nedir?
+
+Aşım ücreti, tarifenizde tanımlı olan internet, konuşma dakikası veya SMS haklarınızı aştığınızda uygulanan ek ücrettir. Faturanızda "Aşım Ücreti" kategorisinde ayrı kalem olarak gösterilir.
+
+İnternet Aşım Ücreti
+
+İnternet kotanızı aştığınızda tarifenize göre farklı uygulamalar yapılır. Platinum tarifede hız 1 Mbps'e, Gold tarifede 512 Kbps'e, Silver tarifede 256 Kbps'e ve Ekonomik tarifede 128 Kbps'e düşürülür. Hız düşürülmesine rağmen kullanıma devam edildiğinde ek internet paketi almadığınız sürece düşük hızda devam edersiniz. Bazı tarifelerde ise GB başına doğrudan aşım ücreti faturanıza yansıtılır.
+
+Konuşma Aşım Ücreti
+
+Tarifenizdeki konuşma dakikalarınız tükendiğinde dakika başına 0,35 TL ile 0,50 TL arasında aşım ücreti uygulanır. Bu ücret tarifenize göre değişir. Platinum tarifede dakika başı 0,50 TL, Gold tarifede 0,45 TL, Silver tarifede 0,40 TL ve Ekonomik tarifede 0,35 TL aşım ücreti geçerlidir.
+
+SMS Aşım Ücreti
+
+SMS hakkınız tükendiğinde adet başına 0,25 TL ücretlendirilir. Bu ücret tüm tarifelerde aynıdır. Mesajlaşma ihtiyacınız yüksekse BiP gibi ücretsiz mesajlaşma uygulamalarını kullanmanız önerilir.
+
+Aşım Ücretinden Nasıl Kaçınılır?
+
+Aşım ücretlerinden kaçınmak için birkaç yöntem bulunmaktadır. Turkcell uygulamasından kullanımınızı düzenli olarak takip edebilirsiniz. Kotanız dolmadan ek paket satın alabilirsiniz. Kullanımınız sürekli tarifenizin üzerindeyse daha yüksek bir tarifeye geçiş yapmanız uzun vadede daha ekonomik olabilir. Ayrıca Wi-Fi bağlantısı kullanarak mobil veri tüketiminizi azaltabilirsiniz.
+
+Fatura Ödeme Yöntemleri
+
+Turkcell faturanızı birçok farklı yöntemle ödeyebilirsiniz. Turkcell uygulaması üzerinden kredi kartı veya banka kartı ile anında ödeme yapabilirsiniz. Online işlem merkezinden ödeme mümkündür. Otomatik ödeme talimatı vererek her ay faturanızın otomatik ödenmesini sağlayabilirsiniz. PTT şubeleri ve anlaşmalı banka şubelerinden nakit ödeme yapabilirsiniz. Turkcell mağazalarında da ödeme kabul edilmektedir.
+
+Otomatik Ödeme Avantajları
+
+Otomatik ödeme talimatı veren müşteriler, son ödeme tarihini kaçırma riskini ortadan kaldırır. Ayrıca zaman zaman otomatik ödeme kullanan müşterilere özel indirim kampanyaları sunulmaktadır. Talimatı Turkcell uygulamasından veya bankanızın internet bankacılığından verebilirsiniz. İstediğiniz zaman talimatı iptal edebilirsiniz.
+
+Gecikme Faizi
+
+Fatura son ödeme tarihini geçirmeniz halinde gecikme faizi uygulanır. Gecikme faizi oranı aylık %2 ile %3 arasında değişmektedir. Ödeme gecikmeniz uzarsa hattınız geçici olarak kapatılabilir. Bu durumda sadece gelen aramalar açık kalır, giden aramalar ve internet kullanımı kısıtlanır. Borcunuzu ödemeniz halinde hattınız kısa sürede yeniden aktifleştirilir.
+
+Tarife Değişikliği
+
+Turkcell müşterileri istedikleri zaman tarife değişikliği yapabilir. Yeni tarife genellikle bir sonraki fatura döneminin başında aktif olur. Daha yüksek bir tarifeye geçiş (upgrade) yapıyorsanız yeni haklar anında tanımlanabilir. Daha düşük bir tarifeye geçiş (downgrade) yapıyorsanız mevcut dönemin sonuna kadar eski tarifeniz geçerli kalır.
+
+Tarife Yükseltme ve Düşürme
+
+Tarife yükseltme işleminde yeni tarifenizin ek hakları hemen kullanılabilir hale gelir. Tarife düşürme işleminde ise mevcut fatura döneminizin sonuna kadar eski tarifeniz aktif kalır, yeni tarife sonraki dönemde başlar. Taahhütlü tarifelerden çıkış yapmak istiyorsanız cayma bedeli uygulanabilir. Cayma bedelini Turkcell uygulamasından kontrol edebilirsiniz.
+
+Faturam Neden Yüksek?
+
+Faturanız beklenenden yüksekse öncelikle aşım ücretlerini kontrol edin. İnternet kotanızı veya konuşma dakikalarınızı aşmış olabilirsiniz. Turkcell uygulamasından detaylı kullanım dökümünüzü inceleyerek hangi kalemlerin faturanızı artırdığını görebilirsiniz. Yurt dışı kullanım, ek paket alımları veya üçüncü taraf servis abonelikleri de fatura artışına neden olabilir. Kullanımınız sürekli tarifenizin üzerindeyse daha uygun bir tarifeye geçmeniz önerilir.
+
+Tarifemi Nasıl Değiştirebilirim?
+
+Tarife değişikliği için Turkcell uygulamasında "Tarifem" bölümüne gidin ve mevcut tarifenizi görebilirsiniz. Alternatif tarifeleri karşılaştırarak size uygun olanı seçebilirsiniz. *123# kısa kodundan da tarife menüsüne erişebilirsiniz. Turkcell mağazalarına veya müşteri hizmetlerini arayarak da tarife değişikliği yapabilirsiniz.
+
+KDV ve ÖİV Neden Ayrı Gösteriliyor?
+
+KDV ve ÖİV farklı yasal düzenlemelere tabi vergilerdir ve faturanızda şeffaflık amacıyla ayrı kalemler olarak gösterilir. KDV tüm mal ve hizmetlere uygulanan genel bir vergidir, ÖİV ise yalnızca telekomünikasyon hizmetlerine özeldir. Her iki vergi de kanun gereği fatura tutarınıza eklenmektedir ve Turkcell tarafından doğrudan ilgili vergi dairelerine aktarılmaktadır.
+
+Sık Sorulan Sorular
+
+Soru: Faturamda gördüğüm aşım ücreti ne demek?
+Cevap: Aşım ücreti, tarifenizdeki internet, konuşma veya SMS haklarınızı tükettiğinizde uygulanan ek ücrettir. Faturanızda hangi hizmette aşım olduğu detaylı olarak gösterilir.
+
+Soru: Fatura tutarımı nasıl düşürebilirim?
+Cevap: Kullanımınızı tarifenizin limitleri içinde tutarak aşım ücretlerinden kaçınabilirsiniz. Düzenli olarak aşıyorsanız daha yüksek bir tarifeye geçmek uzun vadede daha ekonomik olabilir.
+
+Soru: Ödenmemiş faturamı nerede görebilirim?
+Cevap: Turkcell uygulamasının "Faturalarım" bölümünden tüm faturalarınızı ve ödeme durumlarını görebilirsiniz. Son 12 aya kadar geçmiş faturalarınıza erişim mümkündür.
+
+Soru: Fatura itirazı nasıl yapılır?
+Cevap: Faturanızda hatalı bir kalem olduğunu düşünüyorsanız Turkcell müşteri hizmetlerini 532 0000 numarasından arayarak itiraz edebilirsiniz. İtirazınız incelendikten sonra haklı bulunursanız düzeltme faturası düzenlenir.
