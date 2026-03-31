@@ -7,6 +7,7 @@ from pymilvus import connections, utility
 
 from app.config import Settings, get_settings
 from app.services.mock_bss import MockBSSService
+from app.services.rag_service import RAGService
 
 
 async def get_redis_client(
@@ -54,3 +55,8 @@ async def check_milvus(
 def get_mock_bss(request: Request) -> MockBSSService:
     """Get the MockBSSService from app state."""
     return request.app.state.mock_bss
+
+
+def get_rag_service(request: Request) -> RAGService | None:
+    """Get the RAGService from app state. Returns None if not configured."""
+    return getattr(request.app.state, "rag", None)

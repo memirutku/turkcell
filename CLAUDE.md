@@ -16,6 +16,7 @@ Turkcell AI-Gen, LLM ve RAG teknolojilerini kullanarak Turkcell altyapısına ö
 - **Dil**: Türkçe doğal dil anlama (NLU) öncelikli
 - **Deploy**: Docker Compose ile containerized mimari
 - **Erişilebilirlik**: Görme engelli kullanıcılar için sesli etkileşim kalitesi kritik
+- **Yasaklı Siteler**: `milvus.io` sitesinden asla WebFetch/araştırma yapılmayacak (agent hang sorununa neden oluyor)
 <!-- GSD:project-end -->
 
 <!-- GSD:stack-start source:research/STACK.md -->
@@ -173,6 +174,8 @@ Turkcell AI-Gen, LLM ve RAG teknolojilerini kullanarak Turkcell altyapısına ö
 ## Conventions
 
 Conventions not yet established. Will populate as patterns emerge during development.
+
+- Bir phase'de eksik veya tamamlanmamış görünen parçalar, kasıtlı olarak sonraki phase'lere bırakılmış olabilir. ROADMAP.md'deki phase bağımlılıklarını ve requirement dağılımını kontrol et — bir şeyi "eksik" olarak raporlamadan önce başka bir phase'de planlanıp planlanmadığına bak.
 <!-- GSD:conventions-end -->
 
 <!-- GSD:architecture-start source:ARCHITECTURE.md -->

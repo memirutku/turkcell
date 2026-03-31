@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     # Milvus
     milvus_host: str = "milvus-standalone"
     milvus_port: int = 19530
+    milvus_collection_name: str = "turkcell_documents"
 
     # Future phases (optional)
     gemini_api_key: str = ""

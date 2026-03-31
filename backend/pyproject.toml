@@ -10,6 +10,11 @@ dependencies = [
     "pydantic-settings>=2.0.0",
     "redis[hiredis]>=5.0.0",
     "pymilvus>=2.4.0",
+    "langchain>=1.2.13",
+    "langchain-google-genai>=4.2.1",
+    "langchain-milvus>=0.3.3",
+    "langchain-community>=0.4.1",
+    "langchain-text-splitters>=1.1.1",
 ]
 
 [project.optional-dependencies]
@@ -30,3 +35,6 @@ select = ["E", "F", "I", "N", "W", "UP"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+markers = [
+    "integration: marks tests requiring external services (deselect with '-m not integration')",
+]
