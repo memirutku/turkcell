@@ -34,6 +34,9 @@ class Settings(BaseSettings):
     milvus_port: int = 19530
     milvus_collection_name: str = "turkcell_documents"
 
+    # PII Masking (Phase 4)
+    pii_masking_enabled: bool = True
+
     # Future phases (optional)
     gemini_api_key: str = ""
     aws_access_key_id: str = ""

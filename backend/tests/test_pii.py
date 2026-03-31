@@ -29,7 +29,7 @@ def _make_analyzer(recognizer):
     provider = NlpEngineProvider(nlp_configuration=configuration)
     nlp_engine = provider.create_engine()
 
-    registry = RecognizerRegistry()
+    registry = RecognizerRegistry(supported_languages=["tr"])
     registry.add_recognizer(recognizer)
 
     return AnalyzerEngine(
