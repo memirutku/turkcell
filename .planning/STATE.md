@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-03-31T11:04:33.887Z"
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-03-31T11:13:19.212Z"
 last_activity: 2026-03-31
 progress:
   total_phases: 10
   completed_phases: 0
   total_plans: 0
-  completed_plans: 5
+  completed_plans: 6
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 ## Current Position
 
 Phase: 05 (billing-tariff-q-a) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-03-31
 
@@ -62,6 +62,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 04 P01 | 5min | 1 tasks | 9 files |
 | Phase 04 P02 | 6min | 2 tasks | 9 files |
 | Phase 05 P01 | 7min | 2 tasks | 4 files |
+| Phase 05 P02 | 5min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -99,6 +100,9 @@ Recent decisions affecting current work:
 - [Phase 05]: BillingContextService._format_tl as static method for Turkish currency formatting reuse
 - [Phase 05]: PII redaction in billing context: TC Kimlik omitted, phone masked ***XXXX, name first+initial
 - [Phase 05]: Bills sorted descending by period for LLM context relevance
+- [Phase 05]: shadcn v4 base-nova uses @base-ui/react instead of @radix-ui -- adapted Select API accordingly
+- [Phase 05]: GENERAL_CHAT_VALUE sentinel for null customer in Select (base-ui does not support null values)
+- [Phase 05]: Yeni Sohbet preserves customerId; only setCustomerId resets session
 
 ### Pending Todos
 
@@ -112,6 +116,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T11:04:33.884Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-03-31T11:13:19.209Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None
