@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-03-31T08:04:06.258Z"
+stopped_at: Completed 04-02-PLAN.md
+last_updated: "2026-03-31T08:15:25.571Z"
 last_activity: 2026-03-31
 progress:
   total_phases: 10
   completed_phases: 0
   total_plans: 0
-  completed_plans: 3
+  completed_plans: 4
   percent: 0
 ---
 
@@ -60,6 +60,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03 P01 | 6min | 2 tasks | 10 files |
 | Phase 03 P03 | 4min | 2 tasks | 14 files |
 | Phase 04 P01 | 5min | 1 tasks | 9 files |
+| Phase 04 P02 | 6min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -91,6 +92,9 @@ Recent decisions affecting current work:
 - [Phase 04]: Skip load_predefined_recognizers() to avoid English false positives on Turkish text
 - [Phase 04]: RecognizerRegistry must use supported_languages=['tr'] to match AnalyzerEngine
 - [Phase 04]: TC Kimlik validate_result() auto-invoked by PatternRecognizer -- no manual override needed
+- [Phase 04]: pii_enabled parameter on ChatService.__init__ controls masking at instantiation, not per-request
+- [Phase 04]: PIILoggingFilter uses regex (not Presidio) for log sanitization performance
+- [Phase 04]: Existing chat tests use pii_enabled=False to avoid spaCy dependency in test environment
 
 ### Pending Todos
 
@@ -104,6 +108,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T08:04:06.255Z
-Stopped at: Completed 04-01-PLAN.md
+Last session: 2026-03-31T08:15:25.568Z
+Stopped at: Completed 04-02-PLAN.md
 Resume file: None
