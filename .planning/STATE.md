@@ -9,8 +9,8 @@ last_activity: 2026-03-31
 progress:
   total_phases: 10
   completed_phases: 5
-  total_plans: 13
-  completed_plans: 13
+  total_plans: 15
+  completed_plans: 14
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Musterilerin fatura/tarife/destek taleplerini sesli AI asistan ile saniyeler icinde cozmek
-**Current focus:** Phase 05 — billing-tariff-q-a
+**Current focus:** Phase 06 — personalized-recommendations-rich-ui
 
 ## Current Position
 
 Phase: 6
-Plan: Not started
-Status: Phase complete — ready for verification
+Plan: 1 of 2 complete
+Status: Executing
 Last activity: 2026-03-31
 
 Progress: [░░░░░░░░░░] 0%
@@ -64,6 +64,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 05 P01 | 7min | 2 tasks | 4 files |
 | Phase 05 P02 | 5min | 2 tasks | 7 files |
 | Phase 05 P03 | 6min | 2 tasks | 5 files |
+| Phase 06 P01 | 12min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -105,6 +106,9 @@ Recent decisions affecting current work:
 - [Phase 05]: GENERAL_CHAT_VALUE sentinel for null customer in Select (base-ui does not support null values)
 - [Phase 05]: Yeni Sohbet preserves customerId; only setCustomerId resets session
 - [Phase 05]: Conditional prompt routing: BILLING_SYSTEM_PROMPT when customer context available, standard SYSTEM_PROMPT as fallback
+- [Phase 06]: Only positive-savings tariffs recommended; Decimal arithmetic for all TL calculations with KDV/OIV
+- [Phase 06]: Structured SSE event ("structured") emitted after text tokens with typed recommendation JSON payload
+- [Phase 06]: Fit score weighted formula: data 50%, voice 30%, SMS 20% with over-provisioning penalty
 
 ### Pending Todos
 
@@ -118,6 +122,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T11:23:08.146Z
-Stopped at: Completed 05-03-PLAN.md (Task 2 human-verify checkpoint pending)
+Last session: 2026-03-31T18:30:00Z
+Stopped at: Completed 06-01-PLAN.md
 Resume file: None

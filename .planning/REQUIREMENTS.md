@@ -41,8 +41,8 @@ Requirements for initial MVP release. Each maps to roadmap phases.
 - [x] **BILL-02**: Fatura kalemleri (ana ücret, aşım, vergiler) doğal dilde açıklanır
 - [x] **BILL-03**: Kullanıcının mevcut tarife bilgisi sorgulanabilir
 - [x] **BILL-04**: Mevcut tarifeler ve kampanyalar RAG ile sorgulanabilir
-- [ ] **BILL-05**: Kullanıcıya kullanım analizine dayalı kişiselleştirilmiş tarife önerisi sunulur
-- [ ] **BILL-06**: Tasarruf hesaplaması yapılır ("Bu paket aylık 40 TL tasarruf sağlar")
+- [x] **BILL-05**: Kullanıcıya kullanım analizine dayalı kişiselleştirilmiş tarife önerisi sunulur
+- [x] **BILL-06**: Tasarruf hesaplaması yapılır ("Bu paket aylık 40 TL tasarruf sağlar")
 
 ### Güvenlik & KVKK
 
@@ -148,8 +148,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BILL-02 | Phase 5 | Complete |
 | BILL-03 | Phase 5 | Complete |
 | BILL-04 | Phase 5 | Complete |
-| BILL-05 | Phase 6 | Pending |
-| BILL-06 | Phase 6 | Pending |
+| BILL-05 | Phase 6 | Complete |
+| BILL-06 | Phase 6 | Complete |
 | SEC-01 | Phase 4 | Complete |
 | SEC-02 | Phase 4 | Complete |
 | SEC-03 | Phase 4 | Complete |
