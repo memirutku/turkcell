@@ -31,7 +31,7 @@ Requirements for initial MVP release. Each maps to roadmap phases.
 - [x] **CHAT-02**: Gemini API entegrasyonu çalışır ve Türkçe yanıtlar üretir
 - [x] **CHAT-03**: Yanıtlar streaming (SSE/WebSocket) ile token token görüntülenir
 - [x] **CHAT-04**: Konuşma hafızası (Redis) ile çok turlu diyalog desteklenir (en az 10-15 tur)
-- [ ] **CHAT-05**: Yazı göstergesi (typing indicator) kullanıcıya geri bildirim verir
+- [x] **CHAT-05**: Yazı göstergesi (typing indicator) kullanıcıya geri bildirim verir
 - [x] **CHAT-06**: Hata durumlarında kullanıcı dostu Türkçe mesajlar gösterilir
 - [x] **CHAT-07**: Sistem empatik bir ton kullanır (sistem prompt mühendisliği ile)
 
@@ -80,10 +80,10 @@ Requirements for initial MVP release. Each maps to roadmap phases.
 
 ### Frontend UI
 
-- [ ] **UI-01**: Modern chat arayüzü (mesaj baloncukları, kullanıcı/asistan ayrımı)
+- [x] **UI-01**: Modern chat arayüzü (mesaj baloncukları, kullanıcı/asistan ayrımı)
 - [ ] **UI-02**: Ses kayıt butonu ve ses dalgası animasyonu
-- [ ] **UI-03**: Responsive tasarım (mobil tarayıcıda çalışır)
-- [ ] **UI-04**: Markdown rendering (yapılandırılmış yanıtlar, tablolar)
+- [x] **UI-03**: Responsive tasarım (mobil tarayıcıda çalışır)
+- [x] **UI-04**: Markdown rendering (yapılandırılmış yanıtlar, tablolar)
 - [ ] **UI-05**: Fatura detayları için zengin UI kartları (tablo/card)
 
 ## v2 Requirements
@@ -141,7 +141,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CHAT-02 | Phase 3 | Complete |
 | CHAT-03 | Phase 3 | Complete |
 | CHAT-04 | Phase 3 | Complete |
-| CHAT-05 | Phase 3 | Pending |
+| CHAT-05 | Phase 3 | Complete |
 | CHAT-06 | Phase 3 | Complete |
 | CHAT-07 | Phase 3 | Complete |
 | BILL-01 | Phase 5 | Pending |
@@ -172,10 +172,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | A11Y-02 | Phase 10 | Pending |
 | A11Y-03 | Phase 10 | Pending |
 | A11Y-04 | Phase 10 | Pending |
-| UI-01 | Phase 3 | Pending |
+| UI-01 | Phase 3 | Complete |
 | UI-02 | Phase 7 | Pending |
-| UI-03 | Phase 3 | Pending |
-| UI-04 | Phase 3 | Pending |
+| UI-03 | Phase 3 | Complete |
+| UI-04 | Phase 3 | Complete |
 | UI-05 | Phase 6 | Pending |
 
 **Coverage:**

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-03-31T06:09:51.265Z"
+stopped_at: "Completed 03-03-PLAN.md Tasks 1-2, checkpoint:human-verify pending"
+last_updated: "2026-03-31T06:28:22.200Z"
 last_activity: 2026-03-31
 progress:
   total_phases: 10
   completed_phases: 0
   total_plans: 0
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 ## Current Position
 
 Phase: 03 (core-chat-llm-integration) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-03-31
 
@@ -58,6 +58,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02 P01 | 7min | 2 tasks | 8 files |
 | Phase 02 P02 | 4min | 2 tasks | 7 files |
 | Phase 03 P01 | 6min | 2 tasks | 10 files |
+| Phase 03 P03 | 4min | 2 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,9 @@ Recent decisions affecting current work:
 - [Phase 02]: Graceful degradation: app.state.rag = None when GEMINI_API_KEY is empty (503 on endpoint)
 - [Phase 03]: Used langchain-redis RedisChatMessageHistory (sync) for conversation memory over RunnableWithMessageHistory (async/streaming bugs)
 - [Phase 03]: gemini-2.0-flash with temperature=0.3, history capped at 20 messages (10 turns)
+- [Phase 03]: react-markdown v10 removed className prop -- wrapped in div with prose classes instead
+- [Phase 03]: Custom avatar divs (T/S letters) instead of shadcn Avatar for Turkcell branding
+- [Phase 03]: Server-side redirect() for root to /chat (zero client JS overhead)
 
 ### Pending Todos
 
@@ -96,6 +100,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T06:09:51.262Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-03-31T06:28:22.197Z
+Stopped at: Completed 03-03-PLAN.md Tasks 1-2, checkpoint:human-verify pending
 Resume file: None

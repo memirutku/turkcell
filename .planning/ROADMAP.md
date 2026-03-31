@@ -186,7 +186,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 |-------|----------------|--------|-----------|
 | 1. Infrastructure & Foundation | 0/3 | Planned | - |
 | 2. Turkish Embedding & RAG Pipeline | 0/2 | Not started | - |
-| 3. Core Chat & LLM Integration | 1/3 | In progress | - |
+| 3. Core Chat & LLM Integration | 2/3 | In progress (checkpoint pending) | - |
 | 4. PII Masking & KVKK Compliance | 0/2 | Not started | - |
 | 5. Billing & Tariff Q&A | 0/2 | Not started | - |
 | 6. Personalized Recommendations & Rich UI | 0/2 | Not started | - |
