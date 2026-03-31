@@ -2,6 +2,9 @@
 
 import pytest
 from decimal import Decimal
+from unittest.mock import AsyncMock, MagicMock, patch
+
+from langchain_core.messages import SystemMessage
 
 from app.main import app
 from app.services.mock_bss import MockBSSService
@@ -157,3 +160,225 @@ class TestBillingPrompts:
         from app.prompts.billing_prompts import BILLING_SYSTEM_PROMPT
 
         assert "empati" in BILLING_SYSTEM_PROMPT
+
+
+# -- Billing Chat Integration tests (Plan 03) --
+
+
+class TestBillingChatIntegration:
+    """Test ChatService integration with BillingContextService."""
+
+    def test_chat_request_optional_customer_id(self):
+        """ChatRequest works with and without customer_id."""
+        from app.models.chat_schemas import ChatRequest
+
+        # Without customer_id
+        req1 = ChatRequest(message="test")
+        assert req1.message == "test"
+
+        # With customer_id
+        req2 = ChatRequest(message="test", customer_id="cust-001")
+        assert req2.customer_id == "cust-001"
+
+    def test_chat_request_customer_id_none_default(self):
+        """ChatRequest.customer_id defaults to None."""
+        from app.models.chat_schemas import ChatRequest
+
+        req = ChatRequest(message="test")
+        assert req.customer_id is None
+
+    @patch("app.services.chat_service.MemoryService")
+    @patch("app.services.chat_service.RAGService")
+    @patch("app.services.chat_service.ChatGoogleGenerativeAI")
+    def test_chat_service_init_with_billing_context(
+        self, MockLLM, MockRAG, MockMemory
+    ):
+        """ChatService accepts optional billing_context parameter."""
+        from app.services.chat_service import ChatService
+        from app.services.billing_context import BillingContextService
+
+        settings = MagicMock()
+        settings.gemini_api_key = "test-key"
+        settings.redis_url = "redis://localhost:6379/0"
+        settings.milvus_host = "localhost"
+        settings.milvus_port = 19530
+        settings.milvus_collection_name = "test"
+
+        mock_bss = MagicMock()
+        billing_ctx = BillingContextService(mock_bss)
+
+        service = ChatService(settings, pii_enabled=False, billing_context=billing_ctx)
+        assert service._billing_context is billing_ctx
+
+    @patch("app.services.chat_service.MemoryService")
+    @patch("app.services.chat_service.RAGService")
+    @patch("app.services.chat_service.ChatGoogleGenerativeAI")
+    def test_chat_service_init_without_billing_context(
+        self, MockLLM, MockRAG, MockMemory
+    ):
+        """ChatService still works without billing_context (backward compatible)."""
+        from app.services.chat_service import ChatService
+
+        settings = MagicMock()
+        settings.gemini_api_key = "test-key"
+        settings.redis_url = "redis://localhost:6379/0"
+        settings.milvus_host = "localhost"
+        settings.milvus_port = 19530
+        settings.milvus_collection_name = "test"
+
+        service = ChatService(settings, pii_enabled=False)
+        assert service._billing_context is None
+
+    @patch("app.services.chat_service.MemoryService")
+    @patch("app.services.chat_service.RAGService")
+    @patch("app.services.chat_service.ChatGoogleGenerativeAI")
+    async def test_chat_service_with_customer_id_uses_billing_prompt(
+        self, MockLLM, MockRAG, MockMemory
+    ):
+        """When stream_response called with customer_id, system prompt contains 'Musteri Bilgileri'."""
+        from app.services.chat_service import ChatService
+        from app.services.billing_context import BillingContextService
+
+        settings = MagicMock()
+        settings.gemini_api_key = "test-key"
+        settings.redis_url = "redis://localhost:6379/0"
+        settings.milvus_host = "localhost"
+        settings.milvus_port = 19530
+        settings.milvus_collection_name = "test"
+
+        # Mock RAG
+        mock_rag = AsyncMock()
+        mock_rag.search = AsyncMock(return_value=[{"content": "RAG content", "metadata": {}, "score": 0.9}])
+        MockRAG.return_value = mock_rag
+
+        # Mock Memory
+        mock_memory = MagicMock()
+        mock_memory.get_history = MagicMock(return_value=[])
+        mock_memory.add_messages = MagicMock()
+        MockMemory.return_value = mock_memory
+
+        # Capture messages sent to LLM
+        captured_messages = []
+
+        async def mock_astream(messages):
+            captured_messages.extend(messages)
+            chunk = MagicMock()
+            chunk.content = "Yanit"
+            yield chunk
+
+        mock_llm = MagicMock()
+        mock_llm.astream = mock_astream
+        MockLLM.return_value = mock_llm
+
+        # Real BillingContextService with mock BSS data
+        billing_ctx = BillingContextService(app.state.mock_bss)
+
+        service = ChatService(settings, pii_enabled=False, billing_context=billing_ctx)
+        async for _ in service.stream_response("Faturam neden yuksek?", "session-1", customer_id="cust-001"):
+            pass
+
+        # System prompt should contain billing context
+        system_msg = captured_messages[0]
+        assert isinstance(system_msg, SystemMessage)
+        assert "Musteri Bilgileri" in system_msg.content
+        assert "Fatura Analiz Kurallari" in system_msg.content
+
+    @patch("app.services.chat_service.MemoryService")
+    @patch("app.services.chat_service.RAGService")
+    @patch("app.services.chat_service.ChatGoogleGenerativeAI")
+    async def test_chat_service_without_customer_id_uses_standard_prompt(
+        self, MockLLM, MockRAG, MockMemory
+    ):
+        """When stream_response called without customer_id, uses standard SYSTEM_PROMPT."""
+        from app.services.chat_service import ChatService
+        from app.services.billing_context import BillingContextService
+
+        settings = MagicMock()
+        settings.gemini_api_key = "test-key"
+        settings.redis_url = "redis://localhost:6379/0"
+        settings.milvus_host = "localhost"
+        settings.milvus_port = 19530
+        settings.milvus_collection_name = "test"
+
+        mock_rag = AsyncMock()
+        mock_rag.search = AsyncMock(return_value=[{"content": "RAG content", "metadata": {}, "score": 0.9}])
+        MockRAG.return_value = mock_rag
+
+        mock_memory = MagicMock()
+        mock_memory.get_history = MagicMock(return_value=[])
+        mock_memory.add_messages = MagicMock()
+        MockMemory.return_value = mock_memory
+
+        captured_messages = []
+
+        async def mock_astream(messages):
+            captured_messages.extend(messages)
+            chunk = MagicMock()
+            chunk.content = "Yanit"
+            yield chunk
+
+        mock_llm = MagicMock()
+        mock_llm.astream = mock_astream
+        MockLLM.return_value = mock_llm
+
+        billing_ctx = BillingContextService(app.state.mock_bss)
+        service = ChatService(settings, pii_enabled=False, billing_context=billing_ctx)
+
+        # No customer_id
+        async for _ in service.stream_response("Merhaba", "session-1"):
+            pass
+
+        system_msg = captured_messages[0]
+        assert isinstance(system_msg, SystemMessage)
+        assert "Bilgi Kaynaklari" in system_msg.content
+        assert "Musteri Bilgileri" not in system_msg.content
+
+    @patch("app.services.chat_service.MemoryService")
+    @patch("app.services.chat_service.RAGService")
+    @patch("app.services.chat_service.ChatGoogleGenerativeAI")
+    async def test_chat_service_unknown_customer_falls_back(
+        self, MockLLM, MockRAG, MockMemory
+    ):
+        """When customer_id is unknown, falls back to standard prompt."""
+        from app.services.chat_service import ChatService
+        from app.services.billing_context import BillingContextService
+
+        settings = MagicMock()
+        settings.gemini_api_key = "test-key"
+        settings.redis_url = "redis://localhost:6379/0"
+        settings.milvus_host = "localhost"
+        settings.milvus_port = 19530
+        settings.milvus_collection_name = "test"
+
+        mock_rag = AsyncMock()
+        mock_rag.search = AsyncMock(return_value=[{"content": "RAG content", "metadata": {}, "score": 0.9}])
+        MockRAG.return_value = mock_rag
+
+        mock_memory = MagicMock()
+        mock_memory.get_history = MagicMock(return_value=[])
+        mock_memory.add_messages = MagicMock()
+        MockMemory.return_value = mock_memory
+
+        captured_messages = []
+
+        async def mock_astream(messages):
+            captured_messages.extend(messages)
+            chunk = MagicMock()
+            chunk.content = "Yanit"
+            yield chunk
+
+        mock_llm = MagicMock()
+        mock_llm.astream = mock_astream
+        MockLLM.return_value = mock_llm
+
+        billing_ctx = BillingContextService(app.state.mock_bss)
+        service = ChatService(settings, pii_enabled=False, billing_context=billing_ctx)
+
+        # Unknown customer_id
+        async for _ in service.stream_response("test", "session-1", customer_id="nonexistent"):
+            pass
+
+        system_msg = captured_messages[0]
+        assert isinstance(system_msg, SystemMessage)
+        # Should fall back to standard prompt (no billing context)
+        assert "Musteri Bilgileri" not in system_msg.content
