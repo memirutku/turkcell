@@ -120,3 +120,16 @@ export interface SSEStructuredEvent {
   type: string;
   payload: Record<string, unknown>;
 }
+
+// Voice types (Phase 7)
+export type VoiceState = "idle" | "recording" | "processing" | "playing";
+
+export interface VoiceWebSocketMessage {
+  type: "init" | "transcription" | "token" | "response_end" | "audio_done" | "error";
+  text?: string;
+  content?: string;
+  full_text?: string;
+  message?: string;
+  session_id?: string;
+  customer_id?: string | null;
+}
