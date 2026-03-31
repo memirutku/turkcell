@@ -18,11 +18,11 @@ Müşterilerin fatura, tarife ve destek taleplerini sesli AI asistan ile saniyel
 
 ### Active
 
-- [ ] Kullanıcı sesli soru sorarak fatura detaylarını öğrenebilir (voice kanalı)
+- [x] Kullanıcı sesli soru sorarak fatura detaylarını öğrenebilir (voice kanalı) — Validated in Phase 7: Voice Input/Output
 - [x] Kullanıcıya kişiselleştirilmiş tarife ve paket önerileri sunulabilir — Validated in Phase 6: Personalized Recommendations & Rich UI
 - [ ] Kullanıcı sesli komutla işlem onaylayabilir (paket tanımlama vb.)
-- [ ] Ses girişi metne dönüştürülür (STT - AWS Transcribe)
-- [ ] Metin yanıtları doğal sesle okunur (TTS - AWS Polly)
+- [x] Ses girişi metne dönüştürülür (STT - Gemini multimodal) — Validated in Phase 7: Voice Input/Output
+- [x] Metin yanıtları doğal sesle okunur (TTS - AWS Polly Burcu neural) — Validated in Phase 7: Voice Input/Output
 - [ ] Oturum hafızası ile çok turlu konuşma desteklenir
 - [ ] Web tabanlı chat arayüzü ile etkileşim sağlanır
 - [ ] Sistem Docker Compose ile tek komutla ayağa kalkar
@@ -70,7 +70,7 @@ Müşterilerin fatura, tarife ve destek taleplerini sesli AI asistan ile saniyel
 | Next.js (Frontend) | Modern SSR, API routes, React ekosistemi | — Pending |
 | Mock veri (v1) | Gerçek Turkcell verisi erişimi yok | — Pending |
 | Docker Compose (Deploy) | Tüm servisleri tek komutla ayağa kaldırma | — Pending |
-| AWS Transcribe + Polly (Voice) | Dokümanın belirttiği servisler, yüksek kaliteli Türkçe desteği | — Pending |
+| Gemini Multimodal STT + Polly Burcu TTS | AWS Transcribe lacks Turkish streaming; Gemini multimodal provides superior Turkish STT. Polly Burcu neural (not Filiz) for natural TTS. | Phase 7 validated |
 
 ## Evolution
 
@@ -90,4 +90,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-31 after Phase 6 completion*
+*Last updated: 2026-04-01 after Phase 7 completion*
