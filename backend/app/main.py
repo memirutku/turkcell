@@ -4,8 +4,9 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import health, mock_bss, rag
+from app.api.routes import chat, health, mock_bss, rag
 from app.config import get_settings
+from app.services.chat_service import ChatService
 from app.services.mock_bss import MockBSSService
 from app.services.rag_service import RAGService
 
@@ -40,6 +41,15 @@ async def lifespan(app: FastAPI):
         app.state.rag = None
         logger.warning("GEMINI_API_KEY not set -- RAG service disabled")
 
+    # Chat service (Phase 3)
+    if settings.gemini_api_key:
+        chat_service = ChatService(settings)
+        app.state.chat_service = chat_service
+        logger.info("Chat service initialized")
+    else:
+        app.state.chat_service = None
+        logger.warning("GEMINI_API_KEY not set -- Chat service disabled")
+
     yield
 
     # Cleanup on shutdown
@@ -67,3 +77,4 @@ app.add_middleware(
 app.include_router(health.router, prefix="/api", tags=["health"])
 app.include_router(mock_bss.router, prefix="/api/mock", tags=["mock-bss"])
 app.include_router(rag.router, prefix="/api", tags=["rag"])
+app.include_router(chat.router, prefix="/api", tags=["chat"])

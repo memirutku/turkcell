@@ -60,3 +60,8 @@ def get_mock_bss(request: Request) -> MockBSSService:
 def get_rag_service(request: Request) -> RAGService | None:
     """Get the RAGService from app state. Returns None if not configured."""
     return getattr(request.app.state, "rag", None)
+
+
+def get_chat_service(request: Request):
+    """Get the ChatService from app state. Returns None if not configured."""
+    return getattr(request.app.state, "chat_service", None)

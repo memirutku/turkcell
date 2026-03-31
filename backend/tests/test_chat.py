@@ -455,3 +455,97 @@ class TestChatService:
         assert isinstance(system_msg, SystemMessage)
         assert "bilgi bulunamadi" in system_msg.content.lower() or \
                "bilgi kaynaklarinda" in system_msg.content.lower()
+
+
+# -- Endpoint (integration) tests --
+
+
+class TestChatEndpoint:
+    """Test POST /api/chat SSE streaming endpoint."""
+
+    async def test_chat_endpoint_returns_sse(self, client, mock_chat_service):
+        from app.main import app
+
+        original = getattr(app.state, "chat_service", None)
+        try:
+            app.state.chat_service = mock_chat_service
+            response = await client.post(
+                "/api/chat",
+                json={"message": "Merhaba", "session_id": "test-session"},
+            )
+            assert response.status_code == 200
+            assert "text/event-stream" in response.headers.get("content-type", "")
+        finally:
+            app.state.chat_service = original
+
+    async def test_chat_endpoint_503_when_no_service(self, client):
+        from app.main import app
+
+        original = getattr(app.state, "chat_service", None)
+        try:
+            app.state.chat_service = None
+            response = await client.post(
+                "/api/chat",
+                json={"message": "Merhaba", "session_id": "test-session"},
+            )
+            assert response.status_code == 503
+            assert "Chat servisi kullanilamiyor" in response.json()["detail"]
+        finally:
+            app.state.chat_service = original
+
+    async def test_chat_endpoint_validates_empty_message(self, client, mock_chat_service):
+        from app.main import app
+
+        original = getattr(app.state, "chat_service", None)
+        try:
+            app.state.chat_service = mock_chat_service
+            response = await client.post(
+                "/api/chat",
+                json={"message": "", "session_id": "test-session"},
+            )
+            assert response.status_code == 422
+        finally:
+            app.state.chat_service = original
+
+    async def test_chat_endpoint_sse_format(self, client, mock_chat_service):
+        from app.main import app
+
+        original = getattr(app.state, "chat_service", None)
+        try:
+            app.state.chat_service = mock_chat_service
+            response = await client.post(
+                "/api/chat",
+                json={"message": "Tarife bilgisi", "session_id": "test-session"},
+            )
+            assert response.status_code == 200
+            body = response.text
+            assert "event: token" in body
+            assert "event: done" in body
+        finally:
+            app.state.chat_service = original
+
+    async def test_chat_endpoint_error_event_on_failure(self, client):
+        from app.main import app
+
+        # Create a chat service that raises an error during streaming
+        error_service = MagicMock()
+
+        async def error_stream(*args, **kwargs):
+            raise RuntimeError("Test error")
+            yield  # noqa: E305 - make it an async generator
+
+        error_service.stream_response = error_stream
+
+        original = getattr(app.state, "chat_service", None)
+        try:
+            app.state.chat_service = error_service
+            response = await client.post(
+                "/api/chat",
+                json={"message": "test", "session_id": "test-session"},
+            )
+            assert response.status_code == 200
+            body = response.text
+            assert "event: error" in body
+            assert "Bir hata olustu" in body
+        finally:
+            app.state.chat_service = original
