@@ -53,6 +53,10 @@ async def voice_websocket(websocket: WebSocket):
         while True:
             data = await websocket.receive()
 
+            # Handle WebSocket disconnect message
+            if data.get("type") == "websocket.disconnect":
+                break
+
             if "text" in data:
                 # JSON control message
                 try:
