@@ -28,13 +28,19 @@ async def chat_stream(body: ChatRequest, request: Request):
 
     async def event_generator():
         try:
-            async for token in chat_service.stream_response(
+            async for item in chat_service.stream_response(
                 body.message, body.session_id, body.customer_id
             ):
-                yield {
-                    "event": "token",
-                    "data": json.dumps({"content": token}, ensure_ascii=False),
-                }
+                if isinstance(item, str):
+                    yield {
+                        "event": "token",
+                        "data": json.dumps({"content": item}, ensure_ascii=False),
+                    }
+                elif isinstance(item, dict) and item.get("type") == "structured":
+                    yield {
+                        "event": "structured",
+                        "data": json.dumps(item["data"], ensure_ascii=False),
+                    }
             yield {
                 "event": "done",
                 "data": json.dumps({"status": "complete"}, ensure_ascii=False),

@@ -11,6 +11,7 @@ from app.services.billing_context import BillingContextService
 from app.services.chat_service import ChatService
 from app.services.mock_bss import MockBSSService
 from app.services.rag_service import RAGService
+from app.services.recommendation_service import TariffRecommendationService
 
 logger = logging.getLogger(__name__)
 
@@ -52,16 +53,21 @@ async def lifespan(app: FastAPI):
     billing_context = BillingContextService(mock_service)
     logger.info("BillingContextService initialized")
 
-    # Chat service (Phase 3) with PII masking (Phase 4) and billing context (Phase 5)
+    # Recommendation service (Phase 6)
+    recommendation_service = TariffRecommendationService(mock_service)
+    logger.info("TariffRecommendationService initialized")
+
+    # Chat service (Phase 3) with PII masking (Phase 4), billing context (Phase 5), recommendations (Phase 6)
     if settings.gemini_api_key:
         chat_service = ChatService(
             settings,
             pii_enabled=settings.pii_masking_enabled,
             billing_context=billing_context,
+            recommendation_service=recommendation_service,
         )
         app.state.chat_service = chat_service
         logger.info(
-            "Chat service initialized (PII masking: %s, billing context: enabled)",
+            "Chat service initialized (PII masking: %s, billing context: enabled, recommendations: enabled)",
             "enabled" if settings.pii_masking_enabled else "disabled",
         )
     else:
