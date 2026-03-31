@@ -85,8 +85,8 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [x] 04-01-PLAN.md — Presidio/spaCy dependencies, Turkish PII recognizers (TC Kimlik, phone, IBAN), PIIMaskingService, test suite (Wave 1)
+- [ ] 04-02-PLAN.md — ChatService PII integration, log sanitization filter, system prompt guardrails, Dockerfile update (Wave 2)
 
 ### Phase 5: Billing & Tariff Q&A
 **Goal**: Users can ask natural-language questions about their bills and available tariffs and receive accurate, detailed answers from mock data
@@ -187,7 +187,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 1. Infrastructure & Foundation | 0/3 | Planned | - |
 | 2. Turkish Embedding & RAG Pipeline | 0/2 | Not started | - |
 | 3. Core Chat & LLM Integration | 2/3 | In progress (checkpoint pending) | - |
-| 4. PII Masking & KVKK Compliance | 0/2 | Not started | - |
+| 4. PII Masking & KVKK Compliance | 1/2 | In progress | - |
 | 5. Billing & Tariff Q&A | 0/2 | Not started | - |
 | 6. Personalized Recommendations & Rich UI | 0/2 | Not started | - |
 | 7. Voice Input & Output | 0/3 | Not started | - |

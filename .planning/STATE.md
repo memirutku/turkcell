@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: "Completed 03-03-PLAN.md Tasks 1-2, checkpoint:human-verify pending"
-last_updated: "2026-03-31T06:28:22.200Z"
+status: verifying
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-03-31T08:04:06.258Z"
 last_activity: 2026-03-31
 progress:
   total_phases: 10
   completed_phases: 0
   total_plans: 0
-  completed_plans: 2
+  completed_plans: 3
   percent: 0
 ---
 
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 
 Phase: 03 (core-chat-llm-integration) — EXECUTING
 Plan: 3 of 3
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-03-31
 
 Progress: [░░░░░░░░░░] 0%
@@ -59,6 +59,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02 P02 | 4min | 2 tasks | 7 files |
 | Phase 03 P01 | 6min | 2 tasks | 10 files |
 | Phase 03 P03 | 4min | 2 tasks | 14 files |
+| Phase 04 P01 | 5min | 1 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,9 @@ Recent decisions affecting current work:
 - [Phase 03]: react-markdown v10 removed className prop -- wrapped in div with prose classes instead
 - [Phase 03]: Custom avatar divs (T/S letters) instead of shadcn Avatar for Turkcell branding
 - [Phase 03]: Server-side redirect() for root to /chat (zero client JS overhead)
+- [Phase 04]: Skip load_predefined_recognizers() to avoid English false positives on Turkish text
+- [Phase 04]: RecognizerRegistry must use supported_languages=['tr'] to match AnalyzerEngine
+- [Phase 04]: TC Kimlik validate_result() auto-invoked by PatternRecognizer -- no manual override needed
 
 ### Pending Todos
 
@@ -100,6 +104,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T06:28:22.197Z
-Stopped at: Completed 03-03-PLAN.md Tasks 1-2, checkpoint:human-verify pending
+Last session: 2026-03-31T08:04:06.255Z
+Stopped at: Completed 04-01-PLAN.md
 Resume file: None

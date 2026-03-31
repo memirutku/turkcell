@@ -46,11 +46,11 @@ Requirements for initial MVP release. Each maps to roadmap phases.
 
 ### Güvenlik & KVKK
 
-- [ ] **SEC-01**: PII maskeleme — isim, telefon, TC Kimlik No Gemini'ye gönderilmeden önce maskelenir
-- [ ] **SEC-02**: Presidio + özel Türkçe recognizer'lar (TC Kimlik, Türk telefon formatı, IBAN) kullanılır
+- [x] **SEC-01**: PII maskeleme — isim, telefon, TC Kimlik No Gemini'ye gönderilmeden önce maskelenir
+- [x] **SEC-02**: Presidio + özel Türkçe recognizer'lar (TC Kimlik, Türk telefon formatı, IBAN) kullanılır
 - [ ] **SEC-03**: Log'larda PII asla açık şekilde yazılmaz
 - [ ] **SEC-04**: AI Guardrails — model hassas bilgileri paylaşmaya zorlanamaz
-- [ ] **SEC-05**: API anahtarları ve credentials .env dosyasında tutulur, git'e commit edilmez
+- [x] **SEC-05**: API anahtarları ve credentials .env dosyasında tutulur, git'e commit edilmez
 
 ### Voice AI
 
@@ -150,11 +150,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BILL-04 | Phase 5 | Pending |
 | BILL-05 | Phase 6 | Pending |
 | BILL-06 | Phase 6 | Pending |
-| SEC-01 | Phase 4 | Pending |
-| SEC-02 | Phase 4 | Pending |
+| SEC-01 | Phase 4 | Complete |
+| SEC-02 | Phase 4 | Complete |
 | SEC-03 | Phase 4 | Pending |
 | SEC-04 | Phase 4 | Pending |
-| SEC-05 | Phase 4 | Pending |
+| SEC-05 | Phase 4 | Complete |
 | VOICE-01 | Phase 7 | Pending |
 | VOICE-02 | Phase 7 | Pending |
 | VOICE-03 | Phase 8 | Pending |
