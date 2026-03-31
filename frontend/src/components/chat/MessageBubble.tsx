@@ -36,6 +36,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
               {message.isStreaming && (
                 <span className="inline-block w-0.5 h-4 bg-turkcell-blue animate-pulse ml-1 align-middle" />
               )}
+              {/* Phase 7: TTS indicator placeholder -- activate when wasSpoken tracking is added */}
             </>
           )}
         </div>
