@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import chat, health, mock_bss, rag
 from app.config import get_settings
+from app.logging.pii_filter import PIILoggingFilter
 from app.services.chat_service import ChatService
 from app.services.mock_bss import MockBSSService
 from app.services.rag_service import RAGService
@@ -18,6 +19,11 @@ async def lifespan(app: FastAPI):
     """Startup and shutdown events."""
     settings = get_settings()
     logging.basicConfig(level=settings.log_level)
+
+    # Attach PII sanitization filter to root logger (SEC-03)
+    pii_filter = PIILoggingFilter()
+    logging.getLogger().addFilter(pii_filter)
+    logger.info("PII logging filter attached to root logger")
 
     # Load mock data at startup
     mock_service = MockBSSService()

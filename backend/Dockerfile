@@ -5,6 +5,9 @@ WORKDIR /app
 COPY pyproject.toml uv.lock* ./
 RUN uv sync --frozen --no-dev --no-editable
 
+# Download spaCy model for Presidio PII detection
+RUN /app/.venv/bin/python -m spacy download xx_ent_wiki_sm
+
 # Stage 2: Runtime
 FROM python:3.12-slim
 RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
