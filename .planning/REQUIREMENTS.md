@@ -54,8 +54,8 @@ Requirements for initial MVP release. Each maps to roadmap phases.
 
 ### Voice AI
 
-- [ ] **VOICE-01**: Kullanıcı ses girişi (STT) — AWS Transcribe ile ses metne dönüştürülür
-- [ ] **VOICE-02**: Sesli yanıt (TTS) — AWS Polly ile metin doğal Türkçe sesle okunur
+- [x] **VOICE-01**: Kullanıcı ses girişi (STT) — AWS Transcribe ile ses metne dönüştürülür
+- [x] **VOICE-02**: Sesli yanıt (TTS) — AWS Polly ile metin doğal Türkçe sesle okunur
 - [ ] **VOICE-03**: Full voice conversation loop — kullanıcı sürekli sesli konuşabilir
 - [ ] **VOICE-04**: Voice Activity Detection (VAD) — kullanıcının konuşmasının bittiğini algılar
 - [ ] **VOICE-05**: WebSocket üzerinden streaming ses iletimi (browser ↔ backend)
@@ -155,8 +155,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEC-03 | Phase 4 | Complete |
 | SEC-04 | Phase 4 | Complete |
 | SEC-05 | Phase 4 | Complete |
-| VOICE-01 | Phase 7 | Pending |
-| VOICE-02 | Phase 7 | Pending |
+| VOICE-01 | Phase 7 | Complete |
+| VOICE-02 | Phase 7 | Complete |
 | VOICE-03 | Phase 8 | Pending |
 | VOICE-04 | Phase 8 | Pending |
 | VOICE-05 | Phase 7 | Pending |
