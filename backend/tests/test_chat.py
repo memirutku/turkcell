@@ -169,7 +169,7 @@ class TestChatService:
         from app.services.chat_service import ChatService
 
         settings = self._make_settings()
-        service = ChatService(settings)
+        service = ChatService(settings, pii_enabled=False)
 
         MockLLM.assert_called_once()
         call_kwargs = MockLLM.call_args
@@ -208,7 +208,7 @@ class TestChatService:
         mock_llm.astream = mock_astream
         MockLLM.return_value = mock_llm
 
-        service = ChatService(settings)
+        service = ChatService(settings, pii_enabled=False)
         tokens = []
         async for token in service.stream_response("test query", "session-1"):
             tokens.append(token)
@@ -244,7 +244,7 @@ class TestChatService:
         mock_llm.astream = mock_astream
         MockLLM.return_value = mock_llm
 
-        service = ChatService(settings)
+        service = ChatService(settings, pii_enabled=False)
         async for _ in service.stream_response("test", "session-1"):
             pass
 
@@ -288,7 +288,7 @@ class TestChatService:
         mock_llm.astream = mock_astream
         MockLLM.return_value = mock_llm
 
-        service = ChatService(settings)
+        service = ChatService(settings, pii_enabled=False)
         async for _ in service.stream_response("Yeni soru", "session-1"):
             pass
 
@@ -329,7 +329,7 @@ class TestChatService:
         mock_llm.astream = mock_astream
         MockLLM.return_value = mock_llm
 
-        service = ChatService(settings)
+        service = ChatService(settings, pii_enabled=False)
         tokens = []
         async for token in service.stream_response("test", "session-1"):
             tokens.append(token)
@@ -365,7 +365,7 @@ class TestChatService:
         mock_llm.astream = mock_astream
         MockLLM.return_value = mock_llm
 
-        service = ChatService(settings)
+        service = ChatService(settings, pii_enabled=False)
         async for _ in service.stream_response("user msg", "session-1"):
             pass
 
@@ -408,7 +408,7 @@ class TestChatService:
         mock_llm.astream = mock_astream
         MockLLM.return_value = mock_llm
 
-        service = ChatService(settings)
+        service = ChatService(settings, pii_enabled=False)
         async for _ in service.stream_response("tarife sorgula", "session-1"):
             pass
 
@@ -447,7 +447,7 @@ class TestChatService:
         mock_llm.astream = mock_astream
         MockLLM.return_value = mock_llm
 
-        service = ChatService(settings)
+        service = ChatService(settings, pii_enabled=False)
         async for _ in service.stream_response("bilinmeyen konu", "session-1"):
             pass
 

@@ -41,11 +41,14 @@ async def lifespan(app: FastAPI):
         app.state.rag = None
         logger.warning("GEMINI_API_KEY not set -- RAG service disabled")
 
-    # Chat service (Phase 3)
+    # Chat service (Phase 3) with PII masking (Phase 4)
     if settings.gemini_api_key:
-        chat_service = ChatService(settings)
+        chat_service = ChatService(settings, pii_enabled=settings.pii_masking_enabled)
         app.state.chat_service = chat_service
-        logger.info("Chat service initialized")
+        logger.info(
+            "Chat service initialized (PII masking: %s)",
+            "enabled" if settings.pii_masking_enabled else "disabled",
+        )
     else:
         app.state.chat_service = None
         logger.warning("GEMINI_API_KEY not set -- Chat service disabled")

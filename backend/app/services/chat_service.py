@@ -9,6 +9,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from app.config import Settings
 from app.prompts.system_prompt import SYSTEM_PROMPT
 from app.services.memory_service import MemoryService
+from app.services.pii_service import PIIMaskingService
 from app.services.rag_service import RAGService
 
 logger = logging.getLogger(__name__)
@@ -28,7 +29,7 @@ class ChatService:
     5. Save the exchange to conversation history
     """
 
-    def __init__(self, settings: Settings) -> None:
+    def __init__(self, settings: Settings, pii_enabled: bool = True) -> None:
         self._llm = ChatGoogleGenerativeAI(
             model="gemini-2.0-flash",
             google_api_key=settings.gemini_api_key,
@@ -37,6 +38,7 @@ class ChatService:
         )
         self._rag = RAGService(settings)
         self._memory = MemoryService(redis_url=settings.redis_url)
+        self._pii_service = PIIMaskingService() if pii_enabled else None
 
     async def stream_response(
         self, message: str, session_id: str
@@ -50,8 +52,16 @@ class ChatService:
         Yields:
             String tokens from the Gemini LLM response.
         """
-        # 1. RAG retrieval
-        rag_results = await self._rag.search(message, top_k=5)
+        # 0. Mask PII in user message BEFORE any processing
+        masked_message = self._pii_service.mask(message) if self._pii_service else message
+        logger.debug(
+            "PII masking applied: original_len=%d masked_len=%d",
+            len(message),
+            len(masked_message),
+        )
+
+        # 1. RAG retrieval (uses masked message)
+        rag_results = await self._rag.search(masked_message, top_k=5)
         if rag_results:
             context = "\n\n".join(r["content"] for r in rag_results)
         else:
@@ -60,12 +70,12 @@ class ChatService:
         # 2. Load conversation history (last 20 messages = 10 turns)
         past_messages = self._memory.get_history(session_id)
 
-        # 3. Build message list
+        # 3. Build message list (uses masked message)
         system_content = SYSTEM_PROMPT.format(context=context)
         messages = [
             SystemMessage(content=system_content),
             *past_messages[-20:],
-            HumanMessage(content=message),
+            HumanMessage(content=masked_message),
         ]
 
         # 4. Stream from Gemini
@@ -76,5 +86,5 @@ class ChatService:
                 full_response += token
                 yield token
 
-        # 5. Save to conversation history
-        self._memory.add_messages(session_id, message, full_response)
+        # 5. Save masked message to conversation history (not raw)
+        self._memory.add_messages(session_id, masked_message, full_response)
