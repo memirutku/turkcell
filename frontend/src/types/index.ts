@@ -68,3 +68,10 @@ export interface SSEDoneEvent {
 export interface SSEErrorEvent {
   message: string;
 }
+
+// Customer selector types (Phase 5)
+export interface CustomerOption {
+  id: string;
+  name: string;
+  tariff: string;
+}
