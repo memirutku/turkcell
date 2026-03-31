@@ -41,3 +41,25 @@ def mock_rag_service():
         }
     ])
     return mock
+
+
+@pytest.fixture
+def mock_chat_service():
+    """Create a mock ChatService for endpoint testing."""
+    mock = MagicMock()
+
+    async def mock_stream(*args, **kwargs):
+        for token in ["Merhaba", ", ", "size", " nasil", " yardimci", " olabilirim?"]:
+            yield token
+
+    mock.stream_response = mock_stream
+    return mock
+
+
+@pytest.fixture
+def mock_memory_service():
+    """Create a mock MemoryService for testing."""
+    mock = MagicMock()
+    mock.get_history = MagicMock(return_value=[])
+    mock.add_messages = MagicMock()
+    return mock
