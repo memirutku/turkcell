@@ -58,7 +58,7 @@ Requirements for initial MVP release. Each maps to roadmap phases.
 - [ ] **VOICE-02**: Sesli yanıt (TTS) — AWS Polly ile metin doğal Türkçe sesle okunur
 - [ ] **VOICE-03**: Full voice conversation loop — kullanıcı sürekli sesli konuşabilir
 - [ ] **VOICE-04**: Voice Activity Detection (VAD) — kullanıcının konuşmasının bittiğini algılar
-- [ ] **VOICE-05**: WebSocket üzerinden streaming ses iletimi (browser ↔ backend)
+- [x] **VOICE-05**: WebSocket üzerinden streaming ses iletimi (browser ↔ backend)
 - [ ] **VOICE-06**: Ses işleme sırasında görsel geri bildirim (dalga formu / animasyon)
 - [ ] **VOICE-07**: Uçtan uca ses döngüsü latency'si 3 saniyenin altında hedeflenir
 
@@ -159,7 +159,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | VOICE-02 | Phase 7 | Pending |
 | VOICE-03 | Phase 8 | Pending |
 | VOICE-04 | Phase 8 | Pending |
-| VOICE-05 | Phase 7 | Pending |
+| VOICE-05 | Phase 7 | Complete |
 | VOICE-06 | Phase 7 | Pending |
 | VOICE-07 | Phase 8 | Pending |
 | AGENT-01 | Phase 9 | Pending |
