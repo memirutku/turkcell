@@ -37,8 +37,33 @@ class TestRecommendationService:
             )
 
     def test_recommendations_sorted_by_savings_descending(self, service):
-        """Recommendations are sorted by savings descending (highest first)."""
-        result = service.get_recommendations("cust-002")
+        """Recommendations are sorted by savings descending (highest first).
+
+        Uses a mock BSS with custom tariffs that guarantee multiple positive-savings
+        recommendations for cust-002 (Silver 5GB, effective cost 268.65 TL).
+        """
+        from app.models.schemas import Tariff
+
+        mock_bss = MagicMock()
+        mock_bss.get_customer.return_value = app.state.mock_bss.get_customer("cust-002")
+        mock_bss.get_customer_usage.return_value = app.state.mock_bss.get_customer_usage("cust-002")
+        mock_bss.get_customer_bills.return_value = app.state.mock_bss.get_customer_bills("cust-002")
+
+        # Create cheap tariffs that cover cust-002 usage (8.2 GB, 320 min, 15 SMS)
+        cheap_tariff_a = Tariff(
+            id="tariff-test-a", name="Test A 10GB", data_gb=10,
+            voice_minutes=500, sms_count=100, monthly_price_tl=Decimal("99.00"),
+            description="Test", features=[], is_active=True,
+        )
+        cheap_tariff_b = Tariff(
+            id="tariff-test-b", name="Test B 10GB", data_gb=10,
+            voice_minutes=500, sms_count=100, monthly_price_tl=Decimal("109.00"),
+            description="Test", features=[], is_active=True,
+        )
+        mock_bss.get_tariffs.return_value = [cheap_tariff_a, cheap_tariff_b]
+
+        svc = TariffRecommendationService(mock_bss)
+        result = svc.get_recommendations("cust-002")
         assert result is not None
         assert len(result.recommendations) >= 2
         savings = [r.monthly_savings_tl for r in result.recommendations]
