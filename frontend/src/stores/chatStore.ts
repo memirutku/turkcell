@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Message } from "@/types";
+import { Message, StructuredData } from "@/types";
 import { streamChat } from "@/lib/api";
 
 const SESSION_STORAGE_KEY = "turkcell-chat-session-id";
@@ -25,6 +25,7 @@ interface ChatStore {
   appendToLastMessage: (token: string) => void;
   setStreaming: (streaming: boolean) => void;
   setError: (error: string | null) => void;
+  addStructuredData: (data: StructuredData) => void;
   setCustomerId: (id: string | null) => void;
   sendMessage: (message: string) => Promise<void>;
   clearMessages: () => void;
@@ -61,6 +62,20 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       const last = msgs[msgs.length - 1];
       if (last?.role === "assistant") {
         msgs[msgs.length - 1] = { ...last, content: last.content + token };
+      }
+      return { messages: msgs };
+    }),
+
+  addStructuredData: (data) =>
+    set((state) => {
+      const msgs = [...state.messages];
+      const last = msgs[msgs.length - 1];
+      if (last?.role === "assistant") {
+        const existing = last.structuredData || [];
+        msgs[msgs.length - 1] = {
+          ...last,
+          structuredData: [...existing, data],
+        };
       }
       return { messages: msgs };
     }),
@@ -120,6 +135,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
             }
             return { messages: msgs };
           });
+        },
+        (structuredData) => {
+          const { addStructuredData } = get();
+          addStructuredData(structuredData);
         }
       );
     } catch {

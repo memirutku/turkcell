@@ -1,4 +1,4 @@
-import { HealthResponse } from "@/types";
+import { HealthResponse, StructuredData } from "@/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -27,6 +27,7 @@ export async function streamChat(
   onToken: (token: string) => void,
   onDone: () => void,
   onError: (error: string) => void,
+  onStructured?: (data: StructuredData) => void,
 ): Promise<void> {
   const body: Record<string, string> = {
     message,
@@ -78,6 +79,10 @@ export async function streamChat(
           } else if (currentEvent === "done") {
             onDone();
             return;
+          } else if (currentEvent === "structured") {
+            if (onStructured) {
+              onStructured(data as StructuredData);
+            }
           } else if (currentEvent === "error") {
             onError(data.message || "Bir hata olustu. Lutfen tekrar deneyin.");
             return;
