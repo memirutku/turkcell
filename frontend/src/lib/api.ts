@@ -23,14 +23,23 @@ export async function fetchHealth(): Promise<HealthResponse> {
 export async function streamChat(
   message: string,
   sessionId: string,
+  customerId: string | null,
   onToken: (token: string) => void,
   onDone: () => void,
   onError: (error: string) => void,
 ): Promise<void> {
+  const body: Record<string, string> = {
+    message,
+    session_id: sessionId,
+  };
+  if (customerId) {
+    body.customer_id = customerId;
+  }
+
   const response = await fetch(`${API_BASE_URL}/api/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message, session_id: sessionId }),
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) {

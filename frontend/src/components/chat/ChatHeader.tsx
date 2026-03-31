@@ -1,5 +1,6 @@
 "use client";
 import { useChatStore } from "@/stores/chatStore";
+import { CustomerSelector } from "./CustomerSelector";
 
 export function ChatHeader() {
   const resetSession = useChatStore((s) => s.resetSession);
@@ -21,12 +22,15 @@ export function ChatHeader() {
         </div>
         <h1 className="text-xl font-semibold text-turkcell-dark">Turkcell Asistan</h1>
       </div>
-      <button
-        onClick={handleNewChat}
-        className="text-sm text-turkcell-blue hover:text-turkcell-blue/80 transition-colors font-medium"
-      >
-        Yeni Sohbet
-      </button>
+      <div className="flex items-center gap-3">
+        <CustomerSelector />
+        <button
+          onClick={handleNewChat}
+          className="text-sm text-turkcell-blue hover:text-turkcell-blue/80 transition-colors font-medium"
+        >
+          Yeni Sohbet
+        </button>
+      </div>
     </header>
   );
 }

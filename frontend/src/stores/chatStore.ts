@@ -20,10 +20,12 @@ interface ChatStore {
   isStreaming: boolean;
   sessionId: string;
   error: string | null;
+  customerId: string | null;
   addMessage: (role: "user" | "assistant", content: string) => string; // returns message id
   appendToLastMessage: (token: string) => void;
   setStreaming: (streaming: boolean) => void;
   setError: (error: string | null) => void;
+  setCustomerId: (id: string | null) => void;
   sendMessage: (message: string) => Promise<void>;
   clearMessages: () => void;
   resetSession: () => void;
@@ -34,6 +36,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   isStreaming: false,
   sessionId: getOrCreateSessionId(),
   error: null,
+  customerId: "cust-001",
 
   addMessage: (role, content) => {
     const id = crypto.randomUUID();
@@ -66,8 +69,22 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
   setError: (error) => set({ error }),
 
+  setCustomerId: (id) => {
+    const newSessionId = crypto.randomUUID();
+    if (typeof window !== "undefined") {
+      localStorage.setItem(SESSION_STORAGE_KEY, newSessionId);
+    }
+    set({
+      customerId: id,
+      messages: [],
+      error: null,
+      sessionId: newSessionId,
+      isStreaming: false,
+    });
+  },
+
   sendMessage: async (message) => {
-    const { sessionId, addMessage, appendToLastMessage, setStreaming, setError } = get();
+    const { sessionId, customerId, addMessage, appendToLastMessage, setStreaming, setError } = get();
     setError(null);
     setStreaming(true);
     addMessage("user", message);
@@ -77,6 +94,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       await streamChat(
         message,
         sessionId,
+        customerId,
         (token) => appendToLastMessage(token),
         () => {
           // Mark last message as not streaming
