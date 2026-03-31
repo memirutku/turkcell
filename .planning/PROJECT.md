@@ -13,11 +13,12 @@ Müşterilerin fatura, tarife ve destek taleplerini sesli AI asistan ile saniyel
 ### Validated
 
 - [x] Kullanıcı verileri PII maskeleme ile korunur (KVKK uyumu) — Validated in Phase 4: PII Masking & KVKK Compliance
+- [x] Kullanıcı metin tabanlı soru sorarak fatura detaylarını öğrenebilir — Validated in Phase 5: Billing & Tariff Q&A
+- [x] Sistem, RAG mimarisi ile Turkcell'in güncel tarife ve kampanya bilgilerini anlık olarak sorgulayabilir — Validated in Phase 5: Billing & Tariff Q&A
 
 ### Active
 
-- [ ] Kullanıcı sesli veya metin tabanlı soru sorarak fatura detaylarını öğrenebilir
-- [ ] Sistem, RAG mimarisi ile Turkcell'in güncel tarife ve kampanya bilgilerini anlık olarak sorgulayabilir
+- [ ] Kullanıcı sesli soru sorarak fatura detaylarını öğrenebilir (voice kanalı)
 - [ ] Kullanıcıya kişiselleştirilmiş tarife ve paket önerileri sunulabilir
 - [ ] Kullanıcı sesli komutla işlem onaylayabilir (paket tanımlama vb.)
 - [ ] Ses girişi metne dönüştürülür (STT - AWS Transcribe)
@@ -89,4 +90,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-31 after Phase 4 completion*
+*Last updated: 2026-03-31 after Phase 5 completion*
