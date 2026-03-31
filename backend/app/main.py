@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import chat, health, mock_bss, rag
 from app.config import get_settings
 from app.logging.pii_filter import PIILoggingFilter
+from app.services.billing_context import BillingContextService
 from app.services.chat_service import ChatService
 from app.services.mock_bss import MockBSSService
 from app.services.rag_service import RAGService
@@ -47,12 +48,20 @@ async def lifespan(app: FastAPI):
         app.state.rag = None
         logger.warning("GEMINI_API_KEY not set -- RAG service disabled")
 
-    # Chat service (Phase 3) with PII masking (Phase 4)
+    # Billing context service (Phase 5)
+    billing_context = BillingContextService(mock_service)
+    logger.info("BillingContextService initialized")
+
+    # Chat service (Phase 3) with PII masking (Phase 4) and billing context (Phase 5)
     if settings.gemini_api_key:
-        chat_service = ChatService(settings, pii_enabled=settings.pii_masking_enabled)
+        chat_service = ChatService(
+            settings,
+            pii_enabled=settings.pii_masking_enabled,
+            billing_context=billing_context,
+        )
         app.state.chat_service = chat_service
         logger.info(
-            "Chat service initialized (PII masking: %s)",
+            "Chat service initialized (PII masking: %s, billing context: enabled)",
             "enabled" if settings.pii_masking_enabled else "disabled",
         )
     else:

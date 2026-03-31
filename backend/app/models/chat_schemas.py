@@ -18,3 +18,7 @@ class ChatRequest(BaseModel):
         default_factory=lambda: str(uuid.uuid4()),
         description="Session ID for conversation memory",
     )
+    customer_id: str | None = Field(
+        default=None,
+        description="Optional customer ID for billing context enrichment (e.g., 'cust-001')",
+    )

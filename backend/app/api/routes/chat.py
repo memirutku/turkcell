@@ -29,7 +29,7 @@ async def chat_stream(body: ChatRequest, request: Request):
     async def event_generator():
         try:
             async for token in chat_service.stream_response(
-                body.message, body.session_id
+                body.message, body.session_id, body.customer_id
             ):
                 yield {
                     "event": "token",

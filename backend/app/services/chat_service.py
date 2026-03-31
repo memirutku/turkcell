@@ -7,7 +7,9 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 from app.config import Settings
+from app.prompts.billing_prompts import BILLING_SYSTEM_PROMPT
 from app.prompts.system_prompt import SYSTEM_PROMPT
+from app.services.billing_context import BillingContextService
 from app.services.memory_service import MemoryService
 from app.services.pii_service import PIIMaskingService
 from app.services.rag_service import RAGService
@@ -29,7 +31,12 @@ class ChatService:
     5. Save the exchange to conversation history
     """
 
-    def __init__(self, settings: Settings, pii_enabled: bool = True) -> None:
+    def __init__(
+        self,
+        settings: Settings,
+        pii_enabled: bool = True,
+        billing_context: BillingContextService | None = None,
+    ) -> None:
         self._llm = ChatGoogleGenerativeAI(
             model="gemini-2.0-flash",
             google_api_key=settings.gemini_api_key,
@@ -39,15 +46,17 @@ class ChatService:
         self._rag = RAGService(settings)
         self._memory = MemoryService(redis_url=settings.redis_url)
         self._pii_service = PIIMaskingService() if pii_enabled else None
+        self._billing_context = billing_context
 
     async def stream_response(
-        self, message: str, session_id: str
+        self, message: str, session_id: str, customer_id: str | None = None
     ) -> AsyncIterator[str]:
         """Stream LLM response tokens for a user message.
 
         Args:
             message: User's message in Turkish.
             session_id: Session ID for conversation memory.
+            customer_id: Optional customer ID for billing context enrichment.
 
         Yields:
             String tokens from the Gemini LLM response.
@@ -67,18 +76,30 @@ class ChatService:
         else:
             context = _NO_CONTEXT_FALLBACK
 
-        # 2. Load conversation history (last 20 messages = 10 turns)
+        # 2. Billing context enrichment (Phase 5)
+        customer_context = ""
+        if customer_id and self._billing_context:
+            customer_context = self._billing_context.get_customer_context(customer_id) or ""
+
+        # 3. Load conversation history (last 20 messages = 10 turns)
         past_messages = self._memory.get_history(session_id)
 
-        # 3. Build message list (uses masked message)
-        system_content = SYSTEM_PROMPT.format(context=context)
+        # 4. Build message list with conditional prompt selection
+        if customer_context:
+            system_content = BILLING_SYSTEM_PROMPT.format(
+                customer_context=customer_context,
+                rag_context=context,
+            )
+        else:
+            system_content = SYSTEM_PROMPT.format(context=context)
+
         messages = [
             SystemMessage(content=system_content),
             *past_messages[-20:],
             HumanMessage(content=masked_message),
         ]
 
-        # 4. Stream from Gemini
+        # 5. Stream from Gemini
         full_response = ""
         async for chunk in self._llm.astream(messages):
             token = chunk.content
@@ -86,5 +107,5 @@ class ChatService:
                 full_response += token
                 yield token
 
-        # 5. Save masked message to conversation history (not raw)
+        # 6. Save masked message to conversation history (not raw)
         self._memory.add_messages(session_id, masked_message, full_response)
