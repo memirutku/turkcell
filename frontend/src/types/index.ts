@@ -40,3 +40,31 @@ export interface Customer {
   address_city: string;
   tariff?: Tariff;
 }
+
+// Chat types (Phase 3)
+export interface Message {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  timestamp: number;
+  isStreaming?: boolean;
+}
+
+export interface ChatState {
+  messages: Message[];
+  isStreaming: boolean;
+  sessionId: string;
+  error: string | null;
+}
+
+export interface SSETokenEvent {
+  content: string;
+}
+
+export interface SSEDoneEvent {
+  status: "complete";
+}
+
+export interface SSEErrorEvent {
+  message: string;
+}
