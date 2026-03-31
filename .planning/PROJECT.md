@@ -12,7 +12,7 @@ Müşterilerin fatura, tarife ve destek taleplerini sesli AI asistan ile saniyel
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] Kullanıcı verileri PII maskeleme ile korunur (KVKK uyumu) — Validated in Phase 4: PII Masking & KVKK Compliance
 
 ### Active
 
@@ -22,7 +22,6 @@ Müşterilerin fatura, tarife ve destek taleplerini sesli AI asistan ile saniyel
 - [ ] Kullanıcı sesli komutla işlem onaylayabilir (paket tanımlama vb.)
 - [ ] Ses girişi metne dönüştürülür (STT - AWS Transcribe)
 - [ ] Metin yanıtları doğal sesle okunur (TTS - AWS Polly)
-- [ ] Kullanıcı verileri PII maskeleme ile korunur (KVKK uyumu)
 - [ ] Oturum hafızası ile çok turlu konuşma desteklenir
 - [ ] Web tabanlı chat arayüzü ile etkileşim sağlanır
 - [ ] Sistem Docker Compose ile tek komutla ayağa kalkar
@@ -90,4 +89,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-30 after initialization*
+*Last updated: 2026-03-31 after Phase 4 completion*
