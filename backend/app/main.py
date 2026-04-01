@@ -112,11 +112,13 @@ async def lifespan(app: FastAPI):
             stt_service=stt_service,
             tts_service=tts_service,
             chat_service=app.state.chat_service,
+            agent_service=app.state.agent_service if hasattr(app.state, 'agent_service') else None,
         )
         logger.info(
-            "Voice service initialized (STT: %s, TTS: %s)",
+            "Voice service initialized (STT: %s, TTS: %s, Agent: %s)",
             "Gemini" if isinstance(stt_service, STTService) else "Mock",
             "Polly" if tts_service else "disabled",
+            "enabled" if hasattr(app.state, 'agent_service') and app.state.agent_service else "disabled",
         )
     else:
         app.state.voice_service = None

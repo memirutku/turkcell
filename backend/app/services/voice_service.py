@@ -27,8 +27,13 @@ def parse_voice_confirmation(text: str) -> bool | None:
     """Parse Turkish confirmation/rejection from transcribed text.
 
     Returns True for confirm, False for reject, None for ambiguous.
+    Strips punctuation from words before matching to handle STT output
+    like "Evet, tanimla" where comma attaches to the word.
     """
-    words = set(text.lower().strip().split())
+    # Strip punctuation from each word for robust matching
+    words = set(
+        w.strip(".,!?;:") for w in text.lower().strip().split()
+    )
     if words & CONFIRM_WORDS:
         return True
     if words & REJECT_WORDS:
