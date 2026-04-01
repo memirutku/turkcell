@@ -1,11 +1,11 @@
 ---
 phase: 10-accessibility-hardening
 verified: 2026-04-01T21:00:00Z
-status: gaps_found
-score: 3/4 must-haves verified
+status: passed
+score: 4/4 must-haves verified
 gaps:
   - truth: "Focus moves to last assistant message when streaming completes (with preventScroll)"
-    status: failed
+    status: resolved
     reason: "ChatContainer calls document.getElementById('msg-${lastMsg.id}') but MessageBubble never renders id='msg-{id}' on its article element. The DOM element does not exist so el is always null and focus() is never called."
     artifacts:
       - path: "frontend/src/components/chat/MessageBubble.tsx"

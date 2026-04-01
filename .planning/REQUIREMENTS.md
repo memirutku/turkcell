@@ -73,10 +73,10 @@ Requirements for initial MVP release. Each maps to roadmap phases.
 
 ### Erişilebilirlik
 
-- [ ] **A11Y-01**: Web arayüzü WCAG 2.1 AA seviyesinde erişilebilirdir
-- [ ] **A11Y-02**: Tüm etkileşimler yalnızca sesle (eyes-free) tamamlanabilir
-- [ ] **A11Y-03**: Ekran okuyucu uyumluluğu (ARIA etiketleri)
-- [ ] **A11Y-04**: Yeterli renk kontrastı ve font büyüklüğü
+- [x] **A11Y-01**: Web arayüzü WCAG 2.1 AA seviyesinde erişilebilirdir
+- [x] **A11Y-02**: Tüm etkileşimler yalnızca sesle (eyes-free) tamamlanabilir
+- [x] **A11Y-03**: Ekran okuyucu uyumluluğu (ARIA etiketleri)
+- [x] **A11Y-04**: Yeterli renk kontrastı ve font büyüklüğü
 
 ### Frontend UI
 
@@ -168,10 +168,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AGENT-04 | Phase 9 | Complete |
 | AGENT-05 | Phase 9 | Complete |
 | AGENT-06 | Phase 9 | Complete |
-| A11Y-01 | Phase 10 | Pending |
-| A11Y-02 | Phase 10 | Pending |
-| A11Y-03 | Phase 10 | Pending |
-| A11Y-04 | Phase 10 | Pending |
+| A11Y-01 | Phase 10 | Complete |
+| A11Y-02 | Phase 10 | Complete |
+| A11Y-03 | Phase 10 | Complete |
+| A11Y-04 | Phase 10 | Complete |
 | UI-01 | Phase 3 | Complete |
 | UI-02 | Phase 7 | Complete |
 | UI-03 | Phase 3 | Complete |
