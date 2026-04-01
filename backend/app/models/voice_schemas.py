@@ -72,3 +72,33 @@ class VoiceErrorResponse(BaseModel):
 
     type: str = "error"
     message: str
+
+
+# Agent action message types (Phase 10: Voice-Agent integration)
+
+
+class VoiceActionProposal(BaseModel):
+    """Agent action proposal sent to the client for confirmation."""
+
+    type: str = "action_proposal"
+    action_type: str
+    description: str
+    details: dict
+    thread_id: str
+
+
+class VoiceActionResult(BaseModel):
+    """Agent action execution result sent to the client."""
+
+    type: str = "action_result"
+    success: bool
+    action_type: str
+    description: str
+    details: dict
+
+
+class VoiceConfirmationPrompt(BaseModel):
+    """TTS confirmation prompt text sent to the client."""
+
+    type: str = "confirmation_prompt"
+    text: str
