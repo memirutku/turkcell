@@ -94,12 +94,12 @@ export function RecommendationCard({
 
         {/* Savings callout */}
         {savingsPositive ? (
-          <div className="p-2 bg-green-50 rounded-lg text-green-700 text-sm font-medium">
-            Aylik {formatTL(recommendation.savings)} tasarruf
+          <div className="p-2 bg-green-50 rounded-lg text-green-800 text-sm font-medium" role="status" aria-label={`Aylik ${formatTL(recommendation.savings)} tasarruf`}>
+            <span aria-hidden="true">&#9660; </span>Aylik {formatTL(recommendation.savings)} tasarruf
           </div>
         ) : savings < 0 ? (
-          <div className="p-2 bg-red-50 rounded-lg text-red-700 text-sm font-medium">
-            Aylik {formatTL(Math.abs(savings).toFixed(2))} daha fazla
+          <div className="p-2 bg-red-50 rounded-lg text-red-800 text-sm font-medium" role="status" aria-label={`Aylik ${formatTL(Math.abs(savings).toFixed(2))} daha fazla`}>
+            <span aria-hidden="true">&#9650; </span>Aylik {formatTL(Math.abs(savings).toFixed(2))} daha fazla
           </div>
         ) : null}
 
