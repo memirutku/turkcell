@@ -158,7 +158,7 @@ Plans:
 **Plans**: 3 plans in 3 waves
 
 Plans:
-- [ ] 09-01-PLAN.md — Mock BSS action methods, agent tools, schemas, and agent prompt (Wave 1)
+- [x] 09-01-PLAN.md — Mock BSS action methods, agent tools, schemas, and agent prompt (Wave 1)
 - [ ] 09-02-PLAN.md — LangGraph StateGraph agent service and SSE API endpoints (Wave 2)
 - [ ] 09-03-PLAN.md — Frontend action confirmation/result UI components and chatStore integration (Wave 3)
 
@@ -192,5 +192,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 6. Personalized Recommendations & Rich UI | 2/2 | Complete | 2026-03-31 |
 | 7. Voice Input & Output | 2/3 | In Progress|  |
 | 8. Full Voice Conversation | 1/2 | In progress | - |
-| 9. Agentic Capabilities | 0/3 | Not started | - |
+| 9. Agentic Capabilities | 1/3 | In progress | - |
 | 10. Accessibility & Hardening | 0/2 | Not started | - |
