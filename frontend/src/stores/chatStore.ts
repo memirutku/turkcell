@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { Message, StructuredData } from "@/types";
-import { streamChat } from "@/lib/api";
+import { Message, StructuredData, ActionProposal, ActionResult } from "@/types";
+import { streamChat, streamAgentChat, confirmAgentAction } from "@/lib/api";
 
 const SESSION_STORAGE_KEY = "turkcell-chat-session-id";
 
@@ -21,12 +21,18 @@ interface ChatStore {
   sessionId: string;
   error: string | null;
   customerId: string | null;
+  pendingAction: ActionProposal | null;
+  isActionProcessing: boolean;
+  activeThreadId: string | null;
   addMessage: (role: "user" | "assistant", content: string) => string; // returns message id
   appendToLastMessage: (token: string) => void;
   setStreaming: (streaming: boolean) => void;
   setError: (error: string | null) => void;
   addStructuredData: (data: StructuredData) => void;
   setCustomerId: (id: string | null) => void;
+  setPendingAction: (action: ActionProposal | null) => void;
+  setActionProcessing: (processing: boolean) => void;
+  confirmAction: (threadId: string, approved: boolean) => Promise<void>;
   sendMessage: (message: string) => Promise<void>;
   clearMessages: () => void;
   resetSession: () => void;
@@ -38,6 +44,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   sessionId: getOrCreateSessionId(),
   error: null,
   customerId: "cust-001",
+  pendingAction: null,
+  isActionProcessing: false,
+  activeThreadId: null,
 
   addMessage: (role, content) => {
     const id = crypto.randomUUID();
@@ -95,7 +104,75 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       error: null,
       sessionId: newSessionId,
       isStreaming: false,
+      pendingAction: null,
+      isActionProcessing: false,
+      activeThreadId: null,
     });
+  },
+
+  setPendingAction: (action) => set({ pendingAction: action, activeThreadId: action?.thread_id || null }),
+
+  setActionProcessing: (processing) => set({ isActionProcessing: processing }),
+
+  confirmAction: async (threadId, approved) => {
+    const { appendToLastMessage, setStreaming, setError, addStructuredData } = get();
+    const setPendingAction = get().setPendingAction;
+    const setActionProcessing = get().setActionProcessing;
+    setActionProcessing(true);
+    setPendingAction(null);
+
+    if (!approved) {
+      // For rejection, add a cancelled result to structured data
+      addStructuredData({
+        type: "action_result",
+        payload: {
+          success: false,
+          action_type: "package_activation",
+          description: "Islem iptal edildi",
+          details: {},
+        },
+      });
+    }
+
+    // Add empty assistant message for the response
+    const { addMessage } = get();
+    addMessage("assistant", "");
+    setStreaming(true);
+
+    try {
+      await confirmAgentAction(
+        threadId,
+        approved,
+        (token) => appendToLastMessage(token),
+        () => {
+          set((state) => {
+            const msgs = [...state.messages];
+            const last = msgs[msgs.length - 1];
+            if (last?.role === "assistant") {
+              msgs[msgs.length - 1] = { ...last, isStreaming: false };
+            }
+            return { messages: msgs };
+          });
+          setStreaming(false);
+          setActionProcessing(false);
+        },
+        (errorMsg) => {
+          setError(errorMsg);
+          setStreaming(false);
+          setActionProcessing(false);
+        },
+        (result) => {
+          addStructuredData({
+            type: "action_result",
+            payload: result,
+          });
+        },
+      );
+    } catch {
+      setError("Onay islemi sirasinda bir sorun olustu. Lutfen tekrar deneyin.");
+      setStreaming(false);
+      setActionProcessing(false);
+    }
   },
 
   sendMessage: async (message) => {
@@ -106,48 +183,100 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     addMessage("assistant", "");
 
     try {
-      await streamChat(
-        message,
-        sessionId,
-        customerId,
-        (token) => appendToLastMessage(token),
-        () => {
-          // Mark last message as not streaming
-          set((state) => {
-            const msgs = [...state.messages];
-            const last = msgs[msgs.length - 1];
-            if (last?.role === "assistant") {
-              msgs[msgs.length - 1] = { ...last, isStreaming: false };
-            }
-            return { messages: msgs };
-          });
-          setStreaming(false);
-        },
-        (errorMsg) => {
-          setError(errorMsg);
-          setStreaming(false);
-          // Remove the empty assistant message on error
-          set((state) => {
-            const msgs = [...state.messages];
-            const last = msgs[msgs.length - 1];
-            if (last?.role === "assistant" && last.content === "") {
-              msgs.pop();
-            }
-            return { messages: msgs };
-          });
-        },
-        (structuredData) => {
-          const { addStructuredData } = get();
-          addStructuredData(structuredData);
-        }
-      );
+      if (customerId) {
+        // Route through agent endpoint when customer context is available
+        await streamAgentChat(
+          message,
+          sessionId,
+          customerId,
+          (token) => appendToLastMessage(token),
+          () => {
+            set((state) => {
+              const msgs = [...state.messages];
+              const last = msgs[msgs.length - 1];
+              if (last?.role === "assistant") {
+                msgs[msgs.length - 1] = { ...last, isStreaming: false };
+              }
+              return { messages: msgs };
+            });
+            setStreaming(false);
+          },
+          (errorMsg) => {
+            setError(errorMsg);
+            setStreaming(false);
+            set((state) => {
+              const msgs = [...state.messages];
+              const last = msgs[msgs.length - 1];
+              if (last?.role === "assistant" && last.content === "") {
+                msgs.pop();
+              }
+              return { messages: msgs };
+            });
+          },
+          (proposal) => {
+            // Action proposal received -- store it and add as structured data
+            const { setPendingAction, addStructuredData } = get();
+            setPendingAction(proposal);
+            addStructuredData({
+              type: "action_proposal",
+              payload: proposal,
+            });
+          },
+          (result) => {
+            const { addStructuredData } = get();
+            addStructuredData({
+              type: "action_result",
+              payload: result,
+            });
+          },
+          (structuredData) => {
+            const { addStructuredData } = get();
+            addStructuredData(structuredData);
+          },
+        );
+      } else {
+        // Standard chat endpoint for non-customer context
+        await streamChat(
+          message,
+          sessionId,
+          customerId,
+          (token) => appendToLastMessage(token),
+          () => {
+            set((state) => {
+              const msgs = [...state.messages];
+              const last = msgs[msgs.length - 1];
+              if (last?.role === "assistant") {
+                msgs[msgs.length - 1] = { ...last, isStreaming: false };
+              }
+              return { messages: msgs };
+            });
+            setStreaming(false);
+          },
+          (errorMsg) => {
+            setError(errorMsg);
+            setStreaming(false);
+            set((state) => {
+              const msgs = [...state.messages];
+              const last = msgs[msgs.length - 1];
+              if (last?.role === "assistant" && last.content === "") {
+                msgs.pop();
+              }
+              return { messages: msgs };
+            });
+          },
+          (structuredData) => {
+            const { addStructuredData } = get();
+            addStructuredData(structuredData);
+          },
+        );
+      }
     } catch {
       setError("Bir hata olustu. Lutfen tekrar deneyin.");
       setStreaming(false);
     }
   },
 
-  clearMessages: () => set({ messages: [], error: null }),
+  clearMessages: () => set({ messages: [], error: null, pendingAction: null, isActionProcessing: false, activeThreadId: null }),
 
   resetSession: () => {
     const newId = crypto.randomUUID();
@@ -159,6 +288,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       error: null,
       sessionId: newId,
       isStreaming: false,
+      pendingAction: null,
+      isActionProcessing: false,
+      activeThreadId: null,
     });
   },
 }));

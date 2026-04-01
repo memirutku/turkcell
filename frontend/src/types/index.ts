@@ -111,10 +111,35 @@ export interface RecommendationPayload {
   recommendations: TariffRecommendation[];
 }
 
-export interface StructuredData {
-  type: "recommendation";
-  payload: RecommendationPayload;
+// Agent action types (Phase 9)
+export interface ActionProposal {
+  action_type: "package_activation" | "tariff_change";
+  description: string;
+  details: Record<string, string>;
+  thread_id: string;
 }
+
+export interface ActionResult {
+  success: boolean;
+  action_type: "package_activation" | "tariff_change";
+  description: string;
+  details: Record<string, string>;
+}
+
+export interface ActionProposalStructuredData {
+  type: "action_proposal";
+  payload: ActionProposal;
+}
+
+export interface ActionResultStructuredData {
+  type: "action_result";
+  payload: ActionResult;
+}
+
+export type StructuredData =
+  | { type: "recommendation"; payload: RecommendationPayload }
+  | ActionProposalStructuredData
+  | ActionResultStructuredData;
 
 export interface SSEStructuredEvent {
   type: string;
