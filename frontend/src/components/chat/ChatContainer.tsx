@@ -18,6 +18,17 @@ export function ChatContainer() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Focus management: move screen reader focus to last assistant message after streaming
+  useEffect(() => {
+    if (!isStreaming && messages.length > 0) {
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg.role === "assistant" && lastMsg.content) {
+        const el = document.getElementById(`msg-${lastMsg.id}`);
+        el?.focus({ preventScroll: true });
+      }
+    }
+  }, [isStreaming, messages]);
+
   // Show typing indicator: streaming is true AND either no messages yet or last assistant message is empty
   const showTypingIndicator = isStreaming && (
     messages.length === 0 ||

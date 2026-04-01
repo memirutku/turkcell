@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Message, StructuredData, ActionProposal, ActionResult } from "@/types";
+import { Message, StructuredData, ActionProposal, ActionResult, RecommendationPayload } from "@/types";
 import { streamChat, streamAgentChat, confirmAgentAction } from "@/lib/api";
 
 const SESSION_STORAGE_KEY = "turkcell-chat-session-id";
@@ -24,6 +24,8 @@ interface ChatStore {
   pendingAction: ActionProposal | null;
   isActionProcessing: boolean;
   activeThreadId: string | null;
+  srAnnouncement: string;
+  announce: (text: string) => void;
   addMessage: (role: "user" | "assistant", content: string) => string; // returns message id
   appendToLastMessage: (token: string) => void;
   setStreaming: (streaming: boolean) => void;
@@ -47,6 +49,12 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   pendingAction: null,
   isActionProcessing: false,
   activeThreadId: null,
+  srAnnouncement: "",
+
+  announce: (text) => {
+    set({ srAnnouncement: text });
+    setTimeout(() => set({ srAnnouncement: "" }), 1000);
+  },
 
   addMessage: (role, content) => {
     const id = crypto.randomUUID();
@@ -75,7 +83,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       return { messages: msgs };
     }),
 
-  addStructuredData: (data) =>
+  addStructuredData: (data) => {
     set((state) => {
       const msgs = [...state.messages];
       const last = msgs[msgs.length - 1];
@@ -87,7 +95,21 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         };
       }
       return { messages: msgs };
-    }),
+    });
+
+    // Screen reader announcements for structured content
+    if (data.type === "recommendation") {
+      const payload = data.payload as RecommendationPayload;
+      if (payload.recommendations && payload.recommendations.length > 0) {
+        const top = payload.recommendations[0];
+        setTimeout(() => {
+          get().announce(
+            `Tarife onerisi alindi: ${top.tariff_name}, aylik ${top.savings} TL tasarruf.`
+          );
+        }, 100);
+      }
+    }
+  },
 
   setStreaming: (isStreaming) => set({ isStreaming }),
 
@@ -108,6 +130,16 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       isActionProcessing: false,
       activeThreadId: null,
     });
+    // Screen reader announcement for customer change
+    const CUSTOMER_NAMES: Record<string, string> = {
+      "cust-001": "Ahmet",
+      "cust-002": "Elif",
+      "cust-003": "Mehmet",
+    };
+    if (id) {
+      const name = CUSTOMER_NAMES[id] || id;
+      setTimeout(() => get().announce(`Musteri degistirildi: ${name}`), 100);
+    }
   },
 
   setPendingAction: (action) => set({ pendingAction: action, activeThreadId: action?.thread_id || null }),

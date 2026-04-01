@@ -108,8 +108,10 @@ export function MessageInput() {
   const handleConversationToggle = () => {
     if (isConversationActive) {
       stopConversation();
+      useChatStore.getState().announce("Sesli konusma modu kapatildi.");
     } else {
       startConversation();
+      useChatStore.getState().announce("Sesli konusma modu aktif.");
     }
   };
 
@@ -181,10 +183,6 @@ export function MessageInput() {
           </button>
         </div>
         <VoiceStatusBanner voiceState={voiceState} conversationState={conversationState} />
-        {/* Screen reader announcement for conversation mode changes */}
-        <div className="sr-only" aria-live="assertive">
-          {isConversationActive ? "Serbest konusma modu aktif" : ""}
-        </div>
       </div>
       <p id="input-hint" className="sr-only">
         Gondermek icin Enter, yeni satir icin Shift+Enter tuslayiniz

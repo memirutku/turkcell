@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useMicVAD } from "@ricky0123/vad-react";
-import { ConversationState } from "@/types";
+import { ConversationState, ActionProposal, ActionResult } from "@/types";
 import { useChatStore } from "@/stores/chatStore";
 import { float32ToWavBlob } from "@/lib/audioUtils";
 import { checkMicrophoneSupport, checkSecureContext } from "@/lib/audioUtils";
@@ -205,6 +205,62 @@ export function useVoiceConversation() {
                 setConversationState("listening");
               }
             }, 2000);
+            break;
+          }
+
+          case "action_proposal": {
+            const store = useChatStore.getState();
+            const proposal: ActionProposal = {
+              action_type: (msg.action_type as "package_activation" | "tariff_change") || "package_activation",
+              description: msg.description || "",
+              details: msg.details || {},
+              thread_id: msg.thread_id || "",
+            };
+            store.setPendingAction(proposal);
+            store.addStructuredData({
+              type: "action_proposal",
+              payload: proposal,
+            });
+            // Screen reader announcement per UI-SPEC
+            const title = proposal.action_type === "package_activation"
+              ? "Paket Tanimlama"
+              : "Tarife Degisikligi";
+            store.announce(
+              `Islem onerisi: ${title}. ${proposal.description}. Onaylamak icin Evet Onayla butonunu, iptal etmek icin Vazgec butonunu kullanin.`
+            );
+            break;
+          }
+
+          case "action_result": {
+            const store = useChatStore.getState();
+            const result: ActionResult = {
+              success: !!msg.success,
+              action_type: (msg.action_type as "package_activation" | "tariff_change") || "package_activation",
+              description: msg.description || "",
+              details: msg.details || {},
+            };
+            store.addStructuredData({
+              type: "action_result",
+              payload: result,
+            });
+            // Clear pending action
+            store.setPendingAction(null);
+            // Screen reader announcement
+            if (result.success) {
+              store.announce(`Islem basarili: ${result.description}`);
+            } else {
+              store.announce(`Islem basarisiz: ${result.description}`);
+            }
+            break;
+          }
+
+          case "confirmation_prompt": {
+            // TTS handles the audio playback for the prompt.
+            // The text is for screen reader users who may not hear TTS.
+            const store = useChatStore.getState();
+            if (msg.text) {
+              store.announce(msg.text);
+            }
             break;
           }
         }

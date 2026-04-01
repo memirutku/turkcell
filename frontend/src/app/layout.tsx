@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ScreenReaderAnnouncer } from "@/components/a11y/ScreenReaderAnnouncer";
 
 export const metadata: Metadata = {
   title: "Turkcell AI-Gen | Dijital Asistan",
@@ -24,6 +25,7 @@ export default function RootLayout({
           Ana icerigi atla
         </a>
         {children}
+        <ScreenReaderAnnouncer />
       </body>
     </html>
   );

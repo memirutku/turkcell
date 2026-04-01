@@ -150,13 +150,20 @@ export interface SSEStructuredEvent {
 export type VoiceState = "idle" | "recording" | "processing" | "playing";
 
 export interface VoiceWebSocketMessage {
-  type: "init" | "transcription" | "token" | "response_end" | "audio_done" | "error";
+  type: "init" | "transcription" | "token" | "response_end" | "audio_done" | "error"
+    | "action_proposal" | "action_result" | "confirmation_prompt";
   text?: string;
   content?: string;
   full_text?: string;
   message?: string;
   session_id?: string;
   customer_id?: string | null;
+  // Agent action fields
+  action_type?: string;
+  description?: string;
+  details?: Record<string, string>;
+  thread_id?: string;
+  success?: boolean;
 }
 
 // Conversation mode types (Phase 8)
