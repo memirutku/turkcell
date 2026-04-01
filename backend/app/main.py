@@ -4,9 +4,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import chat, health, mock_bss, rag, voice
+from app.api.routes import agent, chat, health, mock_bss, rag, voice
 from app.config import get_settings
 from app.logging.pii_filter import PIILoggingFilter
+from app.services.agent_service import AgentService
 from app.services.billing_context import BillingContextService
 from app.services.chat_service import ChatService
 from app.services.mock_bss import MockBSSService
@@ -77,6 +78,20 @@ async def lifespan(app: FastAPI):
         app.state.chat_service = None
         logger.warning("GEMINI_API_KEY not set -- Chat service disabled")
 
+    # Agent service (Phase 9)
+    if settings.gemini_api_key:
+        agent_service = AgentService(
+            settings=settings,
+            mock_bss=mock_service,
+            billing_context=billing_context,
+            pii_enabled=settings.pii_masking_enabled,
+        )
+        app.state.agent_service = agent_service
+        logger.info("Agent service initialized (LangGraph workflow)")
+    else:
+        app.state.agent_service = None
+        logger.warning("GEMINI_API_KEY not set -- Agent service disabled")
+
     # Voice services (Phase 7)
     if settings.gemini_api_key:
         stt_service = STTService(settings)
@@ -136,3 +151,4 @@ app.include_router(mock_bss.router, prefix="/api/mock", tags=["mock-bss"])
 app.include_router(rag.router, prefix="/api", tags=["rag"])
 app.include_router(chat.router, prefix="/api", tags=["chat"])
 app.include_router(voice.router, tags=["voice"])
+app.include_router(agent.router, prefix="/api", tags=["agent"])

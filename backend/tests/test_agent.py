@@ -5,6 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from langchain_core.messages import AIMessage, HumanMessage
 
+from app.main import app
 from app.services.mock_bss import MockBSSService
 
 
@@ -396,3 +397,63 @@ class TestAgentConfirmation:
             results = [e for e in resume_events if e.get("type") == "action_result"]
             assert len(results) == 1
             assert results[0]["data"]["status"] == "cancelled"
+
+
+class TestAgentEndpoints:
+    """Test agent API endpoints."""
+
+    @pytest.mark.asyncio
+    async def test_agent_chat_returns_503_when_disabled(self, client):
+        """Agent endpoint returns 503 when agent_service is None."""
+        old_state = getattr(app.state, "agent_service", None)
+        try:
+            app.state.agent_service = None
+            response = await client.post(
+                "/api/agent/chat",
+                json={"message": "Merhaba", "session_id": "test-session", "customer_id": "cust-001"},
+            )
+            assert response.status_code == 503
+        finally:
+            app.state.agent_service = old_state
+
+    @pytest.mark.asyncio
+    async def test_agent_confirm_returns_503_when_disabled(self, client):
+        """Confirm endpoint returns 503 when agent_service is None."""
+        old_state = getattr(app.state, "agent_service", None)
+        try:
+            app.state.agent_service = None
+            response = await client.post(
+                "/api/agent/confirm",
+                json={"thread_id": "test-thread", "approved": True},
+            )
+            assert response.status_code == 503
+        finally:
+            app.state.agent_service = old_state
+
+    @pytest.mark.asyncio
+    async def test_agent_chat_validates_request(self, client):
+        """Agent endpoint validates request body (missing customer_id)."""
+        old_state = getattr(app.state, "agent_service", None)
+        try:
+            app.state.agent_service = MagicMock()
+            response = await client.post(
+                "/api/agent/chat",
+                json={"message": "Merhaba", "session_id": "test-session"},
+            )
+            assert response.status_code == 422  # Validation error for missing customer_id
+        finally:
+            app.state.agent_service = old_state
+
+    @pytest.mark.asyncio
+    async def test_agent_confirm_validates_request(self, client):
+        """Confirm endpoint validates request body."""
+        old_state = getattr(app.state, "agent_service", None)
+        try:
+            app.state.agent_service = MagicMock()
+            response = await client.post(
+                "/api/agent/confirm",
+                json={"thread_id": "test-thread"},  # missing approved
+            )
+            assert response.status_code == 422
+        finally:
+            app.state.agent_service = old_state
