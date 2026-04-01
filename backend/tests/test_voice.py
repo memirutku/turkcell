@@ -261,14 +261,17 @@ class TestVoiceService:
 
 
 def _make_mock_voice_service():
-    """Create a mock VoiceService that returns predetermined results."""
+    """Create a mock VoiceService that returns predetermined results via streaming."""
     mock = AsyncMock()
-    mock.process_voice = AsyncMock(return_value={
-        "transcribed_text": "test metin",
-        "response_text": "Merhaba",
-        "tokens": ["Merhaba"],
-        "audio_response": b"fake-mp3",
-    })
+
+    async def mock_streaming(audio_bytes, session_id, customer_id=None):
+        yield {"type": "transcription", "text": "test metin"}
+        yield {"type": "token", "content": "Merhaba"}
+        yield {"type": "audio_chunk", "data": b"fake-mp3-chunk"}
+        yield {"type": "response_end", "full_text": "Merhaba"}
+        yield {"type": "audio_done"}
+
+    mock.process_voice_streaming = mock_streaming
     return mock
 
 
@@ -307,7 +310,7 @@ class TestVoiceWebSocket:
             app.state.voice_service = original
 
     def test_voice_websocket_flow(self):
-        """Full WebSocket flow: init -> audio -> transcription -> tokens -> response_end -> audio -> audio_done."""
+        """Full WebSocket flow: init -> audio -> transcription -> tokens -> audio_chunk -> response_end -> audio_done."""
         original = getattr(app.state, "voice_service", None)
         app.state.voice_service = _make_mock_voice_service()
         try:
@@ -329,14 +332,14 @@ class TestVoiceWebSocket:
                 assert data["type"] == "token"
                 assert data["content"] == "Merhaba"
 
-                # 5. Receive response_end
+                # 5. Receive audio_chunk (binary)
+                audio_data = ws.receive_bytes()
+                assert audio_data == b"fake-mp3-chunk"
+
+                # 6. Receive response_end
                 data = ws.receive_json()
                 assert data["type"] == "response_end"
                 assert data["full_text"] == "Merhaba"
-
-                # 6. Receive TTS audio bytes
-                audio_data = ws.receive_bytes()
-                assert audio_data == b"fake-mp3"
 
                 # 7. Receive audio_done signal
                 data = ws.receive_json()

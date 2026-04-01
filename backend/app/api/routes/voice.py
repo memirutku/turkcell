@@ -24,15 +24,18 @@ async def voice_websocket(websocket: WebSocket):
     Protocol:
       Client -> Server:
         JSON: {"type": "init", "session_id": "...", "customer_id": "..."}
-        BINARY: <audio bytes from MediaRecorder (WebM/Opus)>
+        BINARY: <audio bytes from MediaRecorder (WebM/Opus or WAV)>
 
       Server -> Client:
         JSON: {"type": "transcription", "text": "..."}
         JSON: {"type": "token", "content": "..."}
+        BINARY: <sentence-level TTS audio chunk (MP3)>  -- 0 or more
         JSON: {"type": "response_end", "full_text": "..."}
-        BINARY: <TTS audio bytes (MP3)>
         JSON: {"type": "audio_done"}
         JSON: {"type": "error", "message": "..."}
+
+    Audio chunks are sent incrementally at sentence boundaries for
+    reduced perceived latency. The client queues and plays them in order.
     """
     await websocket.accept()
     voice_service = websocket.app.state.voice_service
@@ -98,39 +101,37 @@ async def voice_websocket(websocket: WebSocket):
                     continue
 
                 try:
-                    # Process through voice pipeline
-                    result = await voice_service.process_voice(
+                    # Process through streaming voice pipeline
+                    # Yields incremental events: transcription, tokens,
+                    # audio_chunks (sentence-level TTS), response_end, audio_done
+                    async for event in voice_service.process_voice_streaming(
                         audio_bytes, session_id, customer_id
-                    )
+                    ):
+                        event_type = event.get("type")
 
-                    # 1. Send transcription
-                    await websocket.send_json(
-                        VoiceTranscriptionResponse(
-                            text=result["transcribed_text"]
-                        ).model_dump()
-                    )
+                        if event_type == "transcription":
+                            await websocket.send_json(
+                                VoiceTranscriptionResponse(text=event["text"]).model_dump()
+                            )
 
-                    # 2. Stream tokens
-                    for token in result["tokens"]:
-                        await websocket.send_json(
-                            VoiceTokenResponse(content=token).model_dump()
-                        )
+                        elif event_type == "token":
+                            await websocket.send_json(
+                                VoiceTokenResponse(content=event["content"]).model_dump()
+                            )
 
-                    # 3. Send response end
-                    await websocket.send_json(
-                        VoiceResponseEnd(
-                            full_text=result["response_text"]
-                        ).model_dump()
-                    )
+                        elif event_type == "audio_chunk":
+                            # Send binary audio chunk for sentence-level TTS
+                            await websocket.send_bytes(event["data"])
 
-                    # 4. Send TTS audio if available
-                    if result["audio_response"]:
-                        await websocket.send_bytes(result["audio_response"])
+                        elif event_type == "response_end":
+                            await websocket.send_json(
+                                VoiceResponseEnd(full_text=event["full_text"]).model_dump()
+                            )
 
-                    # 5. Signal completion
-                    await websocket.send_json(
-                        VoiceAudioDone().model_dump()
-                    )
+                        elif event_type == "audio_done":
+                            await websocket.send_json(
+                                VoiceAudioDone().model_dump()
+                            )
 
                 except Exception as e:
                     logger.exception("Voice pipeline error: %s", e)
