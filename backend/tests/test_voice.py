@@ -187,6 +187,75 @@ class TestVoiceService:
         # requires valid audio binary.
         assert callable(VoiceService._convert_to_wav)
 
+    def test_convert_to_wav_passes_through_wav(self):
+        """WAV input (RIFF header) is returned unchanged."""
+        from app.services.voice_service import VoiceService
+
+        wav_header = b"RIFF" + b"\x00" * 4 + b"WAVE" + b"\x00" * 100
+        result = VoiceService._convert_to_wav(wav_header)
+        assert result == wav_header
+        assert result[:4] == b"RIFF"
+
+    async def test_process_voice_streaming_yields_correct_sequence(self):
+        """Streaming pipeline yields transcription, tokens, audio_chunks, response_end, audio_done."""
+        from app.services.voice_service import VoiceService
+
+        mock_stt = AsyncMock()
+        mock_stt.transcribe = AsyncMock(return_value="Test sorusu")
+
+        mock_tts = AsyncMock()
+        mock_tts.synthesize = AsyncMock(return_value=b"fake-mp3-chunk")
+
+        mock_chat = MagicMock()
+
+        async def mock_stream(*args, **kwargs):
+            # Simulate response with sentence boundary
+            for token in ["Merhaba", ".", " ", "Nasil", " ", "yardimci", " ", "olabilirim", "?"]:
+                yield token
+
+        mock_chat.stream_response = mock_stream
+
+        service = VoiceService(stt_service=mock_stt, tts_service=mock_tts, chat_service=mock_chat)
+        events = []
+        with patch.object(VoiceService, "_convert_to_wav", return_value=b"fake-wav"):
+            async for event in service.process_voice_streaming(b"fake-audio", "session-1"):
+                events.append(event)
+
+        types = [e["type"] for e in events]
+        assert types[0] == "transcription"
+        assert "token" in types
+        assert "audio_chunk" in types
+        assert types[-2] == "response_end"
+        assert types[-1] == "audio_done"
+        assert events[0]["text"] == "Test sorusu"
+        assert events[-2]["full_text"] == "Merhaba. Nasil yardimci olabilirim?"
+
+    async def test_process_voice_streaming_no_tts(self):
+        """Streaming pipeline with TTS=None yields no audio_chunks."""
+        from app.services.voice_service import VoiceService
+
+        mock_stt = AsyncMock()
+        mock_stt.transcribe = AsyncMock(return_value="Test")
+
+        mock_chat = MagicMock()
+
+        async def mock_stream(*args, **kwargs):
+            for token in ["Yanit."]:
+                yield token
+
+        mock_chat.stream_response = mock_stream
+
+        service = VoiceService(stt_service=mock_stt, tts_service=None, chat_service=mock_chat)
+        events = []
+        with patch.object(VoiceService, "_convert_to_wav", return_value=b"fake-wav"):
+            async for event in service.process_voice_streaming(b"fake-audio", "session-1"):
+                events.append(event)
+
+        types = [e["type"] for e in events]
+        assert "audio_chunk" not in types
+        assert "transcription" in types
+        assert "audio_done" in types
+
 
 # -- WebSocket endpoint tests (synchronous, using Starlette TestClient) --
 
