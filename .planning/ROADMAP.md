@@ -155,12 +155,12 @@ Plans:
   2. User can confirm or reject proposed actions ("Bu paketi tanimlayalim mi?") before execution
   3. Mock package activation and tariff change operations execute successfully and return realistic responses
   4. Gemini function calling integrates with defined tools (bill lookup, tariff change, package activation)
-**Plans**: TBD
+**Plans**: 3 plans in 3 waves
 
 Plans:
-- [ ] 09-01: TBD
-- [ ] 09-02: TBD
-- [ ] 09-03: TBD
+- [ ] 09-01-PLAN.md — Mock BSS action methods, agent tools, schemas, and agent prompt (Wave 1)
+- [ ] 09-02-PLAN.md — LangGraph StateGraph agent service and SSE API endpoints (Wave 2)
+- [ ] 09-03-PLAN.md — Frontend action confirmation/result UI components and chatStore integration (Wave 3)
 
 ### Phase 10: Accessibility & Hardening
 **Goal**: The complete application meets WCAG 2.1 AA accessibility standards and enables fully eyes-free operation for visually impaired users
