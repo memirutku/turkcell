@@ -133,3 +133,6 @@ export interface VoiceWebSocketMessage {
   session_id?: string;
   customer_id?: string | null;
 }
+
+// Conversation mode types (Phase 8)
+export type ConversationState = "off" | "listening" | "speech-detected" | "processing" | "playing";

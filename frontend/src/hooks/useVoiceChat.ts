@@ -31,6 +31,8 @@ export function useVoiceChat(): {
 
   const wsRef = useRef<WebSocket | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const audioPlayQueueRef = useRef<Blob[]>([]);
+  const isPlayingAudioRef = useRef(false);
   const reconnectAttemptRef = useRef(0);
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isFirstTokenRef = useRef(true);
@@ -49,6 +51,32 @@ export function useVoiceChat(): {
     setMediaRecorder(null);
     audioChunksRef.current = [];
   }, [mediaStream]);
+
+  const playNextAudio = useCallback(() => {
+    if (audioPlayQueueRef.current.length === 0) {
+      isPlayingAudioRef.current = false;
+      if (isMountedRef.current) {
+        setVoiceState("idle");
+      }
+      return;
+    }
+    isPlayingAudioRef.current = true;
+    const blob = audioPlayQueueRef.current.shift()!;
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    audio.onended = () => {
+      URL.revokeObjectURL(url);
+      playNextAudio();
+    };
+    audio.onerror = () => {
+      URL.revokeObjectURL(url);
+      playNextAudio();
+    };
+    audio.play().catch(() => {
+      URL.revokeObjectURL(url);
+      playNextAudio();
+    });
+  }, []);
 
   const connectWebSocket = useCallback(() => {
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
@@ -70,33 +98,13 @@ export function useVoiceChat(): {
     ws.onmessage = (event: MessageEvent) => {
       if (!isMountedRef.current) return;
 
-      // Binary data = TTS audio
+      // Binary data = audio_chunk (sentence-level TTS)
       if (event.data instanceof Blob) {
-        const audioUrl = URL.createObjectURL(event.data);
-        const audio = new Audio(audioUrl);
-        setVoiceState("playing");
-
-        audio.onended = () => {
-          if (isMountedRef.current) {
-            setVoiceState("idle");
-          }
-          URL.revokeObjectURL(audioUrl);
-        };
-
-        audio.onerror = () => {
-          if (isMountedRef.current) {
-            setVoiceState("idle");
-          }
-          URL.revokeObjectURL(audioUrl);
-        };
-
-        audio.play().catch(() => {
-          // Auto-play blocked by browser
-          if (isMountedRef.current) {
-            setVoiceState("idle");
-          }
-          URL.revokeObjectURL(audioUrl);
-        });
+        audioPlayQueueRef.current.push(event.data);
+        if (!isPlayingAudioRef.current) {
+          setVoiceState("playing");
+          playNextAudio();
+        }
         return;
       }
 
@@ -144,11 +152,10 @@ export function useVoiceChat(): {
 
           case "audio_done": {
             // TTS audio finished or was unavailable
-            setVoiceState((current) => {
-              // If we're already playing, let audio.onended handle it
-              if (current === "playing") return current;
-              return "idle";
-            });
+            // If currently playing, let playNextAudio handle the idle transition
+            if (!isPlayingAudioRef.current) {
+              setVoiceState("idle");
+            }
             break;
           }
 
@@ -185,7 +192,7 @@ export function useVoiceChat(): {
     };
 
     wsRef.current = ws;
-  }, []);
+  }, [playNextAudio]);
 
   // Connect WebSocket on mount, clean up on unmount
   useEffect(() => {
