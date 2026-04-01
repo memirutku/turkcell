@@ -1,8 +1,12 @@
 "use client";
-import { StructuredData, RecommendationPayload } from "@/types";
+import { StructuredData, RecommendationPayload, ActionProposal, ActionResult } from "@/types";
 import { RecommendationCard } from "./RecommendationCard";
 import { UsageBar } from "./UsageBar";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { ActionConfirmationCard } from "./ActionConfirmationCard";
+import { ActionResultCard } from "./ActionResultCard";
+import { ActionProcessingIndicator } from "./ActionProcessingIndicator";
+import { useChatStore } from "@/stores/chatStore";
 
 interface StructuredContentProps {
   data: StructuredData;
@@ -12,7 +16,55 @@ export function StructuredContent({ data }: StructuredContentProps) {
   if (data.type === "recommendation") {
     return <RecommendationContent payload={data.payload as RecommendationPayload} />;
   }
+
+  if (data.type === "action_proposal") {
+    return <ActionProposalContent proposal={data.payload as ActionProposal} />;
+  }
+
+  if (data.type === "action_result") {
+    return <ActionResultCard result={data.payload as ActionResult} />;
+  }
+
   return null; // Unknown structured type -- graceful degradation
+}
+
+function ActionProposalContent({ proposal }: { proposal: ActionProposal }) {
+  const { confirmAction, isActionProcessing, pendingAction } = useChatStore();
+
+  // Only show buttons if this is the active pending action
+  const isActive = pendingAction?.thread_id === proposal.thread_id;
+
+  if (isActive && isActionProcessing) {
+    return (
+      <div>
+        <ActionConfirmationCard
+          proposal={proposal}
+          onConfirm={() => {}}
+          isProcessing={true}
+        />
+        <ActionProcessingIndicator />
+      </div>
+    );
+  }
+
+  if (isActive) {
+    return (
+      <ActionConfirmationCard
+        proposal={proposal}
+        onConfirm={confirmAction}
+        isProcessing={false}
+      />
+    );
+  }
+
+  // Already confirmed/rejected -- show as disabled
+  return (
+    <ActionConfirmationCard
+      proposal={proposal}
+      onConfirm={() => {}}
+      isProcessing={true}
+    />
+  );
 }
 
 function RecommendationContent({ payload }: { payload: RecommendationPayload }) {
