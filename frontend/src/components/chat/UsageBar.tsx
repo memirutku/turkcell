@@ -20,18 +20,27 @@ export function UsageBar({ label, used, limit, unit, percent }: UsageBarProps) {
 
   const overageAmount = isOverLimit ? (used - limit) : 0;
 
+  const valueText = isOverLimit
+    ? `${used}/${limit} ${unit} (+${overageAmount.toFixed(1)} ${unit} asim)`
+    : `${used}/${limit} ${unit}`;
+
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between text-sm">
         <span className="font-semibold leading-snug">{label}</span>
         <span className={`leading-relaxed ${isOverLimit ? "text-orange-700 font-semibold" : "text-gray-600"}`}>
-          {isOverLimit
-            ? `${used}/${limit} ${unit} (+${overageAmount.toFixed(1)} ${unit} asim)`
-            : `${used}/${limit} ${unit}`
-          }
+          {valueText}
         </span>
       </div>
-      <div className="h-2 w-full rounded-full bg-turkcell-gray overflow-hidden">
+      <div
+        className="h-2 w-full rounded-full bg-turkcell-gray overflow-hidden"
+        role="progressbar"
+        aria-label={`${label} kullanimi`}
+        aria-valuenow={Math.round(percent)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuetext={`${label}: ${valueText}, yuzde ${Math.round(percent)}`}
+      >
         <div
           className={`h-full rounded-full transition-all ${barColor}`}
           style={{ width: `${clampedPercent}%` }}

@@ -9,16 +9,28 @@ interface MessageBubbleProps {
 
 export function MessageBubble({ message }: MessageBubbleProps) {
   const isUser = message.role === "user";
+  const senderLabel = isUser ? "Siz" : "Turkcell Asistan";
+  const timeStr = new Date(message.timestamp).toLocaleTimeString("tr-TR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   return (
-    <div className={`flex ${isUser ? "flex-row-reverse items-start gap-3" : "flex-col gap-0"}`}>
+    <article
+      className={`flex ${isUser ? "flex-row-reverse items-start gap-3" : "flex-col gap-0"}`}
+      role="article"
+      aria-label={`${senderLabel}, ${timeStr}`}
+    >
       <div className={`flex gap-3 items-start ${isUser ? "flex-row-reverse" : "flex-row"}`}>
         {/* Avatar */}
-        <div className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
-          isUser
-            ? "bg-turkcell-blue text-white"
-            : "bg-turkcell-yellow text-turkcell-dark"
-        }`}>
+        <div
+          className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
+            isUser
+              ? "bg-turkcell-blue text-white"
+              : "bg-turkcell-yellow text-turkcell-dark"
+          }`}
+          aria-hidden="true"
+        >
           {isUser ? "S" : "T"}
         </div>
 
@@ -34,7 +46,10 @@ export function MessageBubble({ message }: MessageBubbleProps) {
             <>
               <MarkdownRenderer content={message.content} />
               {message.isStreaming && (
-                <span className="inline-block w-0.5 h-4 bg-turkcell-blue animate-pulse ml-1 align-middle" />
+                <span
+                  className="inline-block w-0.5 h-4 bg-turkcell-blue animate-pulse ml-1 align-middle"
+                  aria-hidden="true"
+                />
               )}
               {/* Phase 7: TTS indicator placeholder -- activate when wasSpoken tracking is added */}
             </>
@@ -44,12 +59,12 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 
       {/* Structured content below bubble, aligned with bubble text (ml-11 = 44px for avatar 32px + gap 12px) */}
       {!isUser && message.structuredData && message.structuredData.length > 0 && (
-        <div className="ml-11 mt-4 max-w-[80%] sm:max-w-[80%] md:max-w-[75%]">
+        <div className="ml-11 mt-4 max-w-[80%] sm:max-w-[80%] md:max-w-[75%]" aria-label="Detayli bilgi kartlari">
           {message.structuredData.map((data, i) => (
             <StructuredContent key={i} data={data} />
           ))}
         </div>
       )}
-    </div>
+    </article>
   );
 }

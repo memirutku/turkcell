@@ -20,7 +20,12 @@ export function ErrorBanner() {
   const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
 
   return (
-    <div className="mx-4 mb-2 px-4 py-3 bg-red-50 border border-red-200 rounded-xl flex items-center justify-between">
+    <div
+      className="mx-4 mb-2 px-4 py-3 bg-red-50 border border-red-200 rounded-xl flex items-center justify-between"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
       <span className="text-sm text-red-800">{error}</span>
       {lastUserMsg && (
         <button
@@ -29,6 +34,7 @@ export function ErrorBanner() {
             sendMessage(lastUserMsg.content);
           }}
           className="ml-3 px-3 py-1 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors shrink-0"
+          aria-label="Son mesaji tekrar gonder"
         >
           Tekrar Dene
         </button>

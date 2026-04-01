@@ -42,6 +42,7 @@ export function CustomerSelector() {
       <SelectTrigger
         className="min-w-[200px] max-w-[280px] h-9 px-2 gap-2 sm:min-w-[200px] min-w-[140px]"
         aria-label="Musteri secin"
+        aria-haspopup="listbox"
       >
         <div className="flex items-center gap-2 truncate">
           {selectedCustomer ? (

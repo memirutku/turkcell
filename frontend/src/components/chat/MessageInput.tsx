@@ -132,7 +132,7 @@ export function MessageInput() {
   }, [isStreaming, isVoiceActive, isConversationActive]);
 
   return (
-    <div className="p-4 bg-white border-t border-gray-200 shrink-0">
+    <div className="p-4 bg-white border-t border-gray-200 shrink-0" role="region" aria-label="Mesaj gonderme alani">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-end gap-2">
           {voiceState === "recording" ? (
@@ -140,7 +140,7 @@ export function MessageInput() {
           ) : isConversationActive ? (
             <ConversationStatusArea conversationState={conversationState} />
           ) : isVoiceActive ? (
-            <div className="flex-1 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-400 opacity-50">
+            <div className="flex-1 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500 opacity-50">
               Mesajinizi yazin...
             </div>
           ) : (
@@ -153,7 +153,9 @@ export function MessageInput() {
               disabled={isStreaming}
               rows={1}
               aria-label="Mesaj alani"
-              className="flex-1 resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-turkcell-dark placeholder:text-gray-400 focus:outline-none focus:border-turkcell-blue transition-colors disabled:opacity-50"
+              aria-describedby="input-hint"
+              aria-disabled={isStreaming}
+              className="flex-1 resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-turkcell-dark placeholder:text-gray-500 focus:outline-none focus:border-turkcell-blue transition-colors disabled:opacity-50"
             />
           )}
           <ConversationModeToggle
@@ -171,10 +173,11 @@ export function MessageInput() {
           <button
             onClick={handleSend}
             disabled={!canSend || isVoiceActive || isConversationActive}
-            aria-label="Mesaj Gonder"
+            aria-label="Mesaj gonder"
+            aria-disabled={!canSend || isVoiceActive || isConversationActive}
             className="h-12 w-12 rounded-xl bg-turkcell-blue text-white flex items-center justify-center hover:bg-turkcell-blue/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
           >
-            <Send className="h-5 w-5" />
+            <Send className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
         <VoiceStatusBanner voiceState={voiceState} conversationState={conversationState} />
@@ -183,6 +186,9 @@ export function MessageInput() {
           {isConversationActive ? "Serbest konusma modu aktif" : ""}
         </div>
       </div>
+      <p id="input-hint" className="sr-only">
+        Gondermek icin Enter, yeni satir icin Shift+Enter tuslayiniz
+      </p>
     </div>
   );
 }

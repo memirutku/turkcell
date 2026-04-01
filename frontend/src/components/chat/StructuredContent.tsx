@@ -71,9 +71,9 @@ function RecommendationContent({ payload }: { payload: RecommendationPayload }) 
   const { usage_summary, recommendations, current_tariff } = payload;
 
   return (
-    <div className="space-y-3">
+    <section className="space-y-3" aria-label="Tarife onerisi ve kullanim ozeti">
       {/* Usage summary card */}
-      <Card className="border-turkcell-blue/20">
+      <Card className="border-turkcell-blue/20" role="region" aria-label="Kullanim ozeti">
         <CardHeader className="pb-2 px-4 pt-4">
           <CardTitle className="text-base font-semibold leading-snug">
             Kullanim Ozeti
@@ -113,6 +113,6 @@ function RecommendationContent({ payload }: { payload: RecommendationPayload }) 
           index={i}
         />
       ))}
-    </div>
+    </section>
   );
 }

@@ -32,7 +32,11 @@ export function RecommendationCard({
   const isTopPick = index === 0;
 
   return (
-    <Card className={`mt-3 border-turkcell-blue/20 ${isTopPick ? "border-l-4 border-l-turkcell-yellow" : ""}`}>
+    <Card
+      className={`mt-3 border-turkcell-blue/20 ${isTopPick ? "border-l-4 border-l-turkcell-yellow" : ""}`}
+      role="region"
+      aria-label={`Tarife onerisi: ${recommendation.tariff_name}${isTopPick ? " - Onerilen" : ""}${savingsPositive ? `, aylik ${formatTL(recommendation.savings)} tasarruf` : ""}`}
+    >
       <CardHeader className="pb-2 px-4 pt-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold leading-snug">
@@ -40,12 +44,12 @@ export function RecommendationCard({
           </CardTitle>
           <div className="flex gap-1">
             {isTopPick && (
-              <Badge className="bg-turkcell-yellow text-turkcell-dark text-xs">
+              <Badge className="bg-turkcell-yellow text-turkcell-dark text-xs" aria-label="Onerilen tarife">
                 Onerilen
               </Badge>
             )}
             {savingsPositive && savings >= 30 && (
-              <Badge className="bg-green-100 text-green-700 text-xs">
+              <Badge className="bg-green-100 text-green-700 text-xs" aria-label="En cok tasarruf saglayan tarife">
                 En Cok Tasarruf
               </Badge>
             )}

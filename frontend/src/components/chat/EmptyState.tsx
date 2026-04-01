@@ -12,8 +12,11 @@ export function EmptyState() {
   const customerName = customerId ? CUSTOMER_NAMES[customerId] : null;
 
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center px-8">
-      <div className="h-16 w-16 rounded-full bg-turkcell-yellow flex items-center justify-center text-2xl font-bold text-turkcell-dark mb-6">
+    <div className="flex flex-col items-center justify-center h-full text-center px-8" role="status" aria-label="Sohbet baslangici">
+      <div
+        className="h-16 w-16 rounded-full bg-turkcell-yellow flex items-center justify-center text-2xl font-bold text-turkcell-dark mb-6"
+        aria-hidden="true"
+      >
         T
       </div>
       <h2 className="text-xl font-semibold text-turkcell-dark mb-2">
@@ -21,7 +24,7 @@ export function EmptyState() {
           ? `Merhaba! ${customerName} hesabi hakkinda soru sorabilirsiniz.`
           : "Merhaba! Size nasil yardimci olabilirim?"}
       </h2>
-      <p className="text-sm text-gray-500 max-w-md">
+      <p className="text-sm text-gray-600 max-w-md">
         {customerName
           ? "Fatura detaylari, tarife bilgisi ve kullanim durumu hakkinda sorularinizi yazabilirsiniz."
           : "Fatura, tarife, paket ve teknik destek konularinda sorularinizi yazabilirsiniz."}
