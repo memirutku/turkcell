@@ -157,11 +157,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEC-05 | Phase 4 | Complete |
 | VOICE-01 | Phase 7 | Complete |
 | VOICE-02 | Phase 7 | Complete |
-| VOICE-03 | Phase 8 | Pending |
+| VOICE-03 | Phase 8 | In Progress (backend streaming done, frontend VAD in Plan 02) |
 | VOICE-04 | Phase 8 | Pending |
 | VOICE-05 | Phase 7 | Complete |
 | VOICE-06 | Phase 7 | Complete |
-| VOICE-07 | Phase 8 | Pending |
+| VOICE-07 | Phase 8 | In Progress (sentence-level TTS streaming reduces latency, needs Plan 02 validation) |
 | AGENT-01 | Phase 9 | Pending |
 | AGENT-02 | Phase 9 | Pending |
 | AGENT-03 | Phase 9 | Pending |

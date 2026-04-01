@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 07-03-PLAN.md (Tasks 1-2; Task 3 checkpoint awaiting human verification)
-last_updated: "2026-03-31T23:36:47.737Z"
-last_activity: 2026-03-31
+stopped_at: Completed 08-01-PLAN.md
+last_updated: "2026-04-01T05:00:27Z"
+last_activity: 2026-04-01
 progress:
   total_phases: 10
   completed_phases: 7
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Musterilerin fatura/tarife/destek taleplerini sesli AI asistan ile saniyeler icinde cozmek
-**Current focus:** Phase 07 — voice-input-output
+**Current focus:** Phase 08 — full-voice-conversation
 
 ## Current Position
 
 Phase: 8
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-03-31
+Plan: 1 of 2 complete
+Status: Executing
+Last activity: 2026-04-01
 
 Progress: [██████████] 100%
 
@@ -68,6 +68,7 @@ Progress: [██████████] 100%
 | Phase 06 P02 | 8min | 3 tasks | 11 files |
 | Phase 07 P02 | 5min | 2 tasks | 4 files |
 | Phase 07-voice-input-output P03 | 5min | 2 tasks | 9 files |
+| Phase 08 P01 | 18min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -120,6 +121,10 @@ Recent decisions affecting current work:
 - [Phase 07-voice-input-output]: Triple ternary MessageInput layout for recording/processing/idle states to satisfy TypeScript narrowing
 - [Phase 07-voice-input-output]: WebSocket auto-connect on hook mount with 3-attempt exponential backoff (1s/2s/4s)
 - [Phase 07-voice-input-output]: TTS indicator in MessageBubble deferred as comment placeholder (requires wasSpoken tracking)
+- [Phase 08]: Sentence boundary regex (?<=[.!?])\s+ for splitting LLM output into TTS chunks
+- [Phase 08]: WAV detected via RIFF+WAVE header bytes (positions 0:4 and 8:12) -- skips pydub/ffmpeg
+- [Phase 08]: process_voice_streaming async generator yields typed dicts for incremental WebSocket delivery
+- [Phase 08]: Existing process_voice() kept for backward compat but no longer called by endpoint
 
 ### Pending Todos
 
@@ -133,6 +138,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T23:22:48.459Z
-Stopped at: Completed 07-03-PLAN.md (Tasks 1-2; Task 3 checkpoint awaiting human verification)
+Last session: 2026-04-01T05:00:27Z
+Stopped at: Completed 08-01-PLAN.md
 Resume file: None

@@ -143,7 +143,7 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 08-01: TBD
+- [x] 08-01-PLAN.md -- Sentence-level TTS streaming, WAV auto-detection, WebSocket streaming pipeline (Wave 1)
 - [ ] 08-02: TBD
 
 ### Phase 9: Agentic Capabilities
@@ -191,6 +191,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 5. Billing & Tariff Q&A | 0/2 | Not started | - |
 | 6. Personalized Recommendations & Rich UI | 2/2 | Complete | 2026-03-31 |
 | 7. Voice Input & Output | 2/3 | In Progress|  |
-| 8. Full Voice Conversation | 0/2 | Not started | - |
+| 8. Full Voice Conversation | 1/2 | In progress | - |
 | 9. Agentic Capabilities | 0/3 | Not started | - |
 | 10. Accessibility & Hardening | 0/2 | Not started | - |
