@@ -1,5 +1,8 @@
+import asyncio
 import json
 import logging
+import random
+from datetime import datetime
 from pathlib import Path
 
 from app.models.schemas import (
@@ -126,3 +129,73 @@ class MockBSSService:
 
     def get_campaigns(self) -> list[Campaign]:
         return list(self._campaigns.values())
+
+    # --- Action methods (async, with realistic delays) ---
+
+    async def activate_package(self, customer_id: str, package_id: str) -> dict:
+        """Activate an add-on package for a customer. Simulates BSS processing delay."""
+        await asyncio.sleep(random.uniform(0.5, 1.5))
+
+        customer = self._customers.get(customer_id)
+        if not customer:
+            return {"success": False, "error": f"Musteri bulunamadi: {customer_id}"}
+
+        package = self._packages.get(package_id)
+        if not package:
+            return {"success": False, "error": f"Paket bulunamadi: {package_id}"}
+
+        return {
+            "success": True,
+            "transaction_id": f"TXN-{random.randint(100000, 999999)}",
+            "timestamp": datetime.now().isoformat(),
+            "customer_id": customer_id,
+            "package": {
+                "id": package.id,
+                "name": package.name,
+                "price_tl": str(package.price_tl),
+                "duration_days": package.duration_days,
+            },
+            "message_tr": (
+                f"{package.name} basariyla aktiflestirildi. "
+                f"Ucret: {package.price_tl} TL, Sure: {package.duration_days} gun."
+            ),
+        }
+
+    async def change_tariff(self, customer_id: str, new_tariff_id: str) -> dict:
+        """Change a customer's tariff plan. Simulates BSS processing delay."""
+        await asyncio.sleep(random.uniform(0.5, 1.5))
+
+        customer = self._customers.get(customer_id)
+        if not customer:
+            return {"success": False, "error": f"Musteri bulunamadi: {customer_id}"}
+
+        new_tariff = self._tariffs.get(new_tariff_id)
+        if not new_tariff:
+            return {"success": False, "error": f"Tarife bulunamadi: {new_tariff_id}"}
+
+        old_tariff = self._tariffs.get(customer.tariff_id)
+
+        # Update customer's tariff in-place
+        customer.tariff_id = new_tariff_id
+
+        return {
+            "success": True,
+            "transaction_id": f"TXN-{random.randint(100000, 999999)}",
+            "timestamp": datetime.now().isoformat(),
+            "customer_id": customer_id,
+            "old_tariff": (
+                {
+                    "id": old_tariff.id,
+                    "name": old_tariff.name,
+                    "monthly_price_tl": str(old_tariff.monthly_price_tl),
+                }
+                if old_tariff
+                else None
+            ),
+            "new_tariff": {
+                "id": new_tariff.id,
+                "name": new_tariff.name,
+                "monthly_price_tl": str(new_tariff.monthly_price_tl),
+            },
+            "message_tr": f"Tarifiniz {new_tariff.name} olarak basariyla degistirildi.",
+        }
