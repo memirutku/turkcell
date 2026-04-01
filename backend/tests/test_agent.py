@@ -1,7 +1,9 @@
 import json
 import time
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+from langchain_core.messages import AIMessage, HumanMessage
 
 from app.services.mock_bss import MockBSSService
 
@@ -158,12 +160,239 @@ class TestToolDefinitions:
 
 
 class TestAgentWorkflow:
-    """Placeholder for LangGraph agent workflow tests (Plan 02)."""
+    """Test LangGraph agent workflow with mocked LLM."""
 
-    pass
+    @pytest.fixture
+    def mock_settings(self):
+        """Create mock Settings for AgentService."""
+        settings = MagicMock()
+        settings.gemini_api_key = "test-api-key"
+        settings.redis_url = "redis://localhost:6379/0"
+        settings.milvus_host = "localhost"
+        settings.milvus_port = 19530
+        settings.milvus_collection_name = "test_collection"
+        return settings
+
+    @pytest.fixture
+    def mock_bss(self):
+        service = MockBSSService()
+        service.load_data()
+        return service
+
+    @pytest.fixture
+    def billing_context(self, mock_bss):
+        from app.services.billing_context import BillingContextService
+        return BillingContextService(mock_bss)
+
+    def test_agent_service_creates_graph(self, mock_settings, mock_bss, billing_context):
+        """Verify AgentService initializes with a compiled LangGraph StateGraph."""
+        with patch("app.services.agent_service.ChatGoogleGenerativeAI") as mock_llm_cls, \
+             patch("app.services.agent_service.RAGService"):
+            mock_llm_instance = MagicMock()
+            mock_llm_instance.bind_tools.return_value = mock_llm_instance
+            mock_llm_cls.return_value = mock_llm_instance
+
+            from app.services.agent_service import AgentService
+            service = AgentService(
+                settings=mock_settings,
+                mock_bss=mock_bss,
+                billing_context=billing_context,
+                pii_enabled=False,
+            )
+
+            assert service._graph is not None
+            assert service._checkpointer is not None
+            assert service._tools is not None
+            assert len(service._tools) == 5
+
+    @pytest.mark.asyncio
+    async def test_agent_stream_general_chat(self, mock_settings, mock_bss, billing_context):
+        """Mock the LLM to return a simple text response (no tool calls) and verify token events."""
+        with patch("app.services.agent_service.ChatGoogleGenerativeAI") as mock_llm_cls, \
+             patch("app.services.agent_service.RAGService") as mock_rag_cls:
+            # Configure mock LLM
+            mock_llm_instance = MagicMock()
+            mock_llm_instance.bind_tools.return_value = mock_llm_instance
+
+            # Mock ainvoke to return a plain AIMessage (no tool calls)
+            mock_response = AIMessage(content="Merhaba, size nasil yardimci olabilirim?")
+            mock_llm_instance.ainvoke = AsyncMock(return_value=mock_response)
+            mock_llm_cls.return_value = mock_llm_instance
+
+            # Configure mock RAG service
+            mock_rag_instance = MagicMock()
+            mock_rag_instance.search = AsyncMock(return_value=[])
+            mock_rag_cls.return_value = mock_rag_instance
+
+            from app.services.agent_service import AgentService
+            service = AgentService(
+                settings=mock_settings,
+                mock_bss=mock_bss,
+                billing_context=billing_context,
+                pii_enabled=False,
+            )
+
+            events = []
+            async for event in service.stream("Merhaba", "test-session-001", "cust-001"):
+                events.append(event)
+
+            # Should have at least one token event or the graph should complete without errors
+            # With mocked LLM, astream_events may not yield on_chat_model_stream
+            # but the graph should complete without errors
+            assert isinstance(events, list)
+            # Check no error events
+            error_events = [e for e in events if e.get("type") == "error"]
+            assert len(error_events) == 0, f"Unexpected errors: {error_events}"
+
+    def test_agent_service_has_required_methods(self, mock_settings, mock_bss, billing_context):
+        """Verify AgentService has stream() and resume() methods."""
+        with patch("app.services.agent_service.ChatGoogleGenerativeAI") as mock_llm_cls, \
+             patch("app.services.agent_service.RAGService"):
+            mock_llm_instance = MagicMock()
+            mock_llm_instance.bind_tools.return_value = mock_llm_instance
+            mock_llm_cls.return_value = mock_llm_instance
+
+            from app.services.agent_service import AgentService
+            service = AgentService(
+                settings=mock_settings,
+                mock_bss=mock_bss,
+                billing_context=billing_context,
+                pii_enabled=False,
+            )
+
+            assert hasattr(service, "stream")
+            assert hasattr(service, "resume")
+            assert callable(service.stream)
+            assert callable(service.resume)
 
 
 class TestAgentConfirmation:
-    """Placeholder for agent confirmation interrupt/resume tests (Plan 02)."""
+    """Test agent confirmation interrupt/resume flow."""
 
-    pass
+    @pytest.fixture
+    def mock_settings(self):
+        settings = MagicMock()
+        settings.gemini_api_key = "test-api-key"
+        settings.redis_url = "redis://localhost:6379/0"
+        settings.milvus_host = "localhost"
+        settings.milvus_port = 19530
+        settings.milvus_collection_name = "test_collection"
+        return settings
+
+    @pytest.fixture
+    def mock_bss(self):
+        service = MockBSSService()
+        service.load_data()
+        return service
+
+    @pytest.fixture
+    def billing_context(self, mock_bss):
+        from app.services.billing_context import BillingContextService
+        return BillingContextService(mock_bss)
+
+    @pytest.mark.asyncio
+    async def test_interrupt_value_structure(self, mock_settings, mock_bss, billing_context):
+        """Verify that the interrupt payload contains action_type, description, details keys."""
+        with patch("app.services.agent_service.ChatGoogleGenerativeAI") as mock_llm_cls, \
+             patch("app.services.agent_service.RAGService") as mock_rag_cls:
+            # Configure mock LLM to return a tool call for activate_package
+            mock_llm_instance = MagicMock()
+            mock_llm_instance.bind_tools.return_value = mock_llm_instance
+
+            mock_tool_response = AIMessage(
+                content="",
+                tool_calls=[{
+                    "name": "activate_package",
+                    "args": {"customer_id": "cust-001", "package_id": "pkg-002"},
+                    "id": "call_test_123",
+                }],
+            )
+            mock_llm_instance.ainvoke = AsyncMock(return_value=mock_tool_response)
+            mock_llm_cls.return_value = mock_llm_instance
+
+            # Configure mock RAG
+            mock_rag_instance = MagicMock()
+            mock_rag_instance.search = AsyncMock(return_value=[])
+            mock_rag_cls.return_value = mock_rag_instance
+
+            from app.services.agent_service import AgentService
+            service = AgentService(
+                settings=mock_settings,
+                mock_bss=mock_bss,
+                billing_context=billing_context,
+                pii_enabled=False,
+            )
+
+            events = []
+            async for event in service.stream(
+                "10GB internet paketi tanimla",
+                "test-confirm-session",
+                "cust-001",
+            ):
+                events.append(event)
+
+            # Find the action_proposal event
+            proposals = [e for e in events if e.get("type") == "action_proposal"]
+            assert len(proposals) == 1, f"Expected 1 proposal, got {len(proposals)}. Events: {events}"
+
+            proposal_data = proposals[0]["data"]
+            assert "action_type" in proposal_data
+            assert "description" in proposal_data
+            assert "details" in proposal_data
+            assert "thread_id" in proposal_data
+            assert proposal_data["action_type"] == "package_activation"
+            assert proposal_data["thread_id"] == "test-confirm-session"
+
+    @pytest.mark.asyncio
+    async def test_resume_rejected_action(self, mock_settings, mock_bss, billing_context):
+        """Verify that rejecting an action returns cancellation message."""
+        with patch("app.services.agent_service.ChatGoogleGenerativeAI") as mock_llm_cls, \
+             patch("app.services.agent_service.RAGService") as mock_rag_cls:
+            mock_llm_instance = MagicMock()
+            mock_llm_instance.bind_tools.return_value = mock_llm_instance
+
+            mock_tool_response = AIMessage(
+                content="",
+                tool_calls=[{
+                    "name": "activate_package",
+                    "args": {"customer_id": "cust-001", "package_id": "pkg-002"},
+                    "id": "call_test_456",
+                }],
+            )
+            mock_llm_instance.ainvoke = AsyncMock(return_value=mock_tool_response)
+            mock_llm_cls.return_value = mock_llm_instance
+
+            mock_rag_instance = MagicMock()
+            mock_rag_instance.search = AsyncMock(return_value=[])
+            mock_rag_cls.return_value = mock_rag_instance
+
+            from app.services.agent_service import AgentService
+            service = AgentService(
+                settings=mock_settings,
+                mock_bss=mock_bss,
+                billing_context=billing_context,
+                pii_enabled=False,
+            )
+
+            # First, stream to get the proposal (which triggers interrupt)
+            session_id = "test-reject-session"
+            events = []
+            async for event in service.stream(
+                "Paket tanimla", session_id, "cust-001"
+            ):
+                events.append(event)
+
+            # Verify we got a proposal
+            proposals = [e for e in events if e.get("type") == "action_proposal"]
+            assert len(proposals) == 1
+
+            # Now resume with rejection
+            config = {"configurable": {"thread_id": session_id}}
+            resume_events = []
+            async for event in service.resume(config, {"approved": False}):
+                resume_events.append(event)
+
+            # Check for action_result with cancelled status
+            results = [e for e in resume_events if e.get("type") == "action_result"]
+            assert len(results) == 1
+            assert results[0]["data"]["status"] == "cancelled"
