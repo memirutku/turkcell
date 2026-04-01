@@ -29,7 +29,14 @@ export function ChatContainer() {
       <ChatHeader />
 
       {/* Message area */}
-      <div className="flex-1 overflow-y-auto" role="log" aria-live="polite">
+      <main
+        id="main-content"
+        className="flex-1 overflow-y-auto"
+        role="log"
+        aria-live="polite"
+        aria-label="Sohbet mesajlari"
+        tabIndex={-1}
+      >
         <div className="max-w-3xl mx-auto px-4 sm:px-8 py-6">
           {messages.length === 0 && !isStreaming ? (
             <EmptyState />
@@ -45,7 +52,7 @@ export function ChatContainer() {
             </div>
           )}
         </div>
-      </div>
+      </main>
 
       {/* Error banner */}
       <ErrorBanner />
