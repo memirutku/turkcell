@@ -64,10 +64,10 @@ Requirements for initial MVP release. Each maps to roadmap phases.
 
 ### Agentic Actions
 
-- [ ] **AGENT-01**: LangGraph ile agent workflow çalışır (analiz → öneri → işlem)
+- [x] **AGENT-01**: LangGraph ile agent workflow çalışır (analiz → öneri → işlem)
 - [x] **AGENT-02**: Mock paket tanımlama işlemi simüle edilir
 - [x] **AGENT-03**: Mock tarife değişikliği işlemi simüle edilir
-- [ ] **AGENT-04**: İşlem öncesi kullanıcı onayı alınır ("Bu paketi tanımlayalım mı?")
+- [x] **AGENT-04**: İşlem öncesi kullanıcı onayı alınır ("Bu paketi tanımlayalım mı?")
 - [x] **AGENT-05**: Gemini function calling ile araçlar (tools) entegre edilir
 - [x] **AGENT-06**: Mock BSS/OSS API'ları gerçekçi yanıtlar ve gecikmeler simüle eder
 
@@ -162,10 +162,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | VOICE-05 | Phase 7 | Complete |
 | VOICE-06 | Phase 7 | Complete |
 | VOICE-07 | Phase 8 | In Progress (sentence-level TTS streaming reduces latency, needs Plan 02 validation) |
-| AGENT-01 | Phase 9 | Pending |
+| AGENT-01 | Phase 9 | Complete |
 | AGENT-02 | Phase 9 | Complete |
 | AGENT-03 | Phase 9 | Complete |
-| AGENT-04 | Phase 9 | Pending |
+| AGENT-04 | Phase 9 | Complete |
 | AGENT-05 | Phase 9 | Complete |
 | AGENT-06 | Phase 9 | Complete |
 | A11Y-01 | Phase 10 | Pending |
