@@ -21,7 +21,7 @@ Müşterilerin fatura, tarife ve destek taleplerini sesli AI asistan ile saniyel
 
 - [x] Kullanıcı sesli soru sorarak fatura detaylarını öğrenebilir (voice kanalı) — Validated in Phase 7: Voice Input/Output
 - [x] Kullanıcıya kişiselleştirilmiş tarife ve paket önerileri sunulabilir — Validated in Phase 6: Personalized Recommendations & Rich UI
-- [ ] Kullanıcı sesli komutla işlem onaylayabilir (paket tanımlama vb.)
+- [x] Kullanıcı sesli komutla işlem onaylayabilir (paket tanımlama vb.) — Validated in Phase 10: Accessibility & Hardening
 - [x] Ses girişi metne dönüştürülür (STT - Gemini multimodal) — Validated in Phase 7: Voice Input/Output
 - [x] Metin yanıtları doğal sesle okunur (TTS - AWS Polly Burcu neural) — Validated in Phase 7: Voice Input/Output
 - [ ] Oturum hafızası ile çok turlu konuşma desteklenir
@@ -92,4 +92,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-01 after Phase 8 completion*
+*Last updated: 2026-04-01 after Phase 10 completion — all 10 phases complete, milestone v1.0 done*
