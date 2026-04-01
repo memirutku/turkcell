@@ -17,6 +17,8 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 
   return (
     <article
+      id={`msg-${message.id}`}
+      tabIndex={-1}
       className={`flex ${isUser ? "flex-row-reverse items-start gap-3" : "flex-col gap-0"}`}
       role="article"
       aria-label={`${senderLabel}, ${timeStr}`}
