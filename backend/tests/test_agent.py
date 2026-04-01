@@ -107,6 +107,55 @@ class TestToolDefinitions:
             has_turkish = any(kw in tool.description.lower() for kw in turkish_keywords)
             assert has_turkish, f"Tool {tool.name} description lacks Turkish keywords: {tool.description}"
 
+    def test_all_five_tool_names(self):
+        from app.services.agent_tools import get_telecom_tools
+
+        mock_bss = MockBSSService()
+        mock_bss.load_data()
+        tools = get_telecom_tools(mock_bss)
+        names = {t.name for t in tools}
+        expected = {"activate_package", "change_tariff", "lookup_customer_bill", "get_available_packages", "get_available_tariffs"}
+        assert names == expected
+
+    @pytest.mark.asyncio
+    async def test_lookup_bill_tool_returns_data(self):
+        from app.services.agent_tools import get_telecom_tools
+
+        mock_bss = MockBSSService()
+        mock_bss.load_data()
+        tools = get_telecom_tools(mock_bss)
+        lookup_tool = next(t for t in tools if t.name == "lookup_customer_bill")
+        result_str = await lookup_tool.ainvoke({"customer_id": "cust-001"})
+        result = json.loads(result_str)
+        assert "customer_name" in result
+        assert "bills" in result
+
+    @pytest.mark.asyncio
+    async def test_get_packages_tool_returns_data(self):
+        from app.services.agent_tools import get_telecom_tools
+
+        mock_bss = MockBSSService()
+        mock_bss.load_data()
+        tools = get_telecom_tools(mock_bss)
+        pkg_tool = next(t for t in tools if t.name == "get_available_packages")
+        result_str = await pkg_tool.ainvoke({})
+        result = json.loads(result_str)
+        assert isinstance(result, list)
+        assert len(result) > 0
+
+    @pytest.mark.asyncio
+    async def test_get_tariffs_tool_returns_data(self):
+        from app.services.agent_tools import get_telecom_tools
+
+        mock_bss = MockBSSService()
+        mock_bss.load_data()
+        tools = get_telecom_tools(mock_bss)
+        tariff_tool = next(t for t in tools if t.name == "get_available_tariffs")
+        result_str = await tariff_tool.ainvoke({})
+        result = json.loads(result_str)
+        assert isinstance(result, list)
+        assert len(result) > 0
+
 
 class TestAgentWorkflow:
     """Placeholder for LangGraph agent workflow tests (Plan 02)."""
