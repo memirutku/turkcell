@@ -56,11 +56,11 @@ Requirements for initial MVP release. Each maps to roadmap phases.
 
 - [x] **VOICE-01**: Kullanıcı ses girişi (STT) — AWS Transcribe ile ses metne dönüştürülür
 - [x] **VOICE-02**: Sesli yanıt (TTS) — AWS Polly ile metin doğal Türkçe sesle okunur
-- [ ] **VOICE-03**: Full voice conversation loop — kullanıcı sürekli sesli konuşabilir
-- [ ] **VOICE-04**: Voice Activity Detection (VAD) — kullanıcının konuşmasının bittiğini algılar
+- [x] **VOICE-03**: Full voice conversation loop — kullanıcı sürekli sesli konuşabilir
+- [x] **VOICE-04**: Voice Activity Detection (VAD) — kullanıcının konuşmasının bittiğini algılar
 - [x] **VOICE-05**: WebSocket üzerinden streaming ses iletimi (browser ↔ backend)
 - [x] **VOICE-06**: Ses işleme sırasında görsel geri bildirim (dalga formu / animasyon)
-- [ ] **VOICE-07**: Uçtan uca ses döngüsü latency'si 3 saniyenin altında hedeflenir
+- [x] **VOICE-07**: Uçtan uca ses döngüsü latency'si 3 saniyenin altında hedeflenir
 
 ### Agentic Actions
 
@@ -158,7 +158,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | VOICE-01 | Phase 7 | Complete |
 | VOICE-02 | Phase 7 | Complete |
 | VOICE-03 | Phase 8 | In Progress (backend streaming done, frontend VAD in Plan 02) |
-| VOICE-04 | Phase 8 | Pending |
+| VOICE-04 | Phase 8 | Complete |
 | VOICE-05 | Phase 7 | Complete |
 | VOICE-06 | Phase 7 | Complete |
 | VOICE-07 | Phase 8 | In Progress (sentence-level TTS streaming reduces latency, needs Plan 02 validation) |
