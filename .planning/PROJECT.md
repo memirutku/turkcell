@@ -15,6 +15,7 @@ Müşterilerin fatura, tarife ve destek taleplerini sesli AI asistan ile saniyel
 - [x] Kullanıcı verileri PII maskeleme ile korunur (KVKK uyumu) — Validated in Phase 4: PII Masking & KVKK Compliance
 - [x] Kullanıcı metin tabanlı soru sorarak fatura detaylarını öğrenebilir — Validated in Phase 5: Billing & Tariff Q&A
 - [x] Sistem, RAG mimarisi ile Turkcell'in güncel tarife ve kampanya bilgilerini anlık olarak sorgulayabilir — Validated in Phase 5: Billing & Tariff Q&A
+- [x] Asistan paket tanımlama ve tarife değişikliği işlemlerini kullanıcı onayıyla gerçekleştirebilir — Validated in Phase 9: Agentic Capabilities
 
 ### Active
 
@@ -71,6 +72,7 @@ Müşterilerin fatura, tarife ve destek taleplerini sesli AI asistan ile saniyel
 | Mock veri (v1) | Gerçek Turkcell verisi erişimi yok | — Pending |
 | Docker Compose (Deploy) | Tüm servisleri tek komutla ayağa kaldırma | — Pending |
 | Gemini Multimodal STT + Polly Burcu TTS | AWS Transcribe lacks Turkish streaming; Gemini multimodal provides superior Turkish STT. Polly Burcu neural (not Filiz) for natural TTS. | Phase 7 validated |
+| LangGraph + interrupt() for agent confirmation | Human-in-the-loop via LangGraph interrupt/resume. SSE stream closes at proposal, frontend sends separate confirm POST. | Phase 9 validated |
 
 ## Evolution
 
