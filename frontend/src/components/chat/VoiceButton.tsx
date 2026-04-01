@@ -7,10 +7,11 @@ interface VoiceButtonProps {
   onClick: () => void;
   disabled: boolean;
   isVoiceSupported: boolean;
+  conversationActive?: boolean;
 }
 
-export function VoiceButton({ voiceState, onClick, disabled, isVoiceSupported }: VoiceButtonProps) {
-  const isDisabledOrUnsupported = disabled || !isVoiceSupported;
+export function VoiceButton({ voiceState, onClick, disabled, isVoiceSupported, conversationActive }: VoiceButtonProps) {
+  const isDisabledOrUnsupported = disabled || !isVoiceSupported || !!conversationActive;
   const isClickable = voiceState === "idle" || voiceState === "recording";
 
   const getIcon = () => {
