@@ -50,6 +50,17 @@ class VoiceResponseEnd(BaseModel):
     full_text: str
 
 
+class VoiceAudioChunk(BaseModel):
+    """A sentence-level TTS audio chunk for incremental playback.
+
+    Note: The actual audio bytes are sent as a separate binary WebSocket
+    frame after this JSON signal. This schema documents the protocol type
+    used in the streaming generator's yield dict.
+    """
+
+    type: str = "audio_chunk"
+
+
 class VoiceAudioDone(BaseModel):
     """Signal that TTS audio has been sent."""
 

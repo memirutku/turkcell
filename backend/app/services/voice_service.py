@@ -3,6 +3,8 @@
 import asyncio
 import io
 import logging
+import re
+from collections.abc import AsyncIterator
 
 from pydub import AudioSegment
 
@@ -11,6 +13,9 @@ from app.services.stt_service import MockSTTService, STTService
 from app.services.tts_service import MockTTSService, TTSService
 
 logger = logging.getLogger(__name__)
+
+# Split at sentence boundaries (after . ! ?) followed by whitespace
+SENTENCE_BOUNDARY = re.compile(r'(?<=[.!?])\s+')
 
 
 class VoiceService:
@@ -88,16 +93,84 @@ class VoiceService:
             "audio_response": audio_response,
         }
 
+    async def process_voice_streaming(
+        self,
+        audio_bytes: bytes,
+        session_id: str,
+        customer_id: str | None = None,
+    ) -> AsyncIterator[dict]:
+        """Process voice with sentence-level TTS streaming.
+
+        Instead of waiting for the full LLM response before TTS,
+        this method synthesizes audio at sentence boundaries and
+        yields audio_chunk events incrementally.
+
+        Yields dicts with types:
+            - transcription: STT result text
+            - token: individual LLM streaming token
+            - audio_chunk: sentence-level TTS audio bytes (data key)
+            - response_end: full LLM response text
+            - audio_done: signal that all audio has been sent
+        """
+        # 1. Convert to WAV (auto-detects WAV input)
+        wav_bytes = await asyncio.to_thread(self._convert_to_wav, audio_bytes)
+
+        # 2. Transcribe via STT
+        transcribed_text = await self._stt.transcribe(wav_bytes)
+        logger.info("STT result: %d chars", len(transcribed_text))
+        yield {"type": "transcription", "text": transcribed_text}
+
+        # 3. Stream LLM response with sentence-level TTS
+        buffer = ""
+        full_response = ""
+        async for item in self._chat.stream_response(
+            transcribed_text, session_id, customer_id
+        ):
+            if isinstance(item, str):
+                buffer += item
+                full_response += item
+                yield {"type": "token", "content": item}
+
+                # Check for sentence boundaries
+                sentences = SENTENCE_BOUNDARY.split(buffer)
+                if len(sentences) > 1:
+                    completed = " ".join(sentences[:-1])
+                    buffer = sentences[-1]
+                    if self._tts and completed.strip():
+                        try:
+                            audio = await self._tts.synthesize(completed)
+                            if audio:
+                                yield {"type": "audio_chunk", "data": audio}
+                        except Exception:
+                            logger.exception("Sentence TTS failed, skipping chunk")
+
+        # 4. Synthesize remaining buffer
+        if self._tts and buffer.strip():
+            try:
+                audio = await self._tts.synthesize(buffer)
+                if audio:
+                    yield {"type": "audio_chunk", "data": audio}
+            except Exception:
+                logger.exception("Final sentence TTS failed, skipping chunk")
+
+        yield {"type": "response_end", "full_text": full_response}
+        yield {"type": "audio_done"}
+
     @staticmethod
     def _convert_to_wav(audio_bytes: bytes) -> bytes:
-        """Convert WebM/Opus audio to WAV format for Gemini.
+        """Convert audio to WAV format for Gemini.
+
+        If input is already WAV (RIFF header), return as-is.
+        Otherwise, convert from WebM/Opus using pydub/ffmpeg.
 
         Args:
-            audio_bytes: Raw audio bytes in WebM/Opus format.
+            audio_bytes: Raw audio bytes (WAV or WebM/Opus format).
 
         Returns:
             Audio bytes in WAV format (16kHz, mono).
         """
+        if len(audio_bytes) >= 12 and audio_bytes[:4] == b"RIFF" and audio_bytes[8:12] == b"WAVE":
+            return audio_bytes
         audio = AudioSegment.from_file(io.BytesIO(audio_bytes), format="webm")
         audio = audio.set_frame_rate(16000).set_channels(1)
         buffer = io.BytesIO()
