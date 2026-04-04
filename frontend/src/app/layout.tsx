@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   description:
     "Turkcell AI-Gen: Fatura analizi, tarife degisikligi ve teknik destek icin yapay zeka destekli dijital asistan.",
   keywords: ["Turkcell", "AI", "dijital asistan", "fatura", "tarife"],
+  icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({

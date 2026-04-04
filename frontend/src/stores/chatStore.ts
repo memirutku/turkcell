@@ -25,6 +25,7 @@ interface ChatStore {
   isActionProcessing: boolean;
   activeThreadId: string | null;
   srAnnouncement: string;
+  liveConfirmCallback: ((approved: boolean) => void) | null;
   announce: (text: string) => void;
   addMessage: (role: "user" | "assistant", content: string) => string; // returns message id
   appendToLastMessage: (token: string) => void;
@@ -34,6 +35,7 @@ interface ChatStore {
   setCustomerId: (id: string | null) => void;
   setPendingAction: (action: ActionProposal | null) => void;
   setActionProcessing: (processing: boolean) => void;
+  setLiveConfirmCallback: (cb: ((approved: boolean) => void) | null) => void;
   confirmAction: (threadId: string, approved: boolean) => Promise<void>;
   sendMessage: (message: string) => Promise<void>;
   clearMessages: () => void;
@@ -50,6 +52,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   isActionProcessing: false,
   activeThreadId: null,
   srAnnouncement: "",
+  liveConfirmCallback: null,
 
   announce: (text) => {
     set({ srAnnouncement: text });
@@ -146,7 +149,19 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
   setActionProcessing: (processing) => set({ isActionProcessing: processing }),
 
+  setLiveConfirmCallback: (cb) => set({ liveConfirmCallback: cb }),
+
   confirmAction: async (threadId, approved) => {
+    const { liveConfirmCallback } = get();
+
+    // Live API mode: route confirmation through WebSocket
+    if (liveConfirmCallback) {
+      get().setPendingAction(null);
+      liveConfirmCallback(approved);
+      return;
+    }
+
+    // Legacy mode: REST API confirmation
     const { appendToLastMessage, setStreaming, setError, addStructuredData } = get();
     const setPendingAction = get().setPendingAction;
     const setActionProcessing = get().setActionProcessing;
@@ -200,7 +215,8 @@ export const useChatStore = create<ChatStore>((set, get) => ({
           });
         },
       );
-    } catch {
+    } catch (err) {
+      console.error("[ChatStore] confirmAction error:", err);
       setError("Onay islemi sirasinda bir sorun olustu. Lutfen tekrar deneyin.");
       setStreaming(false);
       setActionProcessing(false);
@@ -302,7 +318,8 @@ export const useChatStore = create<ChatStore>((set, get) => ({
           },
         );
       }
-    } catch {
+    } catch (err) {
+      console.error("[ChatStore] sendMessage error:", err);
       setError("Bir hata olustu. Lutfen tekrar deneyin.");
       setStreaming(false);
     }

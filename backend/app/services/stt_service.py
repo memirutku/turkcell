@@ -21,7 +21,7 @@ class STTService:
 
     def __init__(self, settings: Settings) -> None:
         self._client = genai.Client(api_key=settings.gemini_api_key)
-        self._model = "gemini-2.0-flash"
+        self._model = settings.gemini_model
 
     async def transcribe(self, wav_bytes: bytes) -> str:
         """Transcribe WAV audio to Turkish text using Gemini.

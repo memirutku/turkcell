@@ -24,6 +24,7 @@ from langgraph.types import Command, interrupt
 from app.config import Settings
 from app.models.agent_schemas import AgentState
 from app.prompts.agent_prompts import AGENT_SYSTEM_PROMPT
+from app.services.personalization_engine import get_conversation_style
 from app.services.agent_tools import get_telecom_tools
 from app.services.billing_context import BillingContextService
 from app.services.mock_bss import MockBSSService
@@ -56,13 +57,20 @@ class AgentService:
         mock_bss: MockBSSService,
         billing_context: BillingContextService,
         pii_enabled: bool = True,
+        personalization_engine=None,
+        customer_memory_service=None,
     ) -> None:
         self._mock_bss = mock_bss
-        self._tools = get_telecom_tools(mock_bss)
+        self._customer_memory_service = customer_memory_service
+        self._tools = get_telecom_tools(
+            mock_bss,
+            personalization_engine=personalization_engine,
+            customer_memory_service=customer_memory_service,
+        )
 
         # LLM with tools bound for function calling
         llm = ChatGoogleGenerativeAI(
-            model="gemini-2.0-flash",
+            model=settings.gemini_model,
             google_api_key=settings.gemini_api_key,
             temperature=0.3,
         )
@@ -70,7 +78,7 @@ class AgentService:
 
         # Plain LLM for general chat (no tool binding)
         self._llm_plain = ChatGoogleGenerativeAI(
-            model="gemini-2.0-flash",
+            model=settings.gemini_model,
             google_api_key=settings.gemini_api_key,
             temperature=0.3,
         )
@@ -134,11 +142,58 @@ class AgentService:
         if customer_id:
             customer_context = self._billing_context.get_customer_context(customer_id) or ""
 
+        # Proactive alerts
+        alert_context = ""
+        if customer_id:
+            alerts = self._mock_bss.get_proactive_alerts(customer_id)
+            if alerts:
+                alert_lines = [f"- [{a['severity'].upper()}] {a['message']}" for a in alerts]
+                alert_context = "\n\n## Musteri Uyarilari\n" + "\n".join(alert_lines)
+                alert_context += "\n\nBu uyarilari musteri ile nazikce paylas ve cozum oner."
+
+        # Customer memory (cross-session)
+        memory_context = "Bu musteri icin onceki etkilesim kaydi bulunamadi."
+        if customer_id and self._customer_memory_service:
+            try:
+                memory = await self._customer_memory_service.get_memory(customer_id)
+                if memory and memory.interactions:
+                    lines = []
+                    for inter in memory.interactions[-5:]:
+                        lines.append(
+                            f"- [{inter.timestamp:%Y-%m-%d}] {inter.summary}"
+                        )
+                        if inter.unresolved_issues:
+                            lines.append(
+                                f"  Cozulmemis: {', '.join(inter.unresolved_issues)}"
+                            )
+                        if inter.preferences_learned:
+                            lines.append(
+                                f"  Tercihler: {', '.join(inter.preferences_learned)}"
+                            )
+                    memory_context = "\n".join(lines)
+            except Exception as e:
+                logger.warning("Failed to load customer memory for %s: %s", customer_id, e)
+
+        # Resolve conversation style based on customer segment
+        conversation_style = get_conversation_style()
+        if customer_id:
+            customer = self._mock_bss.get_customer(customer_id)
+            if customer:
+                conversation_style = get_conversation_style(
+                    customer.segment or "default",
+                    customer.contract_type or "bireysel",
+                )
+
         # Format system prompt with context
         system_content = AGENT_SYSTEM_PROMPT.format(
+            customer_memory=memory_context,
             customer_context=customer_context or "Musteri bilgisi mevcut degil.",
             rag_context=rag_context or "Bilgi kaynaklarinda ilgili bilgi bulunamadi.",
+            conversation_style=conversation_style,
         )
+
+        if alert_context:
+            system_content += alert_context
 
         return {
             "rag_context": rag_context,

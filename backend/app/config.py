@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     # Backend
     backend_host: str = "0.0.0.0"
     backend_port: int = 8000
-    cors_origins: str = "http://localhost:3000,http://localhost:80"
+    cors_origins: str = "http://localhost:3000,http://localhost:80,http://localhost"
 
     @property
     def cors_origins_list(self) -> list[str]:
@@ -37,11 +37,27 @@ class Settings(BaseSettings):
     # PII Masking (Phase 4)
     pii_masking_enabled: bool = True
 
-    # Future phases (optional)
+    # Google Gemini
     gemini_api_key: str = ""
+    gemini_model: str = "gemini-2.5-flash"
+
+    # Gemini Live API
+    gemini_live_enabled: bool = False
+    gemini_live_model: str = "gemini-3.1-flash-live-preview"
+    gemini_live_voice: str = "Kore"
+
     aws_access_key_id: str = ""
     aws_secret_access_key: str = ""
     aws_region: str = "eu-west-1"
+
+    # MCP Server
+    mcp_enabled: bool = True
+    mcp_api_key: str = ""
+
+    # Customer Memory MCP
+    customer_memory_mcp_enabled: bool = True
+    customer_memory_ttl: int = 2592000  # 30 days in seconds
+    customer_memory_max_interactions: int = 20
 
 
 @lru_cache

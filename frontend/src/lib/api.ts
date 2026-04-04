@@ -2,6 +2,11 @@ import { HealthResponse, StructuredData, ActionProposal, ActionResult } from "@/
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
+export function getWsBaseUrl(): string {
+  const apiUrl = API_BASE_URL.replace(/\/+$/, "");
+  return apiUrl.replace(/^https:/, "wss:").replace(/^http:/, "ws:");
+}
+
 /**
  * Fetch health status from the backend API.
  * Uses the Next.js rewrite proxy in development, direct URL otherwise.

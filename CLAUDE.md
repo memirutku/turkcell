@@ -9,7 +9,7 @@ Turkcell AI-Gen, LLM ve RAG teknolojilerini kullanarak Turkcell altyapısına ö
 
 ### Constraints
 
-- **Tech Stack**: Next.js (frontend) + Python FastAPI (backend) + Google Gemini API (LLM) + Milvus (vector DB) + AWS Transcribe/Polly (voice) — kullanıcı tercihi
+- **Tech Stack**: Next.js (frontend) + Python FastAPI (backend) + Google Gemini API (LLM) + Milvus (vector DB) + Gemini Live API (real-time voice, primary) + AWS Polly/Edge TTS (legacy fallback) — kullanıcı tercihi
 - **Veri**: Mock/sentetik Turkcell verisi kullanılacak, gerçek müşteri verisi yok
 - **LLM**: Google Gemini API (doküman Gemini 3 belirtiyor, mevcut en güncel Gemini API kullanılacak)
 - **Güvenlik**: PII maskeleme zorunlu — kişisel veriler LLM'e gönderilmeden önce maskelenmeli (KVKK)
@@ -173,16 +173,66 @@ Turkcell AI-Gen, LLM ve RAG teknolojilerini kullanarak Turkcell altyapısına ö
 <!-- GSD:conventions-start source:CONVENTIONS.md -->
 ## Conventions
 
-Conventions not yet established. Will populate as patterns emerge during development.
+- **Test ortamı**: Geliştirici her zaman Docker Compose ile test ediyor. Kod değişikliğinden sonra `docker compose up --build` ile yeniden build edilmeli. Hot-reload yok, her değişiklik build gerektirir. **Kullanıcı "test et", "build et", "çalıştır" veya `docker compose up --build` dediğinde, bu komutu sen Bash tool ile çalıştır** — kullanıcıya komutu yapıştırmasını söyleme. **Ancak** Docker ile ilgisi olmayan değişikliklerde (dokümantasyon, `.planning/` dosyaları, CLAUDE.md, test dosyaları vb.) build gerekmez — gereksiz build yapma.
 
 - Bir phase'de eksik veya tamamlanmamış görünen parçalar, kasıtlı olarak sonraki phase'lere bırakılmış olabilir. ROADMAP.md'deki phase bağımlılıklarını ve requirement dağılımını kontrol et — bir şeyi "eksik" olarak raporlamadan önce başka bir phase'de planlanıp planlanmadığına bak.
+- **Hata ile karşılaşıldığında** önce `.planning/ERRORS.md` dosyasını kontrol et. Çözülmüş bir hata tekrar oluşmuş olabilir. Yeni bir hata çözüldüğünde çözümü bu dosyaya kaydet.
+- **Context tasarrufu**: `.planning/` altındaki MD dosyalarını **sadece gerektiğinde** oku. Rutin olarak hepsini açma — context bütçesi sınırlıdır. Hangi dosyaya ne zaman bakılacağı:
+  - `.planning/RESUME.md` — **Sadece yeni oturum başlangıcında**. Devam eden iş var mı kontrol et.
+  - `.planning/CHANGELOG.md` — **Sadece "bu değişiklik yapılmış mı?" şüphesi olduğunda**. Her kod/konfigürasyon değişikliğinden sonra güncelle.
+  - `.planning/ERRORS.md` — **Sadece hata ile karşılaşıldığında**. Çözülmüş hata tekrar mı oluşmuş bak. Yeni çözüm bulunca ekle.
+  - `.planning/FRONTEND.md` — **Sadece frontend değişikliği yaparken**. Bileşenler, hooks, state, tipler.
+  - `.planning/BACKEND.md` — **Sadece backend değişikliği yaparken**. API endpoints, servisler, modeller.
+  - `.planning/AI.md` — **Sadece LLM/RAG/ses pipeline değişikliği yaparken**.
+  - `.planning/ARCHITECTURE.md` — **Sadece mimari/altyapı değişikliği yaparken**. Docker, veri akışları, güvenlik.
+  - `.planning/mcp/` — **MCP (Model Context Protocol) değişikliği yaparken**. 5 dosya içerir:
+    - `OVERVIEW.md` — Mimari, dosya yapısı, konfigürasyon, routing
+    - `TOOLS.md` — 5 MCP tool detayları, input/output şemaları, kayıt noktaları
+    - `SCORING.md` — Skorlama ağırlıkları, formüller, segment kuralları
+    - `DATA.md` — Mock veri haritası, müşteri profilleri, rakip tarifeleri
+    - `EXTERNAL-ACCESS.md` — Claude Desktop/Cursor/Claude Code yapılandırması
+    - `DEVELOPMENT.md` — Yeni tool ekleme adımları, segment/rakip ekleme
+  - `.planning/WORKTREES.md` — **Sadece worktree oluşturma/erişme/temizleme sırasında**.
+- **Dokümantasyon güncellemesi ZORUNLUDUR — ASLA ATLANMAZ**: Kod değişikliği yapıldığında, **aynı görev içinde ve kodlama bitmeden önce** etkilenen `.planning/` MD dosyalarını güncelle. Kullanıcıya "tamamlandı" demeden önce MD güncellemelerinin yapılmış olması şarttır. Bu kural istisnasızdır — "sonra yaparım", "ayrı adımda" gibi ertelemeler YASAKTIR. Özellikle:
+  - Yeni endpoint, bileşen, hook, servis, tool, schema ekleme/silme/değiştirme → ilgili MD dosyasını güncelle
+  - Config değişiklikleri (model adı, versiyon, env var) → BACKEND.md + AI.md + ARCHITECTURE.md
+  - MCP tool değişiklikleri → `.planning/mcp/` altındaki ilgili dosyalar (TOOLS.md, OVERVIEW.md, EXTERNAL-ACCESS.md, DEVELOPMENT.md)
+  - Mimari değişiklikler (yeni servis, veri akışı, Docker, güvenlik) → ARCHITECTURE.md + CLAUDE.md Architecture bölümü
+  - Hata çözümleri → ERRORS.md'ye kaydet
+  - **"Son güncelleme" tarihi ZORUNLU**: Her güncellenen MD dosyasının `> **Son güncelleme:**` satırını **bugünün tarihine** değiştir. Bu adım atlanırsa dokümantasyon güncellenmemiş sayılır. Tarih formatı: `YYYY-MM-DD` (örn: `2026-04-04`).
+  - **Kontrol listesi**: Kod yazma bittiğinde kendine sor: "Hangi `.planning/` dosyaları bu değişiklikten etkilendi?" — hepsini güncelle, tarihlerini güncelle, sonra devam et
 <!-- GSD:conventions-end -->
 
-<!-- GSD:architecture-start source:ARCHITECTURE.md -->
 ## Architecture
 
-Architecture not yet mapped. Follow existing patterns found in the codebase.
-<!-- GSD:architecture-end -->
+> **Detayli mimari dokumantasyon**: `.planning/ARCHITECTURE.md` — Docker topolojisi, veri akislari, guvenlik katmanlari, servis bagimliliklari, feature flag'ler, teknoloji stack.
+> Asagida sadece CLAUDE.md'ye ozgu kritik mimari ozetler yer alir.
+
+### Voice Pipeline (Dual Mode)
+- **Live API (primary)**: Browser ↔ `/ws/voice-live` ↔ Gemini Live API (`gemini-3.1-flash-live-preview`). Bidirectional PCM16 audio (input 16kHz, output 24kHz). Server-side VAD. Native function calling for RAG + actions. Feature flag: `GEMINI_LIVE_ENABLED`.
+- **Legacy (fallback)**: Browser ↔ `/ws/voice` ↔ STT (Gemini) → Chat (LangChain) → TTS (Edge TTS/Polly). Client-side Silero VAD. Feature flag: disabled when Live API is on.
+- **Action confirmation**: Live API holds tool response until user confirms via voice or UI button. Legacy uses LangGraph `interrupt()`.
+- **Greeting**: `send_realtime_input(text=...)` ile tetiklenir. Gemini 3.1'de `send_client_content` sadece initial history seeding icin — konusma sirasinda `send_realtime_input` kullanilmali.
+- **Docs**: https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-live-preview?hl=tr
+- Key files: `gemini_live_service.py`, `live_tools.py`, `voice_live.py` (backend); `useVoiceLive.ts`, `pcmAudioUtils.ts` (frontend).
+
+### MCP (Model Context Protocol) — Kisisellestirilmis Oneri
+- **Kutuphane**: `fastapi-mcp v0.4.0` — FastAPI'ye gomulu, `/mcp` endpoint'i
+- **5 Tool**: `get_personalized_tariff_recommendations`, `get_personalized_package_recommendations`, `get_customer_risk_profile`, `get_usage_pattern_analysis`, `get_market_comparison`
+- **Skorlama**: 5 faktorlu agirlikli bilesim (usage_fit %30, demographic_fit %20, behavioral_fit %20, market %15, retention %15)
+- **Cift kullanim**: LangGraph agent icinden LangChain tool olarak + dis MCP istemciler (Claude Desktop, Cursor) icin `/mcp` endpoint
+- **Config**: `MCP_ENABLED` (varsayilan true), `MCP_API_KEY` (opsiyonel)
+- **3 kayit noktasi**: Tool degisikliklerinde `mcp/tools.py`, `agent_tools.py`, `live_tools.py` ucunu de guncelle
+- **Detayli dokumantasyon**: `.planning/mcp/` klasorunde (OVERVIEW, TOOLS, SCORING, DATA, EXTERNAL-ACCESS, DEVELOPMENT)
+- Key files: `mcp/server.py`, `mcp/tools.py` (MCP), `personalization_engine.py`, `usage_pattern_service.py`, `churn_risk_service.py`, `market_data_service.py` (servisler), `personalization_schemas.py` (modeller)
+
+### Dinamik Konusma Tarzi (Segment-Based Conversation Style)
+- **Mekanizma**: Musteri segmentine gore system prompt'taki ton/uslup otomatik degisir
+- **Segmentler**: genc (sen/samimi), profesyonel (siz/resmi), aile (siz/sicak), emekli (siz/sade), ogrenci (sen/enerjik), kurumsal (siz/cok resmi), default (samimi/empatik/profesyonel)
+- **Override**: `contract_type == "kurumsal"` segment'i override eder (genc ama kurumsal → resmi ton)
+- **Placeholder**: 3 prompt sablonunda `{conversation_style}` — `personalization_engine.get_conversation_style(segment, contract_type)` ile doldurulur
+- **3 enjeksiyon noktasi**: `chat_service.py` (metin sohbet), `agent_service.py` (agentic), `gemini_live_service.py` (sesli)
+- Key files: `personalization_engine.py` (`SEGMENT_CONVERSATION_STYLE`, `get_conversation_style()`), `billing_context.py` (`get_customer_segment_info()`)
 
 <!-- GSD:workflow-start source:GSD defaults -->
 ## GSD Workflow Enforcement

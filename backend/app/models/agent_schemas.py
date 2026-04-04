@@ -81,3 +81,42 @@ class ChangeTariffInput(BaseModel):
 
 class LookupBillInput(BaseModel):
     customer_id: str = Field(description="Fatura sorgulanacak musteri ID'si")
+
+
+class RecommendTariffInput(BaseModel):
+    customer_id: str = Field(description="Tarife onerisi yapilacak musteri ID'si")
+
+
+class CompareBillsInput(BaseModel):
+    customer_id: str = Field(description="Fatura karsilastirmasi yapilacak musteri ID'si")
+
+
+class CheckUsageAlertsInput(BaseModel):
+    customer_id: str = Field(description="Kullanim uyarilari kontrol edilecek musteri ID'si")
+
+
+class RecommendPackageInput(BaseModel):
+    customer_id: str = Field(description="Paket onerisi yapilacak musteri ID'si")
+
+
+# MCP-backed personalization tool schemas
+class PersonalizedRecommendationInput(BaseModel):
+    customer_id: str = Field(description="Kisisellestirilmis tarife onerisi yapilacak musteri ID'si")
+    top_n: int = Field(default=3, description="En fazla kac oneri donecegi (varsayilan: 3)")
+
+
+class PersonalizedPackageRecommendationInput(BaseModel):
+    customer_id: str = Field(description="Kisisellestirilmis paket onerisi yapilacak musteri ID'si")
+    top_n: int = Field(default=3, description="En fazla kac oneri donecegi (varsayilan: 3)")
+
+
+class CustomerRiskProfileInput(BaseModel):
+    customer_id: str = Field(description="Kayip riski analiz edilecek musteri ID'si")
+
+
+class UsagePatternAnalysisInput(BaseModel):
+    customer_id: str = Field(description="Kullanim kaliplari analiz edilecek musteri ID'si")
+
+
+class MarketComparisonInput(BaseModel):
+    tariff_id: str = Field(description="Piyasa ile karsilastirilacak tarife ID'si (ornek: tariff-001)")

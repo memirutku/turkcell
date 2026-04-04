@@ -69,6 +69,11 @@ class Customer(BaseModel):
     tariff_id: str
     registration_date: date
     address_city: str
+    # Demographic fields (optional for backward compatibility)
+    birth_date: date | None = None
+    occupation: str | None = None
+    segment: str | None = None
+    contract_type: str = "bireysel"
 
 
 class Campaign(BaseModel):

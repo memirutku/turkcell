@@ -3,15 +3,11 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { VoiceState, VoiceWebSocketMessage } from "@/types";
 import { useChatStore } from "@/stores/chatStore";
 import { checkMicrophoneSupport, checkSecureContext, getAudioMimeType } from "@/lib/audioUtils";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
-function getWsBaseUrl(): string {
-  return API_BASE_URL.replace(/^http:\/\//, "ws://").replace(/^https:\/\//, "wss://");
-}
+import { getWsBaseUrl } from "@/lib/api";
 
 const MAX_RECONNECT_ATTEMPTS = 3;
 const RECONNECT_DELAYS = [1000, 2000, 4000]; // exponential backoff
+const MIN_RECORDING_DURATION_MS = 1500; // minimum recording time to collect enough audio
 
 export function useVoiceChat(): {
   voiceState: VoiceState;
@@ -24,10 +20,12 @@ export function useVoiceChat(): {
   const [voiceState, setVoiceState] = useState<VoiceState>("idle");
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
-  const [isVoiceSupported] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return checkMicrophoneSupport() && checkSecureContext();
-  });
+  const [isVoiceSupported, setIsVoiceSupported] = useState(false);
+
+  // Detect browser capabilities after hydration to avoid SSR mismatch
+  useEffect(() => {
+    setIsVoiceSupported(checkMicrophoneSupport() && checkSecureContext());
+  }, []);
 
   const wsRef = useRef<WebSocket | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -37,6 +35,9 @@ export function useVoiceChat(): {
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isFirstTokenRef = useRef(true);
   const isMountedRef = useRef(true);
+  const recordingStartTimeRef = useRef<number>(0);
+  const stopTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isStartingRef = useRef(false);
 
   // Read store values
   const sessionId = useChatStore((s) => s.sessionId);
@@ -47,6 +48,11 @@ export function useVoiceChat(): {
     if (mediaStream) {
       mediaStream.getTracks().forEach((track) => track.stop());
     }
+    if (stopTimerRef.current) {
+      clearTimeout(stopTimerRef.current);
+      stopTimerRef.current = null;
+    }
+    isStartingRef.current = false;
     setMediaStream(null);
     setMediaRecorder(null);
     audioChunksRef.current = [];
@@ -194,10 +200,9 @@ export function useVoiceChat(): {
     wsRef.current = ws;
   }, [playNextAudio]);
 
-  // Connect WebSocket on mount, clean up on unmount
+  // Track mount state and clean up on unmount
   useEffect(() => {
     isMountedRef.current = true;
-    connectWebSocket();
 
     return () => {
       isMountedRef.current = false;
@@ -209,13 +214,18 @@ export function useVoiceChat(): {
         wsRef.current = null;
       }
     };
-  }, [connectWebSocket]);
+  }, []);
 
   const startRecording = useCallback(async () => {
+    // Prevent double invocation while async setup is in progress
+    if (isStartingRef.current) return;
+    isStartingRef.current = true;
+
     const store = useChatStore.getState();
 
     // Check secure context
     if (!checkSecureContext()) {
+      isStartingRef.current = false;
       store.setError(
         "Ses ozelligi yalnizca guvenli baglantilarda (HTTPS veya localhost) kullanilabilir."
       );
@@ -224,6 +234,7 @@ export function useVoiceChat(): {
 
     // Check browser support
     if (!checkMicrophoneSupport()) {
+      isStartingRef.current = false;
       store.setError(
         "Tarayiciniz ses kaydini desteklemiyor. Lutfen guncel bir tarayici kullanin."
       );
@@ -236,6 +247,7 @@ export function useVoiceChat(): {
       // Give it a moment to connect
       await new Promise<void>((resolve) => setTimeout(resolve, 500));
       if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
+        isStartingRef.current = false;
         store.setError(
           "Ses baglantisi kurulamadi. Lutfen sayfayi yenileyip tekrar deneyin."
         );
@@ -257,6 +269,7 @@ export function useVoiceChat(): {
       audioChunksRef.current = [];
 
       recorder.ondataavailable = (e: BlobEvent) => {
+        console.log("[VoiceChat] ondataavailable:", e.data.size, "bytes");
         if (e.data.size > 0) {
           audioChunksRef.current.push(e.data);
         }
@@ -265,6 +278,7 @@ export function useVoiceChat(): {
       recorder.onstop = () => {
         // Collect audio and send via WebSocket
         const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
+        console.log("[VoiceChat] Final blob:", audioBlob.size, "bytes, chunks:", audioChunksRef.current.length, "mimeType:", mimeType);
         audioChunksRef.current = [];
 
         if (audioBlob.size > 100 && wsRef.current?.readyState === WebSocket.OPEN) {
@@ -286,10 +300,13 @@ export function useVoiceChat(): {
       };
 
       recorder.start(250); // Collect data every 250ms for chunks
+      recordingStartTimeRef.current = Date.now();
       setMediaStream(stream);
       setMediaRecorder(recorder);
       setVoiceState("recording");
+      isStartingRef.current = false;
     } catch (err: unknown) {
+      isStartingRef.current = false;
       const error = err as DOMException;
       if (error.name === "NotAllowedError") {
         store.setError(
@@ -309,7 +326,20 @@ export function useVoiceChat(): {
   }, [connectWebSocket]);
 
   const stopRecording = useCallback(() => {
-    if (mediaRecorder && mediaRecorder.state === "recording") {
+    if (!mediaRecorder || mediaRecorder.state !== "recording") return;
+
+    const elapsed = Date.now() - recordingStartTimeRef.current;
+    const remaining = MIN_RECORDING_DURATION_MS - elapsed;
+
+    if (remaining > 0 && !stopTimerRef.current) {
+      // Delay stop to ensure minimum audio data is collected
+      stopTimerRef.current = setTimeout(() => {
+        stopTimerRef.current = null;
+        if (mediaRecorder.state === "recording") {
+          mediaRecorder.stop();
+        }
+      }, remaining);
+    } else if (!stopTimerRef.current) {
       mediaRecorder.stop();
     }
   }, [mediaRecorder]);

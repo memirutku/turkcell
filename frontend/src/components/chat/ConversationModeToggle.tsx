@@ -1,38 +1,54 @@
 "use client";
-import { ConversationState } from "@/types";
-import { MessageSquare, PhoneOff } from "lucide-react";
+import { ConversationState, LiveConversationState } from "@/types";
+import { MessageSquare, PhoneOff, Loader2, AlertTriangle } from "lucide-react";
 
 interface ConversationModeToggleProps {
-  conversationState: ConversationState;
+  conversationState: ConversationState | LiveConversationState;
   onToggle: () => void;
   disabled: boolean;
+  isVADLoading?: boolean;
+  isVADErrored?: boolean;
 }
 
 export function ConversationModeToggle({
   conversationState,
   onToggle,
   disabled,
+  isVADLoading,
+  isVADErrored,
 }: ConversationModeToggleProps) {
   const isActive = conversationState !== "off";
 
   const getIcon = () => {
     if (isActive) return <PhoneOff className="h-5 w-5" />;
+    if (isVADErrored) return <AlertTriangle className="h-5 w-5" />;
+    if (isVADLoading) return <Loader2 className="h-5 w-5 animate-spin" />;
     return <MessageSquare className="h-5 w-5" />;
   };
 
   const getAriaLabel = () => {
+    if (isVADErrored) return "Ses tanima modeli yuklenemedi";
+    if (isVADLoading) return "Ses tanima modeli yukleniyor";
     if (disabled && !isActive) return "Metin yaniti devam ediyor";
     if (isActive) return "Serbest konusma modunu kapat";
     return "Serbest konusma modunu baslat";
   };
 
   const getTitle = () => {
+    if (isVADErrored) return "Ses tanima modeli yuklenemedi — sayfayi yenileyin";
+    if (isVADLoading) return "Ses tanima modeli yukleniyor...";
     if (disabled) return undefined;
     if (isActive) return "Serbest konusma modunu kapatin";
     return "Serbest konusma modunu baslatin";
   };
 
   const getStyles = () => {
+    if (isVADErrored && !isActive) {
+      return "text-red-400 bg-white border border-red-200 cursor-pointer";
+    }
+    if (isVADLoading && !isActive) {
+      return "text-gray-400 bg-white border border-gray-200 cursor-wait";
+    }
     if (disabled && !isActive) {
       return "text-gray-300 bg-white border border-gray-200 opacity-50 cursor-not-allowed";
     }

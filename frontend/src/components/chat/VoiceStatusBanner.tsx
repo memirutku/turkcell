@@ -1,11 +1,11 @@
 "use client";
-import { VoiceState, ConversationState } from "@/types";
-import { Loader2, Volume2 } from "lucide-react";
+import { VoiceState, ConversationState, LiveConversationState } from "@/types";
+import { Loader2, Volume2, Radio } from "lucide-react";
 import { SilenceIndicator } from "./SilenceIndicator";
 
 interface VoiceStatusBannerProps {
   voiceState: VoiceState;
-  conversationState?: ConversationState;
+  conversationState?: ConversationState | LiveConversationState;
 }
 
 export function VoiceStatusBanner({ voiceState, conversationState }: VoiceStatusBannerProps) {
@@ -26,7 +26,7 @@ export function VoiceStatusBanner({ voiceState, conversationState }: VoiceStatus
         return (
           <>
             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            <span className="text-xs text-gray-500">Dinleniyor...</span>
+            <span className="text-xs text-gray-500">Kayit yapiliyor — durdurmak icin tekrar tiklayin</span>
           </>
         );
       case "processing":
@@ -53,13 +53,27 @@ export function VoiceStatusBanner({ voiceState, conversationState }: VoiceStatus
   );
 }
 
-function getConversationContent(state: ConversationState) {
+function getConversationContent(state: ConversationState | LiveConversationState) {
   switch (state) {
     case "listening":
       return (
         <>
           <span className="w-2 h-2 rounded-full bg-turkcell-blue animate-breathing" />
           <span className="text-xs text-gray-500">Konusmanizi bekliyorum...</span>
+        </>
+      );
+    case "connected":
+      return (
+        <>
+          <Radio className="h-3.5 w-3.5 text-turkcell-blue animate-pulse" />
+          <span className="text-xs text-gray-500">Canli konusma aktif</span>
+        </>
+      );
+    case "connecting":
+      return (
+        <>
+          <Loader2 className="h-3.5 w-3.5 text-turkcell-blue animate-spin" />
+          <span className="text-xs text-gray-500">Baglanti kuruluyor...</span>
         </>
       );
     case "speech-detected":
@@ -78,10 +92,18 @@ function getConversationContent(state: ConversationState) {
         </>
       );
     case "playing":
+    case "model-speaking":
       return (
         <>
           <Volume2 className="h-3.5 w-3.5 text-turkcell-blue animate-pulse" />
           <span className="text-xs text-gray-500">Yanit okunuyor...</span>
+        </>
+      );
+    case "action-pending":
+      return (
+        <>
+          <Loader2 className="h-3.5 w-3.5 text-yellow-500 animate-spin" />
+          <span className="text-xs text-yellow-700">Islem onayiniz bekleniyor</span>
         </>
       );
     default:

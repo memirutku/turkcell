@@ -1,24 +1,47 @@
 "use client";
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { useChatStore } from "@/stores/chatStore";
-import { Send, Loader2, Volume2 } from "lucide-react";
+import { Send, Loader2, Volume2, Radio } from "lucide-react";
 import { useVoiceChat } from "@/hooks/useVoiceChat";
 import { useVoiceConversation } from "@/hooks/useVoiceConversation";
+import { useVoiceLive } from "@/hooks/useVoiceLive";
 import { VoiceButton } from "./VoiceButton";
 import { AudioWaveform } from "./AudioWaveform";
 import { VoiceStatusBanner } from "./VoiceStatusBanner";
 import { ConversationModeToggle } from "./ConversationModeToggle";
-import { ConversationState } from "@/types";
+import { ConversationState, LiveConversationState, VoiceState } from "@/types";
 
-function ConversationStatusArea({ conversationState }: { conversationState: ConversationState }) {
+const IS_LIVE_API = process.env.NEXT_PUBLIC_VOICE_LIVE_ENABLED === "true";
+
+interface VoiceChatProps {
+  voiceState: VoiceState;
+  startRecording: () => void;
+  stopRecording: () => void;
+  isVoiceSupported: boolean;
+  mediaRecorder: MediaRecorder | null;
+}
+
+interface ConversationProps {
+  conversationState: ConversationState | LiveConversationState;
+  startConversation: () => void;
+  stopConversation: () => void;
+  isVADLoading: boolean;
+  isVADErrored: boolean | string;
+}
+
+function ConversationStatusArea({ conversationState }: { conversationState: ConversationState | LiveConversationState }) {
   const getStyles = () => {
     switch (conversationState) {
       case "listening":
+      case "connected":
         return "border-turkcell-blue/20 bg-turkcell-blue/5";
       case "speech-detected":
         return "border-green-200 bg-green-50";
+      case "connecting":
       case "processing":
       case "playing":
+      case "model-speaking":
+      case "action-pending":
       default:
         return "border-gray-200 bg-white";
     }
@@ -31,6 +54,20 @@ function ConversationStatusArea({ conversationState }: { conversationState: Conv
           <>
             <span className="w-2 h-2 rounded-full bg-turkcell-blue animate-breathing shrink-0" />
             <span className="text-sm text-turkcell-blue">Konusmanizi bekliyorum...</span>
+          </>
+        );
+      case "connected":
+        return (
+          <>
+            <Radio className="h-4 w-4 text-turkcell-blue animate-pulse shrink-0" />
+            <span className="text-sm text-turkcell-blue">Canli konusma aktif — konusabilirsiniz</span>
+          </>
+        );
+      case "connecting":
+        return (
+          <>
+            <Loader2 className="h-4 w-4 text-turkcell-blue animate-spin shrink-0" />
+            <span className="text-sm text-gray-500">Baglanti kuruluyor...</span>
           </>
         );
       case "speech-detected":
@@ -48,10 +85,18 @@ function ConversationStatusArea({ conversationState }: { conversationState: Conv
           </>
         );
       case "playing":
+      case "model-speaking":
         return (
           <>
             <Volume2 className="h-4 w-4 text-turkcell-blue animate-pulse shrink-0" />
             <span className="text-sm text-gray-500">Yanit okunuyor...</span>
+          </>
+        );
+      case "action-pending":
+        return (
+          <>
+            <Loader2 className="h-4 w-4 text-yellow-500 animate-spin shrink-0" />
+            <span className="text-sm text-yellow-700">Islem onayiniz bekleniyor...</span>
           </>
         );
       default:
@@ -66,14 +111,14 @@ function ConversationStatusArea({ conversationState }: { conversationState: Conv
   );
 }
 
-export function MessageInput() {
+function MessageInputInner({ voiceChat, conversation }: { voiceChat: VoiceChatProps; conversation: ConversationProps }) {
   const [input, setInput] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const sendMessage = useChatStore((s) => s.sendMessage);
   const isStreaming = useChatStore((s) => s.isStreaming);
 
-  const { voiceState, startRecording, stopRecording, isVoiceSupported, mediaRecorder } = useVoiceChat();
-  const { conversationState, startConversation, stopConversation } = useVoiceConversation();
+  const { voiceState, startRecording, stopRecording, isVoiceSupported, mediaRecorder } = voiceChat;
+  const { conversationState, startConversation, stopConversation, isVADLoading, isVADErrored } = conversation;
 
   const isVoiceActive = voiceState !== "idle";
   const isConversationActive = conversationState !== "off";
@@ -110,6 +155,18 @@ export function MessageInput() {
       stopConversation();
       useChatStore.getState().announce("Sesli konusma modu kapatildi.");
     } else {
+      if (isVADErrored) {
+        useChatStore.getState().setError(
+          "Ses tanima modeli yuklenemedi. Sayfayi yenileyip tekrar deneyin."
+        );
+        return;
+      }
+      if (isVADLoading) {
+        useChatStore.getState().setError(
+          "Ses tanima modeli yukleniyor, lutfen birka\u00e7 saniye bekleyin."
+        );
+        return;
+      }
       startConversation();
       useChatStore.getState().announce("Sesli konusma modu aktif.");
     }
@@ -147,6 +204,8 @@ export function MessageInput() {
             </div>
           ) : (
             <textarea
+              id="message-input"
+              name="message"
               ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -164,6 +223,8 @@ export function MessageInput() {
             conversationState={conversationState}
             onToggle={handleConversationToggle}
             disabled={isStreaming || voiceState === "recording"}
+            isVADLoading={isVADLoading}
+            isVADErrored={!!isVADErrored}
           />
           <VoiceButton
             voiceState={voiceState}
@@ -189,4 +250,20 @@ export function MessageInput() {
       </p>
     </div>
   );
+}
+
+function LiveMessageInput() {
+  const voiceChat = useVoiceChat();
+  const conversation = useVoiceLive();
+  return <MessageInputInner voiceChat={voiceChat} conversation={conversation} />;
+}
+
+function LegacyMessageInput() {
+  const voiceChat = useVoiceChat();
+  const conversation = useVoiceConversation();
+  return <MessageInputInner voiceChat={voiceChat} conversation={conversation} />;
+}
+
+export function MessageInput() {
+  return IS_LIVE_API ? <LiveMessageInput /> : <LegacyMessageInput />;
 }

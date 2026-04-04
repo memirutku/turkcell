@@ -15,6 +15,7 @@ from app.prompts.billing_prompts import (
 )
 from app.prompts.system_prompt import SYSTEM_PROMPT
 from app.services.billing_context import BillingContextService
+from app.services.personalization_engine import get_conversation_style
 from app.services.memory_service import MemoryService
 from app.services.pii_service import PIIMaskingService
 from app.services.rag_service import RAGService
@@ -47,7 +48,7 @@ class ChatService:
         recommendation_service: TariffRecommendationService | None = None,
     ) -> None:
         self._llm = ChatGoogleGenerativeAI(
-            model="gemini-2.0-flash",
+            model=settings.gemini_model,
             google_api_key=settings.gemini_api_key,
             temperature=0.3,
             max_output_tokens=2048,
@@ -104,14 +105,23 @@ class ChatService:
         past_messages = self._memory.get_history(session_id)
 
         # 4. Build message list with conditional prompt selection
+        conversation_style = get_conversation_style()
+        if customer_id and self._billing_context:
+            segment, contract_type = self._billing_context.get_customer_segment_info(customer_id)
+            conversation_style = get_conversation_style(segment, contract_type)
+
         if customer_context:
             system_content = BILLING_SYSTEM_PROMPT.format(
                 customer_context=customer_context,
                 rag_context=context,
                 recommendation_context=recommendation_context,
+                conversation_style=conversation_style,
             )
         else:
-            system_content = SYSTEM_PROMPT.format(context=context)
+            system_content = SYSTEM_PROMPT.format(
+                context=context,
+                conversation_style=conversation_style,
+            )
 
         messages = [
             SystemMessage(content=system_content),

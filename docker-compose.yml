@@ -28,7 +28,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    mem_limit: 1g
+    mem_limit: 512m
     restart: unless-stopped
 
   minio:
@@ -46,13 +46,13 @@ services:
       timeout: 5s
       retries: 5
       start_period: 20s
-    mem_limit: 1g
+    mem_limit: 512m
     restart: unless-stopped
 
   # --- Vector Database ---
 
   milvus-standalone:
-    image: milvusdb/milvus:v2.4-latest
+    image: milvusdb/milvus:v2.4.21
     container_name: turkcell-milvus
     environment:
       ETCD_ENDPOINTS: etcd:2379
@@ -76,7 +76,7 @@ services:
       timeout: 5s
       retries: 10
       start_period: 60s
-    mem_limit: 8g
+    mem_limit: 4g
     restart: unless-stopped
 
   # --- Session Store & Cache ---
@@ -95,7 +95,7 @@ services:
       timeout: 3s
       retries: 5
       start_period: 10s
-    mem_limit: 512m
+    mem_limit: 256m
     restart: unless-stopped
 
   # --- Backend API ---
@@ -121,11 +121,11 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    mem_limit: 2g
+    mem_limit: 1536m
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=PathPrefix(`/api`)"
+      - "traefik.http.routers.api.rule=PathPrefix(`/api`) || PathPrefix(`/ws`) || PathPrefix(`/mcp`)"
       - "traefik.http.services.api.loadbalancer.server.port=8000"
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
@@ -147,12 +147,12 @@ services:
       api:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "node", "-e", "const http = require('http'); http.get('http://localhost:3000', (r) => { process.exit(r.statusCode < 400 ? 0 : 1); }).on('error', () => process.exit(1));"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
-    mem_limit: 1g
+    mem_limit: 512m
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
@@ -163,18 +163,17 @@ services:
   # --- Reverse Proxy ---
 
   traefik:
-    image: traefik:v3.2
+    image: traefik:v3.4
     container_name: turkcell-traefik
     command:
       - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedByDefault=false"
+      - "--providers.file.filename=/etc/traefik/dynamic.yml"
       - "--entrypoints.web.address=:80"
     ports:
       - "80:80"
       - "8080:8080"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro
     restart: unless-stopped
 
 # --- Named Volumes ---

@@ -43,6 +43,13 @@ class BillingContextService:
 
         return "\n\n".join(sections)
 
+    def get_customer_segment_info(self, customer_id: str) -> tuple[str, str]:
+        """Return (segment, contract_type) for a customer. Defaults if not found."""
+        customer = self._bss.get_customer(customer_id)
+        if customer is None:
+            return ("default", "bireysel")
+        return (customer.segment or "default", customer.contract_type or "bireysel")
+
     # -- Private formatting methods --
 
     def _format_customer_profile(self, customer: CustomerDetail) -> str:

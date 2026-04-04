@@ -2,6 +2,18 @@ import CopyPlugin from "copy-webpack-plugin";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable SharedArrayBuffer for ONNX Runtime WASM (VAD speech detection)
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+          { key: "Cross-Origin-Embedder-Policy", value: "credentialless" },
+        ],
+      },
+    ];
+  },
   // Proxy API requests to backend in development
   // In production, Traefik handles routing
   async rewrites() {
@@ -36,6 +48,11 @@ const nextConfig = {
           ],
         })
       );
+
+      // Suppress onnxruntime-web "Critical dependency" warnings
+      config.ignoreWarnings = [
+        { module: /onnxruntime-web/ },
+      ];
     }
     return config;
   },

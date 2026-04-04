@@ -6,12 +6,7 @@ import { useChatStore } from "@/stores/chatStore";
 import { float32ToWavBlob } from "@/lib/audioUtils";
 import { checkMicrophoneSupport, checkSecureContext } from "@/lib/audioUtils";
 import { VAD_CONFIG, POST_PLAYBACK_DELAY_MS } from "@/lib/vadConfig";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
-function getWsBaseUrl(): string {
-  return API_BASE_URL.replace(/^http:\/\//, "ws://").replace(/^https:\/\//, "wss://");
-}
+import { getWsBaseUrl } from "@/lib/api";
 
 const MAX_RECONNECT_ATTEMPTS = 3;
 const RECONNECT_DELAYS = [1000, 2000, 4000];
@@ -64,6 +59,12 @@ export function useVoiceConversation() {
     },
   });
 
+  // Keep vad in a ref so callbacks don't depend on the vad object identity
+  const vadRef = useRef(vad);
+  useEffect(() => {
+    vadRef.current = vad;
+  }, [vad]);
+
   // -- Audio playback queue --
   const playNextInQueue = useCallback(() => {
     if (audioQueueRef.current.length === 0) {
@@ -73,7 +74,7 @@ export function useVoiceConversation() {
         audioDoneReceivedRef.current = false;
         setTimeout(() => {
           if (isMountedRef.current && conversationStateRef.current !== "off") {
-            vad.start();
+            vadRef.current.start();
             setConversationState("listening");
           }
         }, POST_PLAYBACK_DELAY_MS);
@@ -100,17 +101,17 @@ export function useVoiceConversation() {
       URL.revokeObjectURL(url);
       playNextInQueue();
     });
-  }, [vad]);
+  }, []);
 
   const enqueueAudio = useCallback((blob: Blob) => {
     audioQueueRef.current.push(blob);
     if (!isPlayingRef.current) {
       // Pause VAD when first audio arrives to prevent echo loop
-      vad.pause();
+      vadRef.current.pause();
       setConversationState("playing");
       playNextInQueue();
     }
-  }, [playNextInQueue, vad]);
+  }, [playNextInQueue]);
 
   // -- WebSocket connection --
   const connectWebSocket = useCallback(() => {
@@ -185,7 +186,7 @@ export function useVoiceConversation() {
               audioDoneReceivedRef.current = false;
               setTimeout(() => {
                 if (isMountedRef.current && conversationStateRef.current !== "off") {
-                  vad.start();
+                  vadRef.current.start();
                   setConversationState("listening");
                 }
               }, POST_PLAYBACK_DELAY_MS);
@@ -201,7 +202,7 @@ export function useVoiceConversation() {
             // On error, pause briefly then resume listening (don't exit conversation mode)
             setTimeout(() => {
               if (isMountedRef.current && conversationStateRef.current !== "off") {
-                vad.start();
+                vadRef.current.start();
                 setConversationState("listening");
               }
             }, 2000);
@@ -293,7 +294,7 @@ export function useVoiceConversation() {
     };
 
     wsRef.current = ws;
-  }, [enqueueAudio, vad]);
+  }, [enqueueAudio]);
 
   // -- Public API --
   const startConversation = useCallback(async () => {
@@ -319,21 +320,20 @@ export function useVoiceConversation() {
     }
 
     setConversationState("listening");
-    vad.start();
-  }, [connectWebSocket, vad]);
+    vadRef.current.start();
+  }, [connectWebSocket]);
 
   const stopConversation = useCallback(() => {
-    vad.pause();
+    vadRef.current.pause();
     audioQueueRef.current = [];
     isPlayingRef.current = false;
     audioDoneReceivedRef.current = false;
     setConversationState("off");
-  }, [vad]);
+  }, []);
 
-  // Connect WebSocket on mount
+  // Track mount state and clean up on unmount
   useEffect(() => {
     isMountedRef.current = true;
-    connectWebSocket();
 
     return () => {
       isMountedRef.current = false;
@@ -345,7 +345,7 @@ export function useVoiceConversation() {
         wsRef.current = null;
       }
     };
-  }, [connectWebSocket]);
+  }, []);
 
   return {
     conversationState,

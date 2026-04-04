@@ -1,0 +1,102 @@
+[
+  {
+    "customer_id": "cust-001",
+    "period": "2026-03",
+    "hourly_data_distribution": {
+      "00-06": 0.05,
+      "06-12": 0.20,
+      "12-18": 0.35,
+      "18-24": 0.40
+    },
+    "weekday_avg_data_gb": 0.65,
+    "weekend_avg_data_gb": 0.85,
+    "monthly_data_trend": [16.2, 17.5, 18.5],
+    "monthly_voice_trend": [1100, 1200, 1250],
+    "top_app_categories": ["is_uygulamalari", "video", "sosyal_medya"],
+    "voice_pattern": {
+      "weekday_minutes": 180,
+      "weekend_minutes": 70
+    },
+    "seasonal_factor": "normal"
+  },
+  {
+    "customer_id": "cust-002",
+    "period": "2026-03",
+    "hourly_data_distribution": {
+      "00-06": 0.10,
+      "06-12": 0.15,
+      "12-18": 0.25,
+      "18-24": 0.50
+    },
+    "weekday_avg_data_gb": 0.25,
+    "weekend_avg_data_gb": 0.55,
+    "monthly_data_trend": [6.5, 7.8, 8.2],
+    "monthly_voice_trend": [280, 310, 320],
+    "top_app_categories": ["sosyal_medya", "video", "muzik"],
+    "voice_pattern": {
+      "weekday_minutes": 40,
+      "weekend_minutes": 65
+    },
+    "seasonal_factor": "okul_donemi"
+  },
+  {
+    "customer_id": "cust-003",
+    "period": "2026-03",
+    "hourly_data_distribution": {
+      "00-06": 0.02,
+      "06-12": 0.30,
+      "12-18": 0.45,
+      "18-24": 0.23
+    },
+    "weekday_avg_data_gb": 0.50,
+    "weekend_avg_data_gb": 0.30,
+    "monthly_data_trend": [11.5, 12.0, 12.8],
+    "monthly_voice_trend": [900, 950, 980],
+    "top_app_categories": ["is_uygulamalari", "e_posta", "haber"],
+    "voice_pattern": {
+      "weekday_minutes": 160,
+      "weekend_minutes": 40
+    },
+    "seasonal_factor": "normal"
+  },
+  {
+    "customer_id": "cust-004",
+    "period": "2026-03",
+    "hourly_data_distribution": {
+      "00-06": 0.02,
+      "06-12": 0.35,
+      "12-18": 0.40,
+      "18-24": 0.23
+    },
+    "weekday_avg_data_gb": 0.08,
+    "weekend_avg_data_gb": 0.10,
+    "monthly_data_trend": [1.8, 2.0, 2.2],
+    "monthly_voice_trend": [350, 380, 420],
+    "top_app_categories": ["haber", "saglik", "whatsapp"],
+    "voice_pattern": {
+      "weekday_minutes": 50,
+      "weekend_minutes": 80
+    },
+    "seasonal_factor": "normal"
+  },
+  {
+    "customer_id": "cust-005",
+    "period": "2026-03",
+    "hourly_data_distribution": {
+      "00-06": 0.03,
+      "06-12": 0.20,
+      "12-18": 0.30,
+      "18-24": 0.47
+    },
+    "weekday_avg_data_gb": 0.30,
+    "weekend_avg_data_gb": 0.60,
+    "monthly_data_trend": [7.0, 7.5, 8.0],
+    "monthly_voice_trend": [600, 650, 700],
+    "top_app_categories": ["video", "egitim", "sosyal_medya"],
+    "voice_pattern": {
+      "weekday_minutes": 80,
+      "weekend_minutes": 120
+    },
+    "seasonal_factor": "okul_donemi"
+  }
+]

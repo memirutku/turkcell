@@ -1,0 +1,89 @@
+{
+  "competitors": [
+    {
+      "operator": "Vodafone",
+      "tariffs": [
+        {
+          "name": "Red 20GB",
+          "monthly_price_tl": "289.00",
+          "data_gb": 20,
+          "voice_minutes": 2000,
+          "sms_count": 1000
+        },
+        {
+          "name": "Red 10GB",
+          "monthly_price_tl": "189.00",
+          "data_gb": 10,
+          "voice_minutes": 1000,
+          "sms_count": 500
+        },
+        {
+          "name": "Red 5GB",
+          "monthly_price_tl": "119.00",
+          "data_gb": 5,
+          "voice_minutes": 500,
+          "sms_count": 250
+        },
+        {
+          "name": "Red 15GB",
+          "monthly_price_tl": "239.00",
+          "data_gb": 15,
+          "voice_minutes": 1500,
+          "sms_count": 750
+        },
+        {
+          "name": "Red 3GB",
+          "monthly_price_tl": "69.00",
+          "data_gb": 3,
+          "voice_minutes": 300,
+          "sms_count": 100
+        }
+      ]
+    },
+    {
+      "operator": "Turk Telekom",
+      "tariffs": [
+        {
+          "name": "Selfy 20GB",
+          "monthly_price_tl": "279.00",
+          "data_gb": 20,
+          "voice_minutes": 2000,
+          "sms_count": 1000
+        },
+        {
+          "name": "Selfy 10GB",
+          "monthly_price_tl": "179.00",
+          "data_gb": 10,
+          "voice_minutes": 1000,
+          "sms_count": 500
+        },
+        {
+          "name": "Selfy 5GB",
+          "monthly_price_tl": "109.00",
+          "data_gb": 5,
+          "voice_minutes": 500,
+          "sms_count": 250
+        },
+        {
+          "name": "Selfy 15GB",
+          "monthly_price_tl": "229.00",
+          "data_gb": 15,
+          "voice_minutes": 1500,
+          "sms_count": 750
+        },
+        {
+          "name": "Selfy 3GB",
+          "monthly_price_tl": "59.00",
+          "data_gb": 3,
+          "voice_minutes": 250,
+          "sms_count": 100
+        }
+      ]
+    }
+  ],
+  "market_trends": {
+    "avg_data_growth_monthly_pct": 3.5,
+    "avg_price_change_quarterly_pct": -2.0,
+    "popular_categories": ["sosyal_medya", "video_streaming", "bulut_depolama"]
+  }
+}

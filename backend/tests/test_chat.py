@@ -173,7 +173,7 @@ class TestChatService:
 
         MockLLM.assert_called_once()
         call_kwargs = MockLLM.call_args
-        assert call_kwargs.kwargs["model"] == "gemini-2.0-flash"
+        assert call_kwargs.kwargs["model"] == settings.gemini_model
         assert call_kwargs.kwargs["temperature"] == 0.3
 
     @patch("app.services.chat_service.MemoryService")

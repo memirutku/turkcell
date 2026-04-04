@@ -168,3 +168,6 @@ export interface VoiceWebSocketMessage {
 
 // Conversation mode types (Phase 8)
 export type ConversationState = "off" | "listening" | "speech-detected" | "processing" | "playing";
+
+// Gemini Live API conversation states
+export type LiveConversationState = "off" | "connecting" | "connected" | "model-speaking" | "action-pending";
