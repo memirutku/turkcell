@@ -1,8 +1,29 @@
+<div align="center">
+
+<a id="top"></a>
+
 # Umay AI-Gen
 
-[EN](#en) | [TR](#tr)
+### Telekom müşteri asistanı · Telecom customer AI assistant
 
-## EN
+<p>
+  <b>EN</b> — <i>Voice &amp; text AI for telecom customer-service scenarios: FastAPI, Next.js, Docker Compose, RAG (Milvus), MCP, Gemini.</i><br>
+  <b>TR</b> — <i>Telekom müşteri hizmetleri için sesli ve metin asistanı: FastAPI, Next.js, Docker Compose, RAG (Milvus), MCP, Gemini.</i>
+</p>
+
+**Dil &nbsp;·&nbsp; Language:** [**English**](#english) &nbsp;|&nbsp; [**Türkçe**](#turkce)
+
+[![](https://img.shields.io/badge/frontend-Next.js%2014-0d1117?logo=nextdotjs)](https://nextjs.org/) [![](https://img.shields.io/badge/backend-FastAPI-0d1117?logo=fastapi)](https://fastapi.tiangolo.com/) [![](https://img.shields.io/badge/orchestration-Docker%20Compose-0d1117?logo=docker)](https://docs.docker.com/compose/) [![](https://img.shields.io/badge/RAG-Milvus-0d1117)](https://milvus.io/) [![](https://img.shields.io/badge/LLM-Google%20GenAI-0d1117?logo=google)](https://ai.google.dev/) [![](https://img.shields.io/badge/protocol-MCP-0d1117)](https://modelcontextprotocol.io/)
+
+**Repo:** [github.com/memirutku/turkcell](https://github.com/memirutku/turkcell)
+
+</div>
+
+---
+
+<a id="english"></a>
+
+## English
 
 Umay AI-Gen is a voice and text AI assistant project built for telecom customer-service scenarios.  
 It includes a FastAPI backend, a Next.js frontend, and supporting services orchestrated with Docker Compose.
@@ -135,9 +156,13 @@ pnpm lint
 
 This project was built as a competition/prototype project.
 
+**[↑ Back to top](#top)**
+
 ---
 
-## TR
+<a id="turkce"></a>
+
+## Türkçe
 
 Umay AI-Gen, telekom müşteri hizmetleri senaryoları için geliştirilmiş, sesli ve metin tabanlı bir yapay zeka asistanı projesidir.  
 Proje; FastAPI tabanlı bir backend, Next.js tabanlı bir frontend ve Docker Compose ile orkestre edilen yardımcı servislerden oluşur.
@@ -270,3 +295,4 @@ pnpm lint
 
 Bu proje yarışma/prototip amaçlı geliştirilmiştir.
 
+**[↑ Başa dön](#top)**
