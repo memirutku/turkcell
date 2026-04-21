@@ -1,0 +1,23 @@
+http:
+  routers:
+    api:
+      rule: "PathPrefix(`/api`) || PathPrefix(`/ws`) || PathPrefix(`/mcp`)"
+      entryPoints:
+        - web
+      service: api
+    web:
+      rule: "PathPrefix(`/`)"
+      entryPoints:
+        - web
+      service: web
+      priority: 1
+
+  services:
+    api:
+      loadBalancer:
+        servers:
+          - url: "http://api:8000"
+    web:
+      loadBalancer:
+        servers:
+          - url: "http://web:3000"

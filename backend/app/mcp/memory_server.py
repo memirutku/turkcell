@@ -19,7 +19,7 @@ def create_and_mount_memory_mcp(app: FastAPI) -> FastApiMCP:
     """
     mcp_server = FastApiMCP(
         app,
-        name="Turkcell Customer Memory MCP Server",
+        name="Umay Customer Memory MCP Server",
         description=(
             "Musteri etkilesim hafizasi — onceki konusmalari, tercihleri "
             "ve cozulmemis sorunlari takip eder"

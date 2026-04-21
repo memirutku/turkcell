@@ -30,7 +30,7 @@ class SearchResponse(BaseModel):
 @router.post("/rag/search", response_model=SearchResponse)
 async def rag_search(body: SearchRequest, request: Request):
     """
-    Turkcell dokuman havuzunda semantik arama yapar.
+    Umay dokuman havuzunda semantik arama yapar.
 
     Turkce sorguyu Gemini embedding ile vektorlestirip Milvus'ta
     en yakin dokuman parcalarini dondurur.

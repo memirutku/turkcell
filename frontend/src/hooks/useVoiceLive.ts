@@ -43,7 +43,9 @@ export function useVoiceLive() {
       event.data.arrayBuffer().then((buffer) => {
         if (!isMountedRef.current) return;
         if (conversationStateRef.current !== "off") {
-          setConversationState("model-speaking");
+          if (conversationStateRef.current !== "action-pending") {
+            setConversationState("model-speaking");
+          }
           pcmPlayerRef.current?.enqueue(buffer);
         }
       });
@@ -53,7 +55,9 @@ export function useVoiceLive() {
     // ArrayBuffer binary data
     if (event.data instanceof ArrayBuffer) {
       if (conversationStateRef.current !== "off") {
-        setConversationState("model-speaking");
+        if (conversationStateRef.current !== "action-pending") {
+          setConversationState("model-speaking");
+        }
         pcmPlayerRef.current?.enqueue(event.data);
       }
       return;
@@ -133,7 +137,7 @@ export function useVoiceLive() {
         }
 
         case "action_proposal": {
-          setConversationState("action-pending");
+          // Info card only (no buttons, no pending state) — voice handles confirmation
           const store = useChatStore.getState();
           const proposal: ActionProposal = {
             action_type: (msg.data?.action_type as "package_activation" | "tariff_change") || "package_activation",
@@ -141,17 +145,10 @@ export function useVoiceLive() {
             details: msg.data?.details || {},
             thread_id: "",
           };
-          store.setPendingAction(proposal);
           store.addStructuredData({
             type: "action_proposal",
             payload: proposal,
           });
-          const title = proposal.action_type === "package_activation"
-            ? "Paket Tanimlama"
-            : "Tarife Degisikligi";
-          store.announce(
-            `Islem onerisi: ${title}. ${proposal.description}. Onaylamak icin Evet Onayla butonunu, iptal etmek icin Vazgec butonunu kullanin.`
-          );
           break;
         }
 
@@ -169,12 +166,11 @@ export function useVoiceLive() {
           });
           store.setPendingAction(null);
           if (result.success) {
-            store.announce(`Islem basarili: ${result.description}`);
+            const cid = store.customerId;
+            if (cid) store.refreshCustomerTariff(cid);
+            store.announce(`İşlem başarılı: ${result.description}`);
           } else {
-            store.announce(`Islem basarisiz: ${result.description}`);
-          }
-          if (conversationStateRef.current === "action-pending") {
-            setConversationState("connected");
+            store.announce(`İşlem başarısız: ${result.description}`);
           }
           break;
         }
@@ -182,7 +178,7 @@ export function useVoiceLive() {
         case "error": {
           hasServerErrorRef.current = true;
           useChatStore.getState().setError(
-            msg.message || "Bir hata olustu. Lutfen tekrar deneyin."
+            msg.message || "Bir hata oluştu. Lütfen tekrar deneyin."
           );
           break;
         }
@@ -196,11 +192,11 @@ export function useVoiceLive() {
     const store = useChatStore.getState();
 
     if (!checkSecureContext()) {
-      store.setError("Ses ozelligi yalnizca guvenli baglantilarda (HTTPS veya localhost) kullanilabilir.");
+      store.setError("Ses özelliği yalnızca güvenli bağlantılarda (HTTPS veya localhost) kullanılabilir.");
       return;
     }
     if (!checkMicrophoneSupport()) {
-      store.setError("Tarayiciniz ses kaydini desteklemiyor. Lutfen guncel bir tarayici kullanin.");
+      store.setError("Tarayıcınız ses kaydını desteklemiyor. Lütfen güncel bir tarayıcı kullanın.");
       return;
     }
 
@@ -208,7 +204,8 @@ export function useVoiceLive() {
 
     // Create PCM player with callback for when playback ends
     const player = new PCMPlayer(() => {
-      if (isMountedRef.current && conversationStateRef.current !== "off") {
+      if (isMountedRef.current && conversationStateRef.current !== "off"
+          && conversationStateRef.current !== "action-pending") {
         setConversationState("connected");
       }
     });
@@ -229,16 +226,6 @@ export function useVoiceLive() {
       ws.send(JSON.stringify(initMsg));
 
       // Start mic capture
-      // Register live confirmation callback so UI buttons route through WebSocket
-      store.setLiveConfirmCallback((approved: boolean) => {
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({ type: "confirmation", approved }));
-        }
-        if (conversationStateRef.current === "action-pending") {
-          setConversationState("connected");
-        }
-      });
-
       startPCMCapture((pcmData) => {
         if (ws.readyState === WebSocket.OPEN) {
           ws.send(pcmData);
@@ -247,11 +234,11 @@ export function useVoiceLive() {
         stopCaptureRef.current = stopFn;
         if (isMountedRef.current) {
           setConversationState("connected");
-          store.announce("Sesli konusma modu aktif.");
+          store.announce("Sesli konuşma modu aktif.");
         }
       }).catch((err) => {
         console.error("Mic capture failed:", err);
-        store.setError("Mikrofon erisimi saglanamadi. Lutfen izinleri kontrol edin.");
+        store.setError("Mikrofon erişimi sağlanamadı. Lütfen izinleri kontrol edin.");
         setConversationState("off");
       });
     };
@@ -263,7 +250,7 @@ export function useVoiceLive() {
       useChatStore.getState().setLiveConfirmCallback(null);
       if (conversationStateRef.current !== "off") {
         if (!hasServerErrorRef.current) {
-          store.setError("Ses baglantisi kapandi.");
+          store.setError("Ses bağlantısı kapandı.");
         }
         hasServerErrorRef.current = false;
         stopCapture();

@@ -10,12 +10,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Turkcell brand colors
-        turkcell: {
+        // Umay brand colors
+        umay: {
           yellow: "#FFD100",
+          "yellow-light": "#FFE066",
+          "yellow-dark": "#E6BC00",
           dark: "#1A1A2E",
+          "dark-lighter": "#252540",
           blue: "#0066CC",
+          "blue-light": "#3388DD",
+          "blue-dark": "#004C99",
           gray: "#F5F5F5",
+          "gray-200": "#E5E5EA",
+          "gray-300": "#D1D1D6",
+          "gray-700": "#48485A",
+          "gray-800": "#2C2C3E",
+          "gray-900": "#1C1C2E",
         },
         // shadcn/ui CSS variable colors
         background: "var(--background)",

@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     # Milvus
     milvus_host: str = "milvus-standalone"
     milvus_port: int = 19530
-    milvus_collection_name: str = "turkcell_documents"
+    milvus_collection_name: str = "umay_documents"
 
     # PII Masking (Phase 4)
     pii_masking_enabled: bool = True

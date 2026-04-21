@@ -64,35 +64,35 @@ SEGMENT_AFFINITY = {
 # Segment-based conversation style directives
 SEGMENT_CONVERSATION_STYLE = {
     "genc": (
-        "Genc ve enerjik bir uslup kullan. 'Sen' dili ile hitap et. "
-        "Kisa ve hizli yanitlar ver. Guncel ve samimi bir dil kullan. "
-        "Ornek: 'Hemen halledelim!', 'Surada bir bakayim senin icin.'"
+        "Genç ve enerjik bir üslup kullan. 'Sen' dili ile hitap et. "
+        "Kısa ve hızlı yanıtlar ver. Güncel ve samimi bir dil kullan. "
+        "Örnek: 'Hemen halledelim!', 'Şurada bir bakayım senin için.'"
     ),
     "profesyonel": (
-        "Profesyonel ve resmi bir uslup kullan. 'Siz' dili ile hitap et. "
-        "Detayli ve cozum odakli yanitlar ver. Is dili kullan, jargondan kacin. "
-        "Ornek: 'Size en uygun cozumu hemen sunayim.', 'Detaylari inceledim.'"
+        "Profesyonel ve resmi bir üslup kullan. 'Siz' dili ile hitap et. "
+        "Detaylı ve çözüm odaklı yanıtlar ver. İş dili kullan, jargondan kaçın. "
+        "Örnek: 'Size en uygun çözümü hemen sunayım.', 'Detayları inceledim.'"
     ),
     "aile": (
-        "Sicak, guven verici ve sabirl bir uslup kullan. 'Siz' dili ile hitap et. "
-        "Pratik ve anlasilir oneriler sun. Aile butcesini goz onunde bulundur. "
-        "Ornek: 'Merak etmeyin, birlikte cozumu bulalim.', 'Aileniz icin en uygunu...'"
+        "Sıcak, güven verici ve sabırlı bir üslup kullan. 'Siz' dili ile hitap et. "
+        "Pratik ve anlaşılır öneriler sun. Aile bütçesini göz önünde bulundur. "
+        "Örnek: 'Merak etmeyin, birlikte çözümü bulalım.', 'Aileniz için en uygunu...'"
     ),
     "emekli": (
-        "Cok acik, sade ve sabirl bir uslup kullan. 'Siz' dili ile hitap et. "
-        "Kisa cumleler kur, teknik terimlerden kacin. Adim adim acikla. "
-        "Gerekirse ayni bilgiyi farkli sekilde tekrarla. "
-        "Ornek: 'Adim adim anlatayim.', 'Yani kisaca soyle...'"
+        "Çok açık, sade ve sabırlı bir üslup kullan. 'Siz' dili ile hitap et. "
+        "Kısa cümleler kur, teknik terimlerden kaçın. Adım adım açıkla. "
+        "Gerekirse aynı bilgiyi farklı şekilde tekrarla. "
+        "Örnek: 'Adım adım anlatayım.', 'Yani kısaca şöyle...'"
     ),
     "ogrenci": (
-        "Samimi ve enerjik bir uslup kullan. 'Sen' dili ile hitap et. "
-        "Butce bilincini goz onunde bulundur. Kisa ve pratik yanitlar ver. "
-        "Ornek: 'En uygun fiyatli secenege bakalim!', 'Ogrenci dostu paketlerimiz var.'"
+        "Samimi ve enerjik bir üslup kullan. 'Sen' dili ile hitap et. "
+        "Bütçe bilincini göz önünde bulundur. Kısa ve pratik yanıtlar ver. "
+        "Örnek: 'En uygun fiyatlı seçeneğe bakalım!', 'Öğrenci dostu paketlerimiz var.'"
     ),
     "kurumsal": (
-        "Cok resmi ve profesyonel bir uslup kullan. 'Siz' dili ile hitap et. "
-        "Verimlilik ve cozum odakli ol. Kurumsal ihtiyaclara oncelik ver. "
-        "Ornek: 'Kurumunuz icin en verimli cozumu sunayim.'"
+        "Çok resmi ve profesyonel bir üslup kullan. 'Siz' dili ile hitap et. "
+        "Verimlilik ve çözüm odaklı ol. Kurumsal ihtiyaçlara öncelik ver. "
+        "Örnek: 'Kurumunuz için en verimli çözümü sunayım.'"
     ),
     "default": "Samimi, empatik ve profesyonel bir ton kullan.",
 }
@@ -149,6 +149,10 @@ class PersonalizationEngine:
         recommendations: list[PersonalizedRecommendation] = []
         for tariff in self._mock_bss.get_tariffs():
             if not tariff.is_active or tariff.id == current_tariff.id:
+                continue
+
+            # Only recommend upgrades (higher data quota)
+            if tariff.data_gb <= current_tariff.data_gb:
                 continue
 
             usage_fit = self._calc_usage_fit(usage, tariff)
@@ -379,7 +383,7 @@ class PersonalizationEngine:
         elif savings < -50:
             reasons.append(f"Mevcut maliyetinize gore aylik {abs(savings):.0f} TL daha pahali")
 
-        return reasons if reasons else ["Genel degerlendirme"]
+        return reasons if reasons else ["Genel değerlendirme"]
 
     @staticmethod
     def _build_tags(profile, tariff) -> list[str]:

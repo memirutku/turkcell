@@ -5,6 +5,13 @@
 .env.local
 .env.*.local
 !.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+id_rsa
+id_ed25519
 
 # Python
 __pycache__/
@@ -33,6 +40,15 @@ docker-compose.override.yml
 # OS
 .DS_Store
 Thumbs.db
+
+# Local artifacts (keep repository clean/public)
+*.pdf
+*.pptx
+*.odp
+*.zip
+*.webp
+*.gif
+*.png
 
 # Volumes (if accidentally created locally)
 etcd-data/

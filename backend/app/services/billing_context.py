@@ -7,8 +7,8 @@ from app.services.mock_bss import MockBSSService
 
 # Category mapping: internal key -> Turkish display label
 CATEGORY_MAP: dict[str, str] = {
-    "base": "Ana Ucret",
-    "overage": "Asim Ucreti",
+    "base": "Ana Ücret",
+    "overage": "Aşım Ücreti",
     "tax": "Vergi",
 }
 
@@ -65,10 +65,11 @@ class BillingContextService:
 
         lines = [
             "## Musteri Bilgileri",
+            f"- Müşteri ID: {customer.id}",
             f"- Ad: {display_name}",
             f"- Telefon: {phone_masked}",
-            f"- Sehir: {customer.address_city}",
-            f"- Kayit Tarihi: {customer.registration_date}",
+            f"- Şehir: {customer.address_city}",
+            f"- Kayıt Tarihi: {customer.registration_date}",
         ]
         return "\n".join(lines)
 
@@ -76,11 +77,12 @@ class BillingContextService:
         """Format current tariff details."""
         lines = [
             "## Mevcut Tarife",
+            f"- Tarife ID: {tariff.id}",
             f"- Tarife: {tariff.name}",
             f"- Internet: {tariff.data_gb}GB",
             f"- Konusma: {tariff.voice_minutes} dakika",
             f"- SMS: {tariff.sms_count} adet",
-            f"- Aylik Ucret: {self._format_tl(tariff.monthly_price_tl)}",
+            f"- Aylık Ücret: {self._format_tl(tariff.monthly_price_tl)}",
         ]
         return "\n".join(lines)
 
@@ -120,11 +122,21 @@ class BillingContextService:
             f"- SMS: {usage.sms_used}/{usage.sms_limit} adet",
         ]
 
-        # Highlight overages
+        # Highlight overages with cause explanation
         if usage.data_overage_gb > 0:
-            lines.append(f"- **Internet Asimi: {usage.data_overage_gb} GB**")
+            lines.append(
+                f"- **İnternet Aşımı: {usage.data_overage_gb} GB** "
+                f"(Tarifenizde {usage.data_limit_gb}GB internet var, "
+                f"bu dönem {usage.data_used_gb}GB kullandınız → "
+                f"{usage.data_overage_gb}GB aşım)"
+            )
         if usage.voice_overage_minutes > 0:
-            lines.append(f"- **Konusma Asimi: {usage.voice_overage_minutes} dakika**")
+            lines.append(
+                f"- **Konuşma Aşımı: {usage.voice_overage_minutes} dakika** "
+                f"(Tarifenizde {usage.voice_limit_minutes} dakika var, "
+                f"bu dönem {usage.voice_used_minutes} dakika kullandınız → "
+                f"{usage.voice_overage_minutes} dakika aşım)"
+            )
 
         return "\n".join(lines)
 

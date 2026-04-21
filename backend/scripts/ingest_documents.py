@@ -106,7 +106,7 @@ def main() -> None:
         sys.exit(1)
 
     logger.info("=" * 60)
-    logger.info("Turkcell AI-Gen Document Ingestion")
+    logger.info("Umay AI-Gen Document Ingestion")
     logger.info("=" * 60)
     logger.info("Milvus: %s:%d", settings.milvus_host, settings.milvus_port)
     logger.info("Collection: %s", settings.milvus_collection_name)

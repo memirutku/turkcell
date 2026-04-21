@@ -127,6 +127,23 @@ class MockBSSService:
             len(self._usage_patterns),
         )
 
+    def _save_customers(self) -> None:
+        """Persist current customer state to the JSON file."""
+        customers_path = DATA_DIR / "customers.json"
+        output = []
+        for cid, customer in self._customers.items():
+            cust_dict = customer.model_dump(mode="json")
+            # Re-attach bills and usage for round-trip compatibility with load_data()
+            bills = self._bills.get(cid, [])
+            cust_dict["bills"] = [b.model_dump(mode="json") for b in bills]
+            usage = self._usage.get(cid)
+            if usage:
+                cust_dict["usage"] = usage.model_dump(mode="json")
+            output.append(cust_dict)
+        with open(customers_path, "w", encoding="utf-8") as f:
+            json.dump(output, f, ensure_ascii=False, indent=2, default=str)
+        logger.info("Customer data persisted to %s", customers_path)
+
     # --- Customer methods ---
 
     def get_customer(self, customer_id: str) -> CustomerDetail | None:
@@ -186,11 +203,16 @@ class MockBSSService:
 
         customer = self._customers.get(customer_id)
         if not customer:
-            return {"success": False, "error": f"Musteri bulunamadi: {customer_id}"}
+            return {"success": False, "error": f"Müşteri bulunamadı: {customer_id}"}
 
         package = self._packages.get(package_id)
         if not package:
-            return {"success": False, "error": f"Paket bulunamadi: {package_id}"}
+            return {"success": False, "error": f"Paket bulunamadı: {package_id}"}
+
+        # Record the package activation on the customer
+        if package_id not in customer.active_packages:
+            customer.active_packages.append(package_id)
+        self._save_customers()
 
         return {
             "success": True,
@@ -204,8 +226,8 @@ class MockBSSService:
                 "duration_days": package.duration_days,
             },
             "message_tr": (
-                f"{package.name} basariyla aktiflestirildi. "
-                f"Ucret: {package.price_tl} TL, Sure: {package.duration_days} gun."
+                f"{package.name} başarıyla aktifleştirildi. "
+                f"Ücret: {package.price_tl} TL, Süre: {package.duration_days} gün."
             ),
         }
 
@@ -220,11 +242,11 @@ class MockBSSService:
         """
         customer = self._customers.get(customer_id)
         if not customer:
-            return {"error": f"Musteri bulunamadi: {customer_id}"}
+            return {"error": f"Müşteri bulunamadı: {customer_id}"}
 
         current_tariff = self._tariffs.get(customer.tariff_id)
         if not current_tariff:
-            return {"error": "Mevcut tarife bulunamadi"}
+            return {"error": "Mevcut tarife bulunamadı"}
 
         bills = self._bills.get(customer_id, [])
         usage = self._usage.get(customer_id)
@@ -251,6 +273,10 @@ class MockBSSService:
         recommendations = []
         for tariff in self._tariffs.values():
             if not tariff.is_active or tariff.id == current_tariff.id:
+                continue
+
+            # Only recommend upgrades (higher data quota)
+            if tariff.data_gb <= current_tariff.data_gb:
                 continue
 
             tariff_price = float(tariff.monthly_price_tl)
@@ -325,8 +351,8 @@ class MockBSSService:
                 "type": "unpaid_bill",
                 "severity": "high",
                 "message": (
-                    f"{bill.period} donemi faturaniz ({bill.total_amount_tl} TL) "
-                    f"henuz odenmedi. Son odeme tarihi: {bill.due_date}."
+                    f"{bill.period} dönemi faturanız ({bill.total_amount_tl} TL) "
+                    f"henüz ödenmedi. Son ödeme tarihi: {bill.due_date}."
                 ),
             })
 
@@ -339,8 +365,8 @@ class MockBSSService:
                     "type": "data_overage",
                     "severity": "high",
                     "message": (
-                        f"Veri limitinizi {usage.data_overage_gb} GB astiniz. "
-                        f"Kullanim: {usage.data_used_gb}/{usage.data_limit_gb} GB."
+                        f"Veri limitinizi {usage.data_overage_gb} GB aştınız. "
+                        f"Kullanım: {usage.data_used_gb}/{usage.data_limit_gb} GB."
                     ),
                 })
             # Data near limit (>80%)
@@ -351,8 +377,8 @@ class MockBSSService:
                         "type": "data_near_limit",
                         "severity": "medium",
                         "message": (
-                            f"Veri kullaniminiz %{pct:.0f} seviyesinde. "
-                            f"{usage.data_used_gb}/{usage.data_limit_gb} GB kullandiniz."
+                            f"Veri kullanımınız %{pct:.0f} seviyesinde. "
+                            f"{usage.data_used_gb}/{usage.data_limit_gb} GB kullandınız."
                         ),
                     })
 
@@ -362,7 +388,7 @@ class MockBSSService:
                     "type": "voice_overage",
                     "severity": "high",
                     "message": (
-                        f"Konusma limitinizi {usage.voice_overage_minutes} dakika astiniz."
+                        f"Konuşma limitinizi {usage.voice_overage_minutes} dakika aştınız."
                     ),
                 })
             elif usage.voice_limit_minutes > 0:
@@ -372,7 +398,7 @@ class MockBSSService:
                         "type": "voice_near_limit",
                         "severity": "medium",
                         "message": (
-                            f"Konusma kullaniminiz %{pct:.0f} seviyesinde. "
+                            f"Konuşma kullanımınız %{pct:.0f} seviyesinde. "
                             f"{usage.voice_used_minutes}/{usage.voice_limit_minutes} dakika."
                         ),
                     })
@@ -383,13 +409,13 @@ class MockBSSService:
         """Compare the last 2 bills: total change, overage change, reasons."""
         customer = self._customers.get(customer_id)
         if not customer:
-            return {"error": f"Musteri bulunamadi: {customer_id}"}
+            return {"error": f"Müşteri bulunamadı: {customer_id}"}
 
         bills = self._bills.get(customer_id, [])
         sorted_bills = sorted(bills, key=lambda b: b.period, reverse=True)
 
         if len(sorted_bills) < 2:
-            return {"error": "Karsilastirma icin en az 2 fatura gerekli."}
+            return {"error": "Karşılaştırma için en az 2 fatura gerekli."}
 
         current = sorted_bills[0]
         previous = sorted_bills[1]
@@ -410,9 +436,9 @@ class MockBSSService:
         overage_diff = curr_overage - prev_overage
         if abs(overage_diff) > 0.01:
             if overage_diff > 0:
-                reasons.append(f"Asim ucretleri {overage_diff:.2f} TL artti")
+                reasons.append(f"Aşım ücretleri {overage_diff:.2f} TL arttı")
             else:
-                reasons.append(f"Asim ucretleri {abs(overage_diff):.2f} TL azaldi")
+                reasons.append(f"Aşım ücretleri {abs(overage_diff):.2f} TL azaldı")
 
         # Check for new line items in current that weren't in previous
         prev_descs = {i.description for i in previous.line_items}
@@ -430,7 +456,7 @@ class MockBSSService:
             "percent_change": f"{pct_change:+.1f}%",
             "current_overage_tl": f"{curr_overage:.2f}",
             "previous_overage_tl": f"{prev_overage:.2f}",
-            "change_reasons": reasons if reasons else ["Onemli bir degisiklik yok"],
+            "change_reasons": reasons if reasons else ["Önemli bir değişiklik yok"],
             "current_is_paid": current.is_paid,
             "previous_is_paid": previous.is_paid,
         }
@@ -439,7 +465,7 @@ class MockBSSService:
         """Recommend add-on packages based on customer usage patterns."""
         customer = self._customers.get(customer_id)
         if not customer:
-            return {"error": f"Musteri bulunamadi: {customer_id}"}
+            return {"error": f"Müşteri bulunamadı: {customer_id}"}
 
         usage = self._usage.get(customer_id)
         bills = self._bills.get(customer_id, [])
@@ -473,13 +499,13 @@ class MockBSSService:
                 if pkg.category == "ek_data" and avg_overage > 0:
                     savings = avg_overage - pkg_price
                     reason = (
-                        f"Aylik ortalama {avg_overage:.0f} TL asim ucretiniz var. "
+                        f"Aylık ortalama {avg_overage:.0f} TL aşım ücretiniz var. "
                         f"Bu paketle tahmini {max(0, savings):.0f} TL tasarruf edebilirsiniz."
                     )
                 elif pkg.category == "sosyal_medya":
                     reason = (
-                        "Sosyal medya kullaniminiz tarifenizden yemez, "
-                        "veri kullaniminizi azaltabilir."
+                        "Sosyal medya kullanımınız tarifenizden yemez, "
+                        "veri kullanımınızı azaltabilir."
                     )
                 recommendations.append({
                     "package_id": pkg.id,
@@ -516,16 +542,17 @@ class MockBSSService:
 
         customer = self._customers.get(customer_id)
         if not customer:
-            return {"success": False, "error": f"Musteri bulunamadi: {customer_id}"}
+            return {"success": False, "error": f"Müşteri bulunamadı: {customer_id}"}
 
         new_tariff = self._tariffs.get(new_tariff_id)
         if not new_tariff:
-            return {"success": False, "error": f"Tarife bulunamadi: {new_tariff_id}"}
+            return {"success": False, "error": f"Tarife bulunamadı: {new_tariff_id}"}
 
         old_tariff = self._tariffs.get(customer.tariff_id)
 
-        # Update customer's tariff in-place
+        # Update customer's tariff in-place and persist
         customer.tariff_id = new_tariff_id
+        self._save_customers()
 
         return {
             "success": True,
@@ -546,5 +573,5 @@ class MockBSSService:
                 "name": new_tariff.name,
                 "monthly_price_tl": str(new_tariff.monthly_price_tl),
             },
-            "message_tr": f"Tarifiniz {new_tariff.name} olarak basariyla degistirildi.",
+            "message_tr": f"Tarifiniz {new_tariff.name} olarak başarıyla değiştirildi.",
         }

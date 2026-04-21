@@ -38,7 +38,7 @@ _ACTION_TOOLS = {"activate_package", "change_tariff"}
 
 
 class AgentService:
-    """LangGraph StateGraph agent for Turkcell telecom workflows.
+    """LangGraph StateGraph agent for Umay telecom workflows.
 
     Nodes:
       - gather_context: RAG search + billing context + PII masking
@@ -185,9 +185,15 @@ class AgentService:
                 )
 
         # Format system prompt with context
+        customer_context_with_id = customer_context or "Musteri bilgisi mevcut degil."
+        if customer_id and customer_context:
+            customer_context_with_id = (
+                f"Musteri ID: {customer_id}\n{customer_context}"
+            )
+
         system_content = AGENT_SYSTEM_PROMPT.format(
             customer_memory=memory_context,
-            customer_context=customer_context or "Musteri bilgisi mevcut degil.",
+            customer_context=customer_context_with_id,
             rag_context=rag_context or "Bilgi kaynaklarinda ilgili bilgi bulunamadi.",
             conversation_style=conversation_style,
         )
@@ -302,8 +308,10 @@ class AgentService:
                         AIMessage(content="Anlasildi, islem iptal edildi. Baska bir konuda yardimci olabilir miyim?"),
                     ],
                     "action_result": {
-                        "status": "cancelled",
+                        "success": False,
                         "action_type": action_type,
+                        "description": "Islem iptal edildi.",
+                        "details": {},
                     },
                 },
             )
@@ -342,20 +350,50 @@ class AgentService:
                     tool_args["new_tariff_id"],
                 )
 
+            action_type = "package_activation" if tool_name == "activate_package" else "tariff_change"
             if result.get("success"):
                 result_message = result.get("message_tr", "Islem basariyla tamamlandi.")
+                friendly = {}
+                if result.get("transaction_id"):
+                    friendly["Islem No"] = result["transaction_id"]
+                if tool_name == "change_tariff" and result.get("new_tariff"):
+                    t = result["new_tariff"]
+                    friendly["Yeni Tarife"] = t.get("name", "")
+                    friendly["Aylik Ucret"] = f"{t.get('monthly_price_tl', '')} TL"
+                elif tool_name == "activate_package" and result.get("package"):
+                    p = result["package"]
+                    friendly["Paket"] = p.get("name", "")
+                    friendly["Ucret"] = f"{p.get('price_tl', '')} TL"
+                    friendly["Sure"] = f"{p.get('duration_days', '')} gun"
+                action_result = {
+                    "success": True,
+                    "action_type": action_type,
+                    "description": result_message,
+                    "details": friendly,
+                }
             else:
                 result_message = f"Islem basarisiz: {result.get('error', 'Bilinmeyen hata')}"
+                action_result = {
+                    "success": False,
+                    "action_type": action_type,
+                    "description": result_message,
+                    "details": {},
+                }
 
             return {
                 "messages": [AIMessage(content=result_message)],
-                "action_result": result,
+                "action_result": action_result,
             }
         except Exception as e:
             logger.error("Action execution failed: %s", e, exc_info=True)
             return {
                 "messages": [AIMessage(content="Islem sirasinda bir hata olustu. Lutfen tekrar deneyin.")],
-                "action_result": {"status": "error", "error": str(e)},
+                "action_result": {
+                    "success": False,
+                    "action_type": "tariff_change",
+                    "description": "Islem sirasinda bir hata olustu.",
+                    "details": {},
+                },
             }
 
     # -- Public streaming methods --

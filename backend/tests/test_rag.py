@@ -146,11 +146,11 @@ def test_document_chunking():
 
     # ~1500 characters of Turkish telecom text across 3 paragraphs
     sample_text = (
-        "Turkcell Platinum Esneyebilen 20GB tarife, aylik 299 TL karsiliginda "
+        "Umay Platinum Esneyebilen 20GB tarife, aylik 299 TL karsiliginda "
         "20GB yuksek hizli internet, sinursiz konusma ve 1000 SMS icermektedir. "
         "Kullanicilar, aylik kotalarini astiklari takdirde GB basina 30 TL asim "
         "ucreti odemektedir. Bu tarife, yogun veri kullanimi olan musteriler icin "
-        "ideal bir secenektir. Tarife degisikligi icin Turkcell uygulamasi veya "
+        "ideal bir secenektir. Tarife degisikligi icin Umay uygulamasi veya "
         "musteri hizmetleri aracaniliyla islem yapilabilir.\n\n"
         "Gold Esneyebilen 10GB tarife aylik 199 TL'dir ve 10GB internet, sinursiz "
         "konusma, 500 SMS sunmaktadir. Asim ucreti GB basina 35 TL olarak "

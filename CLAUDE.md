@@ -1,16 +1,16 @@
 <!-- GSD:project-start source:PROJECT.md -->
 ## Project
 
-**Turkcell AI-Gen**
+**Umay AI-Gen**
 
-Turkcell AI-Gen, LLM ve RAG teknolojilerini kullanarak Turkcell altyapısına özel, anlık ve hatasız çözüm sunan bulut tabanlı bir dijital asistan sistemidir. Müşterilerin fatura analizi, tarife değişikliği ve teknik destek gibi taleplerini sesli yapay zeka ile saniyeler içinde çözerek, geleneksel çağrı merkezi deneyimini dönüştürmeyi hedefler. Bireysel ve kurumsal Turkcell abonelerine, özellikle dijital kanalları aktif kullanan gençlere, yoğun iş profesyonellerine ve sesli erişilebilirliğe ihtiyaç duyan engelli bireylere hizmet eder.
+Umay AI-Gen, LLM ve RAG teknolojilerini kullanarak Umay altyapısına özel, anlık ve hatasız çözüm sunan bulut tabanlı bir dijital asistan sistemidir. Müşterilerin fatura analizi, tarife değişikliği ve teknik destek gibi taleplerini sesli yapay zeka ile saniyeler içinde çözerek, geleneksel çağrı merkezi deneyimini dönüştürmeyi hedefler. Bireysel ve kurumsal Umay abonelerine, özellikle dijital kanalları aktif kullanan gençlere, yoğun iş profesyonellerine ve sesli erişilebilirliğe ihtiyaç duyan engelli bireylere hizmet eder.
 
 **Core Value:** Müşterilerin fatura, tarife ve destek taleplerini sesli AI asistan ile saniyeler içinde, insan benzeri empatiyle çözmek — bekleme stresini ortadan kaldırmak.
 
 ### Constraints
 
 - **Tech Stack**: Next.js (frontend) + Python FastAPI (backend) + Google Gemini API (LLM) + Milvus (vector DB) + Gemini Live API (real-time voice, primary) + AWS Polly/Edge TTS (legacy fallback) — kullanıcı tercihi
-- **Veri**: Mock/sentetik Turkcell verisi kullanılacak, gerçek müşteri verisi yok
+- **Veri**: Mock/sentetik Umay verisi kullanılacak, gerçek müşteri verisi yok
 - **LLM**: Google Gemini API (doküman Gemini 3 belirtiyor, mevcut en güncel Gemini API kullanılacak)
 - **Güvenlik**: PII maskeleme zorunlu — kişisel veriler LLM'e gönderilmeden önce maskelenmeli (KVKK)
 - **Dil**: Türkçe doğal dil anlama (NLU) öncelikli
@@ -173,6 +173,8 @@ Turkcell AI-Gen, LLM ve RAG teknolojilerini kullanarak Turkcell altyapısına ö
 <!-- GSD:conventions-start source:CONVENTIONS.md -->
 ## Conventions
 
+- **Türkçe karakter kullanımı ZORUNLUDUR**: Tüm kullanıcıya görünen string'lerde, LLM prompt'larında, tool açıklamalarında, hata mesajlarında, mock veri açıklamalarında ve `.planning/` dokümantasyonunda Türkçe özel karakterler (ö, ü, ç, ş, ı, ğ, İ, Ö, Ü, Ç, Ş, Ğ) doğru kullanılmalıdır. ASCII karşılıkları (o, u, c, s, i, g, I, O, U, C, S, G) ile yazılması **YASAKTIR**. İstisnalar: (1) "Umay" marka adı olduğu gibi kalır, (2) değişken/fonksiyon/dosya adları ve import path'leri İngilizce/ASCII kalır, (3) kod içi yorumlar İngilizce yazılabilir. Yeni kod yazarken veya mevcut kodu düzenlerken bu kurala uyulmalı — Türkçe string'lerde eksik karakter fark edilirse anında düzeltilmeli.
+
 - **Test ortamı**: Geliştirici her zaman Docker Compose ile test ediyor. Kod değişikliğinden sonra `docker compose up --build` ile yeniden build edilmeli. Hot-reload yok, her değişiklik build gerektirir. **Kullanıcı "test et", "build et", "çalıştır" veya `docker compose up --build` dediğinde, bu komutu sen Bash tool ile çalıştır** — kullanıcıya komutu yapıştırmasını söyleme. **Ancak** Docker ile ilgisi olmayan değişikliklerde (dokümantasyon, `.planning/` dosyaları, CLAUDE.md, test dosyaları vb.) build gerekmez — gereksiz build yapma.
 
 - Bir phase'de eksik veya tamamlanmamış görünen parçalar, kasıtlı olarak sonraki phase'lere bırakılmış olabilir. ROADMAP.md'deki phase bağımlılıklarını ve requirement dağılımını kontrol et — bir şeyi "eksik" olarak raporlamadan önce başka bir phase'de planlanıp planlanmadığına bak.
@@ -201,6 +203,22 @@ Turkcell AI-Gen, LLM ve RAG teknolojilerini kullanarak Turkcell altyapısına ö
   - Hata çözümleri → ERRORS.md'ye kaydet
   - **"Son güncelleme" tarihi ZORUNLU**: Her güncellenen MD dosyasının `> **Son güncelleme:**` satırını **bugünün tarihine** değiştir. Bu adım atlanırsa dokümantasyon güncellenmemiş sayılır. Tarih formatı: `YYYY-MM-DD` (örn: `2026-04-04`).
   - **Kontrol listesi**: Kod yazma bittiğinde kendine sor: "Hangi `.planning/` dosyaları bu değişiklikten etkilendi?" — hepsini güncelle, tarihlerini güncelle, sonra devam et
+### Tool & Prompt Entegrasyon Kuralları (Zorunlu)
+
+Aşağıdaki kurallar, araç (tool) ekleme/değiştirme ve system prompt düzenleme sırasında uyulması gereken kontrol listesidir. Bu kuralların ihlali çalışma zamanında sessiz hataya neden olur.
+
+1. **Araç-Bağlam Bütünlüğü**: Bir araç parametre olarak ID gerektiriyorsa (`customer_id`, `tariff_id`, `package_id` vb.), bu ID **system prompt context'inde** (billing_context, customer_context) açıkça yer almalıdır. LLM'in bir ID'yi tahmin etmesi veya başka bir araç çağırarak keşfetmesi beklenmemelidir. **Kontrol**: Yeni araç eklerken `required` parametrelerin her birinin system prompt'ta mevcut olduğunu doğrula.
+
+2. **Araç Tanım-Dispatch Eşliği**: Bir araç `get_live_tool_declarations()` veya `agent_tools.py`'da tanımlanıyorsa, `dispatch_tool()`'da koşulsuz bir handler'ı olmalıdır. Opsiyonel servisler (personalization_engine, customer_memory_service) None olduğunda "Bilinmeyen araç" hatası değil, anlamlı Türkçe hata mesajı dönmelidir. **Kontrol**: Araç ekleme/çıkarmada her 3 noktayı güncelle: tanım, dispatch, agent_tools.
+
+3. **Sesli Geri Bildirim Tamlığı**: Sesli (Live API) path'te kullanıcının deneyimleyeceği her durum değişikliği (action_proposal, processing, action_result, hata) sesli çıktı içermelidir — sadece görsel UI yeterli değildir. `send_realtime_input(text=...)` ile Türkçe sesli bildirim eklenmeli. **Kontrol**: Yeni bir kullanıcı etkileşim noktası eklendiğinde "kullanıcı bunu sesli modda duyar mı?" sorusunu sor.
+
+4. **Kimlik Tutarlılığı**: Asistanın kimliği (adı, rolü, hitap şekli) tüm prompt'lar, greeting mesajları ve system instruction'larda **aynı** olmalıdır. Şu an: "Umay müşteri hizmetleri asistanı". **Kontrol**: Kimlik değişirse `agent_prompts.py`, `gemini_live_service.py` (system instruction + greeting), ve `billing_prompts.py` hepsinde güncelle.
+
+5. **Basit vs Kişiselleştirilmiş Araç Ayrımı**: Aynı işi yapan basit (`recommend_tariff`) ve kişiselleştirilmiş (`get_personalized_recommendations`) araçlar varsa, system prompt'ta hangisinin ne zaman tercih edileceği açıkça belirtilmelidir. Varsayılan: kişiselleştirilmiş araç önce denenmelidir.
+
+6. **Mock Veri Referans Bütünlüğü**: Yeni tarife, paket veya müşteri eklendiğinde, diğer mock veri dosyalarındaki referansların (tariff_id, package_id) geçerli olduğunu doğrula. `customers.json` → `tariffs.json`, `packages.json` çapraz kontrol.
+
 <!-- GSD:conventions-end -->
 
 ## Architecture

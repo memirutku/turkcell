@@ -31,7 +31,7 @@ async def test_health_mock_bss_ready(client):
     data = response.json()
     mock_bss = data["services"]["mock_bss"]
     assert mock_bss["status"] == "ready"
-    assert mock_bss["customers"] == 3
+    assert mock_bss["customers"] == 5
     assert mock_bss["tariffs"] == 5
 
 

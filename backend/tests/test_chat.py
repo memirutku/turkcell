@@ -59,10 +59,10 @@ class TestSystemPrompt:
 
         assert "{context}" in SYSTEM_PROMPT
 
-    def test_contains_turkcell_brand(self):
+    def test_contains_umay_brand(self):
         from app.prompts.system_prompt import SYSTEM_PROMPT
 
-        assert "Turkcell" in SYSTEM_PROMPT
+        assert "Umay" in SYSTEM_PROMPT
 
     def test_contains_grounding_rule(self):
         from app.prompts.system_prompt import SYSTEM_PROMPT
@@ -93,7 +93,7 @@ class TestSystemPrompt:
         from app.prompts.system_prompt import SYSTEM_PROMPT
 
         context = "Platinum 20GB tarife ayda 299 TL."
-        formatted = SYSTEM_PROMPT.format(context=context)
+        formatted = SYSTEM_PROMPT.format(context=context, conversation_style="Samimi bir üslup kullan.")
         assert context in formatted
         assert "{context}" not in formatted
 

@@ -197,7 +197,7 @@ export function useVoiceConversation() {
 
           case "error": {
             useChatStore.getState().setError(
-              msg.message || "Bir hata olustu. Lutfen tekrar deneyin."
+              msg.message || "Bir hata oluştu. Lütfen tekrar deneyin."
             );
             // On error, pause briefly then resume listening (don't exit conversation mode)
             setTimeout(() => {
@@ -224,10 +224,10 @@ export function useVoiceConversation() {
             });
             // Screen reader announcement per UI-SPEC
             const title = proposal.action_type === "package_activation"
-              ? "Paket Tanimlama"
-              : "Tarife Degisikligi";
+              ? "Paket Tanımlama"
+              : "Tarife Değişikliği";
             store.announce(
-              `Islem onerisi: ${title}. ${proposal.description}. Onaylamak icin Evet Onayla butonunu, iptal etmek icin Vazgec butonunu kullanin.`
+              `İşlem önerisi: ${title}. ${proposal.description}. Onaylamak için Evet Onayla butonunu, iptal etmek için Vazgeç butonunu kullanın.`
             );
             break;
           }
@@ -248,9 +248,9 @@ export function useVoiceConversation() {
             store.setPendingAction(null);
             // Screen reader announcement
             if (result.success) {
-              store.announce(`Islem basarili: ${result.description}`);
+              store.announce(`İşlem başarılı: ${result.description}`);
             } else {
-              store.announce(`Islem basarisiz: ${result.description}`);
+              store.announce(`İşlem başarısız: ${result.description}`);
             }
             break;
           }
@@ -283,7 +283,7 @@ export function useVoiceConversation() {
       } else if (conversationStateRef.current !== "off") {
         // Failed to reconnect -- exit conversation mode
         useChatStore.getState().setError(
-          "Ses baglantisi kurulamadi. Lutfen tekrar deneyin."
+          "Ses bağlantısı kurulamadı. Lütfen tekrar deneyin."
         );
         setConversationState("off");
       }
@@ -301,11 +301,11 @@ export function useVoiceConversation() {
     const store = useChatStore.getState();
 
     if (!checkSecureContext()) {
-      store.setError("Ses ozelligi yalnizca guvenli baglantilarda (HTTPS veya localhost) kullanilabilir.");
+      store.setError("Ses özelliği yalnızca güvenli bağlantılarda (HTTPS veya localhost) kullanılabilir.");
       return;
     }
     if (!checkMicrophoneSupport()) {
-      store.setError("Tarayiciniz ses kaydini desteklemiyor. Lutfen guncel bir tarayici kullanin.");
+      store.setError("Tarayıcınız ses kaydını desteklemiyor. Lütfen güncel bir tarayıcı kullanın.");
       return;
     }
 
@@ -314,7 +314,7 @@ export function useVoiceConversation() {
       connectWebSocket();
       await new Promise<void>((resolve) => setTimeout(resolve, 500));
       if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
-        store.setError("Ses baglantisi kurulamadi. Lutfen tekrar deneyin.");
+        store.setError("Ses bağlantısı kurulamadı. Lütfen tekrar deneyin.");
         return;
       }
     }

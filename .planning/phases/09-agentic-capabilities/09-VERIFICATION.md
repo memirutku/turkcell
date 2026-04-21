@@ -108,7 +108,7 @@ re_verification: false
 | AGENT-01 | 09-02 | LangGraph ile agent workflow calısır (analiz → öneri → islem) | SATISFIED | AgentService._build_graph() creates 5-node StateGraph in agent_service.py; TestAgentWorkflow tests pass |
 | AGENT-02 | 09-01 | Mock paket tanimlama islemi simüle edilir | SATISFIED | MockBSSService.activate_package() async method in mock_bss.py; 3 tests pass |
 | AGENT-03 | 09-01 | Mock tarife degisikligi islemi simüle edilir | SATISFIED | MockBSSService.change_tariff() async method in mock_bss.py; 4 tests pass including state mutation test |
-| AGENT-04 | 09-02, 09-03 | Islem öncesi kullanıcı onayı alinir ("Bu paketi tanımlayalım mı?") | SATISFIED | interrupt() in _propose_action_node (backend) + ActionConfirmationCard with Evet Onayla/Vazgec buttons (frontend) |
+| AGENT-04 | 09-02, 09-03 | İşlem öncesi kullanıcı onayı alinir ("Bu paketi tanımlayalım mı?") | SATISFIED | interrupt() in _propose_action_node (backend) + ActionConfirmationCard with Evet Onayla/Vazgec buttons (frontend) |
 | AGENT-05 | 09-01 | Gemini function calling ile araçlar (tools) entegre edilir | SATISFIED | 5 LangChain @tool functions in agent_tools.py with args_schema Pydantic validation; llm.bind_tools() in AgentService |
 | AGENT-06 | 09-01 | Mock BSS/OSS API'ları gercekci yanıtlar ve gecikmeler simüle eder | SATISFIED | asyncio.sleep(random.uniform(0.5, 1.5)) in both action methods; transaction_id, timestamp, Turkish message_tr in responses |
 
@@ -133,13 +133,13 @@ The frontend components pass all automated structural checks. The following item
 #### 1. End-to-End Agent Action Flow
 
 **Test:** With a running backend (GEMINI_API_KEY set) and frontend, select customer cust-001 and type "10GB ek paket tanımlamak istiyorum"
-**Expected:** Assistant reasons, proposes package, ActionConfirmationCard appears with "Evet, Onayla" and "Vazgec" buttons. Click "Evet, Onayla" triggers POST /api/agent/confirm, ActionProcessingIndicator shows, ActionResultCard renders green "Islem Basarili" state.
+**Expected:** Assistant reasons, proposes package, ActionConfirmationCard appears with "Evet, Onayla" and "Vazgec" buttons. Click "Evet, Onayla" triggers POST /api/agent/confirm, ActionProcessingIndicator shows, ActionResultCard renders green "İşlem Başarılı" state.
 **Why human:** Real LLM reasoning, streaming token display, and SSE round-trip cannot be fully verified without a running server.
 
 #### 2. Rejection Flow
 
 **Test:** Same as above, click "Vazgec" instead
-**Expected:** ActionResultCard renders gray "Islem Iptal Edildi" state (isCancelled=true because description includes "iptal").
+**Expected:** ActionResultCard renders gray "İşlem İptal Edildi" state (isCancelled=true because description includes "iptal").
 **Why human:** Requires live server interaction to verify the iptal detection logic produces correct UI state.
 
 #### 3. ActionConfirmationCard Disabled State After Confirm

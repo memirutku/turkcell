@@ -1,6 +1,6 @@
 Fatura Okuma Rehberi
 
-Turkcell faturanız birkaç ana kalemden oluşmaktadır. Her faturada tarife ücreti (ana ücret), varsa aşım ücretleri ve yasal vergiler ayrı ayrı gösterilir. Faturanızı doğru okumak için bu kalemlerin ne anlama geldiğini bilmeniz önemlidir.
+Umay faturanız birkaç ana kalemden oluşmaktadır. Her faturada tarife ücreti (ana ücret), varsa aşım ücretleri ve yasal vergiler ayrı ayrı gösterilir. Faturanızı doğru okumak için bu kalemlerin ne anlama geldiğini bilmeniz önemlidir.
 
 Ana Ücret (Tarife Ücreti)
 
@@ -36,15 +36,15 @@ SMS hakkınız tükendiğinde adet başına 0,25 TL ücretlendirilir. Bu ücret 
 
 Aşım Ücretinden Nasıl Kaçınılır?
 
-Aşım ücretlerinden kaçınmak için birkaç yöntem bulunmaktadır. Turkcell uygulamasından kullanımınızı düzenli olarak takip edebilirsiniz. Kotanız dolmadan ek paket satın alabilirsiniz. Kullanımınız sürekli tarifenizin üzerindeyse daha yüksek bir tarifeye geçiş yapmanız uzun vadede daha ekonomik olabilir. Ayrıca Wi-Fi bağlantısı kullanarak mobil veri tüketiminizi azaltabilirsiniz.
+Aşım ücretlerinden kaçınmak için birkaç yöntem bulunmaktadır. Umay uygulamasından kullanımınızı düzenli olarak takip edebilirsiniz. Kotanız dolmadan ek paket satın alabilirsiniz. Kullanımınız sürekli tarifenizin üzerindeyse daha yüksek bir tarifeye geçiş yapmanız uzun vadede daha ekonomik olabilir. Ayrıca Wi-Fi bağlantısı kullanarak mobil veri tüketiminizi azaltabilirsiniz.
 
 Fatura Ödeme Yöntemleri
 
-Turkcell faturanızı birçok farklı yöntemle ödeyebilirsiniz. Turkcell uygulaması üzerinden kredi kartı veya banka kartı ile anında ödeme yapabilirsiniz. Online işlem merkezinden ödeme mümkündür. Otomatik ödeme talimatı vererek her ay faturanızın otomatik ödenmesini sağlayabilirsiniz. PTT şubeleri ve anlaşmalı banka şubelerinden nakit ödeme yapabilirsiniz. Turkcell mağazalarında da ödeme kabul edilmektedir.
+Umay faturanızı birçok farklı yöntemle ödeyebilirsiniz. Umay uygulaması üzerinden kredi kartı veya banka kartı ile anında ödeme yapabilirsiniz. Online işlem merkezinden ödeme mümkündür. Otomatik ödeme talimatı vererek her ay faturanızın otomatik ödenmesini sağlayabilirsiniz. PTT şubeleri ve anlaşmalı banka şubelerinden nakit ödeme yapabilirsiniz. Umay mağazalarında da ödeme kabul edilmektedir.
 
 Otomatik Ödeme Avantajları
 
-Otomatik ödeme talimatı veren müşteriler, son ödeme tarihini kaçırma riskini ortadan kaldırır. Ayrıca zaman zaman otomatik ödeme kullanan müşterilere özel indirim kampanyaları sunulmaktadır. Talimatı Turkcell uygulamasından veya bankanızın internet bankacılığından verebilirsiniz. İstediğiniz zaman talimatı iptal edebilirsiniz.
+Otomatik ödeme talimatı veren müşteriler, son ödeme tarihini kaçırma riskini ortadan kaldırır. Ayrıca zaman zaman otomatik ödeme kullanan müşterilere özel indirim kampanyaları sunulmaktadır. Talimatı Umay uygulamasından veya bankanızın internet bankacılığından verebilirsiniz. İstediğiniz zaman talimatı iptal edebilirsiniz.
 
 Gecikme Faizi
 
@@ -52,23 +52,23 @@ Fatura son ödeme tarihini geçirmeniz halinde gecikme faizi uygulanır. Gecikme
 
 Tarife Değişikliği
 
-Turkcell müşterileri istedikleri zaman tarife değişikliği yapabilir. Yeni tarife genellikle bir sonraki fatura döneminin başında aktif olur. Daha yüksek bir tarifeye geçiş (upgrade) yapıyorsanız yeni haklar anında tanımlanabilir. Daha düşük bir tarifeye geçiş (downgrade) yapıyorsanız mevcut dönemin sonuna kadar eski tarifeniz geçerli kalır.
+Umay müşterileri istedikleri zaman tarife değişikliği yapabilir. Yeni tarife genellikle bir sonraki fatura döneminin başında aktif olur. Daha yüksek bir tarifeye geçiş (upgrade) yapıyorsanız yeni haklar anında tanımlanabilir. Daha düşük bir tarifeye geçiş (downgrade) yapıyorsanız mevcut dönemin sonuna kadar eski tarifeniz geçerli kalır.
 
 Tarife Yükseltme ve Düşürme
 
-Tarife yükseltme işleminde yeni tarifenizin ek hakları hemen kullanılabilir hale gelir. Tarife düşürme işleminde ise mevcut fatura döneminizin sonuna kadar eski tarifeniz aktif kalır, yeni tarife sonraki dönemde başlar. Taahhütlü tarifelerden çıkış yapmak istiyorsanız cayma bedeli uygulanabilir. Cayma bedelini Turkcell uygulamasından kontrol edebilirsiniz.
+Tarife yükseltme işleminde yeni tarifenizin ek hakları hemen kullanılabilir hale gelir. Tarife düşürme işleminde ise mevcut fatura döneminizin sonuna kadar eski tarifeniz aktif kalır, yeni tarife sonraki dönemde başlar. Taahhütlü tarifelerden çıkış yapmak istiyorsanız cayma bedeli uygulanabilir. Cayma bedelini Umay uygulamasından kontrol edebilirsiniz.
 
 Faturam Neden Yüksek?
 
-Faturanız beklenenden yüksekse öncelikle aşım ücretlerini kontrol edin. İnternet kotanızı veya konuşma dakikalarınızı aşmış olabilirsiniz. Turkcell uygulamasından detaylı kullanım dökümünüzü inceleyerek hangi kalemlerin faturanızı artırdığını görebilirsiniz. Yurt dışı kullanım, ek paket alımları veya üçüncü taraf servis abonelikleri de fatura artışına neden olabilir. Kullanımınız sürekli tarifenizin üzerindeyse daha uygun bir tarifeye geçmeniz önerilir.
+Faturanız beklenenden yüksekse öncelikle aşım ücretlerini kontrol edin. İnternet kotanızı veya konuşma dakikalarınızı aşmış olabilirsiniz. Umay uygulamasından detaylı kullanım dökümünüzü inceleyerek hangi kalemlerin faturanızı artırdığını görebilirsiniz. Yurt dışı kullanım, ek paket alımları veya üçüncü taraf servis abonelikleri de fatura artışına neden olabilir. Kullanımınız sürekli tarifenizin üzerindeyse daha uygun bir tarifeye geçmeniz önerilir.
 
 Tarifemi Nasıl Değiştirebilirim?
 
-Tarife değişikliği için Turkcell uygulamasında "Tarifem" bölümüne gidin ve mevcut tarifenizi görebilirsiniz. Alternatif tarifeleri karşılaştırarak size uygun olanı seçebilirsiniz. *123# kısa kodundan da tarife menüsüne erişebilirsiniz. Turkcell mağazalarına veya müşteri hizmetlerini arayarak da tarife değişikliği yapabilirsiniz.
+Tarife değişikliği için Umay uygulamasında "Tarifem" bölümüne gidin ve mevcut tarifenizi görebilirsiniz. Alternatif tarifeleri karşılaştırarak size uygun olanı seçebilirsiniz. *123# kısa kodundan da tarife menüsüne erişebilirsiniz. Umay mağazalarına veya müşteri hizmetlerini arayarak da tarife değişikliği yapabilirsiniz.
 
 KDV ve ÖİV Neden Ayrı Gösteriliyor?
 
-KDV ve ÖİV farklı yasal düzenlemelere tabi vergilerdir ve faturanızda şeffaflık amacıyla ayrı kalemler olarak gösterilir. KDV tüm mal ve hizmetlere uygulanan genel bir vergidir, ÖİV ise yalnızca telekomünikasyon hizmetlerine özeldir. Her iki vergi de kanun gereği fatura tutarınıza eklenmektedir ve Turkcell tarafından doğrudan ilgili vergi dairelerine aktarılmaktadır.
+KDV ve ÖİV farklı yasal düzenlemelere tabi vergilerdir ve faturanızda şeffaflık amacıyla ayrı kalemler olarak gösterilir. KDV tüm mal ve hizmetlere uygulanan genel bir vergidir, ÖİV ise yalnızca telekomünikasyon hizmetlerine özeldir. Her iki vergi de kanun gereği fatura tutarınıza eklenmektedir ve Umay tarafından doğrudan ilgili vergi dairelerine aktarılmaktadır.
 
 Sık Sorulan Sorular
 
@@ -79,7 +79,7 @@ Soru: Fatura tutarımı nasıl düşürebilirim?
 Cevap: Kullanımınızı tarifenizin limitleri içinde tutarak aşım ücretlerinden kaçınabilirsiniz. Düzenli olarak aşıyorsanız daha yüksek bir tarifeye geçmek uzun vadede daha ekonomik olabilir.
 
 Soru: Ödenmemiş faturamı nerede görebilirim?
-Cevap: Turkcell uygulamasının "Faturalarım" bölümünden tüm faturalarınızı ve ödeme durumlarını görebilirsiniz. Son 12 aya kadar geçmiş faturalarınıza erişim mümkündür.
+Cevap: Umay uygulamasının "Faturalarım" bölümünden tüm faturalarınızı ve ödeme durumlarını görebilirsiniz. Son 12 aya kadar geçmiş faturalarınıza erişim mümkündür.
 
 Soru: Fatura itirazı nasıl yapılır?
-Cevap: Faturanızda hatalı bir kalem olduğunu düşünüyorsanız Turkcell müşteri hizmetlerini 532 0000 numarasından arayarak itiraz edebilirsiniz. İtirazınız incelendikten sonra haklı bulunursanız düzeltme faturası düzenlenir.
+Cevap: Faturanızda hatalı bir kalem olduğunu düşünüyorsanız Umay müşteri hizmetlerini 532 0000 numarasından arayarak itiraz edebilirsiniz. İtirazınız incelendikten sonra haklı bulunursanız düzeltme faturası düzenlenir.

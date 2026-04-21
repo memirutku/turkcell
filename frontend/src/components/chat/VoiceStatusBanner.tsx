@@ -26,21 +26,21 @@ export function VoiceStatusBanner({ voiceState, conversationState }: VoiceStatus
         return (
           <>
             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            <span className="text-xs text-gray-500">Kayit yapiliyor — durdurmak icin tekrar tiklayin</span>
+            <span className="text-xs text-muted-foreground">Kayıt yapılıyor — durdurmak için tekrar tıklayın</span>
           </>
         );
       case "processing":
         return (
           <>
-            <Loader2 className="h-3.5 w-3.5 text-turkcell-blue animate-spin" />
-            <span className="text-xs text-gray-500">Sesiniz isleniyor...</span>
+            <Loader2 className="h-3.5 w-3.5 text-umay-blue animate-spin" />
+            <span className="text-xs text-muted-foreground">Sesiniz işleniyor...</span>
           </>
         );
       case "playing":
         return (
           <>
-            <Volume2 className="h-3.5 w-3.5 text-turkcell-blue animate-pulse" />
-            <span className="text-xs text-gray-500">Sesli yanit oynatuluyor...</span>
+            <Volume2 className="h-3.5 w-3.5 text-umay-blue animate-pulse" />
+            <span className="text-xs text-muted-foreground">Sesli yanıt oynatılıyor...</span>
           </>
         );
     }
@@ -58,52 +58,52 @@ function getConversationContent(state: ConversationState | LiveConversationState
     case "listening":
       return (
         <>
-          <span className="w-2 h-2 rounded-full bg-turkcell-blue animate-breathing" />
-          <span className="text-xs text-gray-500">Konusmanizi bekliyorum...</span>
+          <span className="w-2 h-2 rounded-full bg-umay-blue animate-breathing" />
+          <span className="text-xs text-muted-foreground">Konuşmanızı bekliyorum...</span>
         </>
       );
     case "connected":
       return (
         <>
-          <Radio className="h-3.5 w-3.5 text-turkcell-blue animate-pulse" />
-          <span className="text-xs text-gray-500">Canli konusma aktif</span>
+          <Radio className="h-3.5 w-3.5 text-umay-blue animate-pulse" />
+          <span className="text-xs text-muted-foreground">Canlı konuşma aktif</span>
         </>
       );
     case "connecting":
       return (
         <>
-          <Loader2 className="h-3.5 w-3.5 text-turkcell-blue animate-spin" />
-          <span className="text-xs text-gray-500">Baglanti kuruluyor...</span>
+          <Loader2 className="h-3.5 w-3.5 text-umay-blue animate-spin" />
+          <span className="text-xs text-muted-foreground">Bağlantı kuruluyor...</span>
         </>
       );
     case "speech-detected":
       return (
         <>
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-xs text-gray-500">Dinleniyor...</span>
+          <span className="text-xs text-muted-foreground">Dinleniyor...</span>
           <SilenceIndicator />
         </>
       );
     case "processing":
       return (
         <>
-          <Loader2 className="h-3.5 w-3.5 text-turkcell-blue animate-spin" />
-          <span className="text-xs text-gray-500">Yanitiniz hazirlaniyor...</span>
+          <Loader2 className="h-3.5 w-3.5 text-umay-blue animate-spin" />
+          <span className="text-xs text-muted-foreground">Yanıtınız hazırlanıyor...</span>
         </>
       );
     case "playing":
     case "model-speaking":
       return (
         <>
-          <Volume2 className="h-3.5 w-3.5 text-turkcell-blue animate-pulse" />
-          <span className="text-xs text-gray-500">Yanit okunuyor...</span>
+          <Volume2 className="h-3.5 w-3.5 text-umay-blue animate-pulse" />
+          <span className="text-xs text-muted-foreground">Yanıt okunuyor...</span>
         </>
       );
     case "action-pending":
       return (
         <>
           <Loader2 className="h-3.5 w-3.5 text-yellow-500 animate-spin" />
-          <span className="text-xs text-yellow-700">Islem onayiniz bekleniyor</span>
+          <span className="text-xs text-yellow-700">İşlem onayınız bekleniyor</span>
         </>
       );
     default:

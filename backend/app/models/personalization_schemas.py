@@ -62,7 +62,7 @@ class MarketComparison(BaseModel):
     """Competitor pricing comparison for a tariff."""
 
     tariff_name: str
-    turkcell_price_tl: Decimal
+    umay_price_tl: Decimal
     competitors: list[CompetitorTariff]
     market_position: str  # "ucuz", "ortalama", "pahali"
     price_competitiveness_score: float  # 0.0-1.0

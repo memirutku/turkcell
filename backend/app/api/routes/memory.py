@@ -27,31 +27,31 @@ class SaveMemoryRequest(BaseModel):
     actions_taken: list[str] = Field(default_factory=list)
     unresolved_issues: list[str] = Field(default_factory=list)
     preferences_learned: list[str] = Field(default_factory=list)
-    sentiment: str = "notr"
+    sentiment: str = "nötr"
 
 
 @router.post("/get-customer-memory")
 async def get_customer_memory(body: GetMemoryRequest, request: Request):
-    """Musterinin onceki etkilesim hafizasini getirir. Musteri tekrar
-    aradiginda onceki konusmalardan ogreniilen tercihleri, cozulmemis
-    sorunlari ve yapilan islemleri gosterir. Musteri ile konusmaya
-    baslarken bu araci kullanarak onceki deneyimi hatirla."""
+    """Müşterinin önceki etkileşim hafızasını getirir. Müşteri tekrar
+    aradığında önceki konuşmalardan öğrenilen tercihleri, çözülmemiş
+    sorunları ve yapılan işlemleri gösterir. Müşteri ile konuşmaya
+    başlarken bu aracı kullanarak önceki deneyimi hatırla."""
     svc = request.app.state.customer_memory_service
     result = await svc.get_memory(body.customer_id)
     if not result:
         return JSONResponse(
             status_code=404,
-            content={"message": f"Musteri {body.customer_id} icin onceki etkilesim kaydi bulunamadi."},
+            content={"message": f"Müşteri {body.customer_id} için önceki etkileşim kaydı bulunamadı."},
         )
     return result.model_dump()
 
 
 @router.post("/save-customer-memory")
 async def save_customer_memory(body: SaveMemoryRequest, request: Request):
-    """Musteri ile yapilan konusmanin ozetini kaydeder. Konusulan konulari,
-    gerceklestirilen islemleri, cozulmemis sorunlari ve ogreniilen
-    tercihleri saklar. Bir sonraki aramada musteri tanimasi icin kullanilir.
-    Anlamli konusmalar sonrasinda otomatik olarak cagrilmalidir."""
+    """Müşteri ile yapılan konuşmanın özetini kaydeder. Konuşulan konuları,
+    gerçekleştirilen işlemleri, çözülmemiş sorunları ve öğrenilen
+    tercihleri saklar. Bir sonraki aramada müşteri tanıması için kullanılır.
+    Anlamlı konuşmalar sonrasında otomatik olarak çağrılmalıdır."""
     svc = request.app.state.customer_memory_service
     record = InteractionRecord(
         interaction_id=str(uuid.uuid4()),

@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import { useChatStore } from "@/stores/chatStore";
 import {
   Select,
@@ -21,6 +22,14 @@ export function CustomerSelector() {
   const customerId = useChatStore((s) => s.customerId);
   const setCustomerId = useChatStore((s) => s.setCustomerId);
   const isStreaming = useChatStore((s) => s.isStreaming);
+  const customerTariffs = useChatStore((s) => s.customerTariffs);
+  const refreshCustomerTariff = useChatStore((s) => s.refreshCustomerTariff);
+
+  useEffect(() => {
+    if (customerId) {
+      refreshCustomerTariff(customerId);
+    }
+  }, [customerId, refreshCustomerTariff]);
 
   const handleValueChange = (value: string | null) => {
     if (value === GENERAL_CHAT_VALUE) {
@@ -41,25 +50,25 @@ export function CustomerSelector() {
     >
       <SelectTrigger
         className="min-w-[200px] max-w-[280px] h-9 px-2 gap-2 sm:min-w-[200px] min-w-[140px]"
-        aria-label="Musteri secin"
+        aria-label="Müşteri seçin"
         aria-haspopup="listbox"
       >
         <div className="flex items-center gap-2 truncate">
           {selectedCustomer ? (
             <>
-              <div className="h-6 w-6 rounded-full bg-turkcell-blue/10 text-turkcell-blue text-xs font-bold flex items-center justify-center shrink-0">
+              <div className="h-6 w-6 rounded-full bg-umay-blue/10 text-umay-blue text-xs font-bold flex items-center justify-center shrink-0">
                 {selectedCustomer.name.charAt(0)}
               </div>
               <span className="text-sm font-semibold truncate">
                 {selectedCustomer.name}
               </span>
-              <span className="text-xs text-gray-500 truncate hidden sm:inline">
-                - {selectedCustomer.tariff}
+              <span className="text-xs text-muted-foreground truncate hidden sm:inline">
+                - {customerTariffs[selectedCustomer.id] || selectedCustomer.tariff}
               </span>
             </>
           ) : (
             <>
-              <div className="h-6 w-6 rounded-full bg-gray-200 text-gray-500 text-xs font-bold flex items-center justify-center shrink-0">
+              <div className="h-6 w-6 rounded-full bg-muted text-muted-foreground text-xs font-bold flex items-center justify-center shrink-0">
                 ~
               </div>
               <span className="text-sm font-semibold">Genel Sohbet</span>
@@ -71,18 +80,18 @@ export function CustomerSelector() {
         {DEMO_CUSTOMERS.map((customer) => (
           <SelectItem key={customer.id} value={customer.id} className="h-9">
             <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded-full bg-turkcell-blue/10 text-turkcell-blue text-xs font-bold flex items-center justify-center shrink-0">
+              <div className="h-6 w-6 rounded-full bg-umay-blue/10 text-umay-blue text-xs font-bold flex items-center justify-center shrink-0">
                 {customer.name.charAt(0)}
               </div>
               <span className="text-sm font-semibold">{customer.name}</span>
-              <span className="text-xs text-gray-500">- {customer.tariff}</span>
+              <span className="text-xs text-muted-foreground">- {customerTariffs[customer.id] || customer.tariff}</span>
             </div>
           </SelectItem>
         ))}
         <SelectSeparator className="my-1" />
         <SelectItem value={GENERAL_CHAT_VALUE} className="h-9">
           <div className="flex items-center gap-2">
-            <div className="h-6 w-6 rounded-full bg-gray-200 text-gray-500 text-xs font-bold flex items-center justify-center shrink-0">
+            <div className="h-6 w-6 rounded-full bg-muted text-muted-foreground text-xs font-bold flex items-center justify-center shrink-0">
               ~
             </div>
             <span className="text-sm font-semibold">Genel Sohbet</span>

@@ -167,7 +167,7 @@ export function useVoiceChat(): {
 
           case "error": {
             useChatStore.getState().setError(
-              msg.message || "Bir hata olustu. Lutfen tekrar deneyin."
+              msg.message || "Bir hata oluştu. Lütfen tekrar deneyin."
             );
             setVoiceState("idle");
             break;
@@ -227,7 +227,7 @@ export function useVoiceChat(): {
     if (!checkSecureContext()) {
       isStartingRef.current = false;
       store.setError(
-        "Ses ozelligi yalnizca guvenli baglantilarda (HTTPS veya localhost) kullanilabilir."
+        "Ses özelliği yalnızca güvenli bağlantılarda (HTTPS veya localhost) kullanılabilir."
       );
       return;
     }
@@ -236,7 +236,7 @@ export function useVoiceChat(): {
     if (!checkMicrophoneSupport()) {
       isStartingRef.current = false;
       store.setError(
-        "Tarayiciniz ses kaydini desteklemiyor. Lutfen guncel bir tarayici kullanin."
+        "Tarayıcınız ses kaydını desteklemiyor. Lütfen güncel bir tarayıcı kullanın."
       );
       return;
     }
@@ -249,7 +249,7 @@ export function useVoiceChat(): {
       if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
         isStartingRef.current = false;
         store.setError(
-          "Ses baglantisi kurulamadi. Lutfen sayfayi yenileyip tekrar deneyin."
+          "Ses bağlantısı kurulamadı. Lütfen sayfayı yenileyip tekrar deneyin."
         );
         return;
       }
@@ -286,7 +286,7 @@ export function useVoiceChat(): {
           wsRef.current.send(audioBlob);
         } else if (audioBlob.size <= 100) {
           store.setError(
-            "Ses algilanamadi. Lutfen mikrofonunuza yakin konusun ve tekrar deneyin."
+            "Ses algılanamadı. Lütfen mikrofonunuza yakın konuşun ve tekrar deneyin."
           );
           setVoiceState("idle");
         } else {
@@ -310,15 +310,15 @@ export function useVoiceChat(): {
       const error = err as DOMException;
       if (error.name === "NotAllowedError") {
         store.setError(
-          "Mikrofon erisimi reddedildi. Tarayici ayarlarindan mikrofon iznini etkinlestirin."
+          "Mikrofon erişimi reddedildi. Tarayıcı ayarlarından mikrofon iznini etkinleştirin."
         );
       } else if (error.name === "NotFoundError") {
         store.setError(
-          "Mikrofon bulunamadi. Lutfen bir mikrofon baglayin."
+          "Mikrofon bulunamadı. Lütfen bir mikrofon bağlayın."
         );
       } else {
         store.setError(
-          "Mikrofon erisiminde bir hata olustu. Lutfen tekrar deneyin."
+          "Mikrofon erişiminde bir hata oluştu. Lütfen tekrar deneyin."
         );
       }
       setVoiceState("idle");

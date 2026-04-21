@@ -1,4 +1,4 @@
-# Turkcell AI-Gen - Docker Compose Infrastructure
+# Umay AI-Gen - Docker Compose Infrastructure
 # All services start with: docker compose up
 # Dependency chain: etcd+minio -> milvus -> redis+api -> web
 # Traefik routes: /api -> backend, / -> frontend
@@ -8,7 +8,7 @@ services:
 
   etcd:
     image: quay.io/coreos/etcd:v3.5.16
-    container_name: turkcell-etcd
+    container_name: umay-etcd
     environment:
       - ETCD_AUTO_COMPACTION_MODE=revision
       - ETCD_AUTO_COMPACTION_RETENTION=1000
@@ -33,7 +33,7 @@ services:
 
   minio:
     image: minio/minio:RELEASE.2024-09-22T00-33-43Z
-    container_name: turkcell-minio
+    container_name: umay-minio
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
@@ -53,7 +53,7 @@ services:
 
   milvus-standalone:
     image: milvusdb/milvus:v2.4.21
-    container_name: turkcell-milvus
+    container_name: umay-milvus
     environment:
       ETCD_ENDPOINTS: etcd:2379
       MINIO_ADDRESS: minio:9000
@@ -83,7 +83,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: turkcell-redis
+    container_name: umay-redis
     command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes
     ports:
       - "6379:6379"
@@ -104,7 +104,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: turkcell-api
+    container_name: umay-api
     env_file: .env
     ports:
       - "8000:8000"
@@ -135,7 +135,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: turkcell-web
+    container_name: umay-web
     env_file: .env
     ports:
       - "3000:3000"
@@ -164,7 +164,7 @@ services:
 
   traefik:
     image: traefik:v3.4
-    container_name: turkcell-traefik
+    container_name: umay-traefik
     command:
       - "--api.insecure=true"
       - "--providers.file.filename=/etc/traefik/dynamic.yml"

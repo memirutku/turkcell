@@ -17,8 +17,8 @@ def create_and_mount_mcp(app: FastAPI) -> FastApiMCP:
     """
     mcp_server = FastApiMCP(
         app,
-        name="Turkcell AI-Gen MCP Server",
-        description="Turkcell musteri oneri ve analiz araclari — kisisellestirilmis tarife/paket onerisi, churn riski, kullanim analizi, pazar karsilastirma",
+        name="Umay AI-Gen MCP Server",
+        description="Umay musteri oneri ve analiz araclari — kisisellestirilmis tarife/paket onerisi, churn riski, kullanim analizi, pazar karsilastirma",
         include_tags=["mcp"],
     )
 

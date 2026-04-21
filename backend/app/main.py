@@ -170,6 +170,7 @@ async def lifespan(app: FastAPI):
             pii_service=pii_svc,
             memory_service=memory_svc,
             customer_memory_service=customer_memory_service,
+            personalization_engine=personalization_engine,
         )
         logger.info(
             "Gemini Live API service initialized (model: %s, voice: %s)",
@@ -204,12 +205,12 @@ async def lifespan(app: FastAPI):
     yield
 
     # Cleanup on shutdown
-    logger.info("Shutting down Turkcell AI-Gen API")
+    logger.info("Shutting down Umay AI-Gen API")
 
 
 app = FastAPI(
-    title="Turkcell AI-Gen API",
-    description="Turkcell AI-Gen Dijital Asistan Backend",
+    title="Umay AI-Gen API",
+    description="Umay AI-Gen Dijital Asistan Backend",
     version="0.1.0",
     lifespan=lifespan,
 )

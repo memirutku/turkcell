@@ -1,0 +1,777 @@
+{
+  "version": "1.0",
+  "description": "Umay AI-Gen Yapay Zeka Degerlendirme Veri Seti",
+  "created_at": "2026-04-05",
+  "model": "gemini-2.5-flash",
+  "cases": [
+    {
+      "id": "INTENT-001",
+      "category": "intent_detection",
+      "customer_id": "cust-001",
+      "query": "Faturami gormek istiyorum",
+      "expected_tool": "lookup_customer_bill",
+      "description": "Fatura sorgulama — standart ifade"
+    },
+    {
+      "id": "INTENT-002",
+      "category": "intent_detection",
+      "customer_id": "cust-002",
+      "query": "Hangi paketler var?",
+      "expected_tool": "get_available_packages",
+      "description": "Paket listeleme"
+    },
+    {
+      "id": "INTENT-003",
+      "category": "intent_detection",
+      "customer_id": "cust-003",
+      "query": "Tarifeleri gorebilir miyim?",
+      "expected_tool": "get_available_tariffs",
+      "description": "Tarife listeleme"
+    },
+    {
+      "id": "INTENT-004",
+      "category": "intent_detection",
+      "customer_id": "cust-001",
+      "query": "Son iki faturami karsilastir",
+      "expected_tool": "compare_bills",
+      "description": "Fatura karsilastirma"
+    },
+    {
+      "id": "INTENT-005",
+      "category": "intent_detection",
+      "customer_id": "cust-002",
+      "query": "Kullanim durumum nasil, limit asimi var mi?",
+      "expected_tool": "check_usage_alerts",
+      "description": "Kullanim uyari kontrolu"
+    },
+    {
+      "id": "INTENT-006",
+      "category": "intent_detection",
+      "customer_id": "cust-004",
+      "query": "Bana uygun bir tarife onerir misin?",
+      "expected_tool": "recommend_tariff",
+      "description": "Tarife onerisi"
+    },
+    {
+      "id": "INTENT-007",
+      "category": "intent_detection",
+      "customer_id": "cust-005",
+      "query": "Ek paket onerir misin?",
+      "expected_tool": "recommend_package",
+      "description": "Paket onerisi"
+    },
+    {
+      "id": "INTENT-008",
+      "category": "intent_detection",
+      "customer_id": "cust-002",
+      "query": "Sosyal Medya Paketi tanimlamak istiyorum",
+      "expected_tool": "activate_package",
+      "description": "Paket aktivasyonu (destructive)"
+    },
+    {
+      "id": "INTENT-009",
+      "category": "intent_detection",
+      "customer_id": "cust-003",
+      "query": "Merhaba, nasilsin?",
+      "expected_tool": null,
+      "description": "Genel sohbet — tool cagirilmamali"
+    },
+    {
+      "id": "INTENT-010",
+      "category": "intent_detection",
+      "customer_id": "cust-001",
+      "query": "Tarifemi Gold 10GB'ye degistirmek istiyorum",
+      "expected_tool": "change_tariff",
+      "description": "Tarife degisikligi (destructive)"
+    },
+    {
+      "id": "INTENT-011",
+      "category": "intent_detection",
+      "customer_id": "cust-005",
+      "query": "Odenmemis faturam var mi?",
+      "expected_tool": "lookup_customer_bill",
+      "description": "Odeme durumu sorgulama"
+    },
+    {
+      "id": "INTENT-012",
+      "category": "intent_detection",
+      "customer_id": "cust-004",
+      "query": "Bu ay ne kadar konustum?",
+      "expected_tool": "check_usage_alerts",
+      "description": "Kullanim detayi sorgulama"
+    },
+
+    {
+      "id": "TOOL-001",
+      "category": "tool_selection",
+      "customer_id": "cust-002",
+      "query": "Faturami goster",
+      "expected_tool": "lookup_customer_bill",
+      "expected_args": {"customer_id": "cust-002"},
+      "description": "Dogru customer_id aktarilmali"
+    },
+    {
+      "id": "TOOL-002",
+      "category": "tool_selection",
+      "customer_id": "cust-001",
+      "query": "Tarife onerisi yap",
+      "expected_tool": "recommend_tariff",
+      "expected_args": {"customer_id": "cust-001"},
+      "description": "Tarife onerisi dogru musteri ile"
+    },
+    {
+      "id": "TOOL-003",
+      "category": "tool_selection",
+      "customer_id": "cust-003",
+      "query": "Mevcut paketleri listele",
+      "expected_tool": "get_available_packages",
+      "expected_args": {},
+      "description": "Paket listeleme — parametre gerektirmez"
+    },
+    {
+      "id": "TOOL-004",
+      "category": "tool_selection",
+      "customer_id": "cust-004",
+      "query": "Bana ek paket oner",
+      "expected_tool": "recommend_package",
+      "expected_args": {"customer_id": "cust-004"},
+      "description": "Paket onerisi dogru musteri ile"
+    },
+    {
+      "id": "TOOL-005",
+      "category": "tool_selection",
+      "customer_id": "cust-005",
+      "query": "Faturalarimi karsilastir",
+      "expected_tool": "compare_bills",
+      "expected_args": {"customer_id": "cust-005"},
+      "description": "Fatura karsilastirma dogru musteri ile"
+    },
+    {
+      "id": "TOOL-006",
+      "category": "tool_selection",
+      "customer_id": "cust-001",
+      "query": "Kullanim uyarilarimi kontrol et",
+      "expected_tool": "check_usage_alerts",
+      "expected_args": {"customer_id": "cust-001"},
+      "description": "Uyari kontrolu dogru musteri ile"
+    },
+    {
+      "id": "TOOL-007",
+      "category": "tool_selection",
+      "customer_id": "cust-002",
+      "query": "Ek 10GB Internet Paketi tanimla",
+      "expected_tool": "activate_package",
+      "expected_args": {"customer_id": "cust-002", "package_id": "pkg-002"},
+      "description": "Paket aktivasyonu dogru paket ID ile"
+    },
+    {
+      "id": "TOOL-008",
+      "category": "tool_selection",
+      "customer_id": "cust-003",
+      "query": "Tarifeleri gormek istiyorum",
+      "expected_tool": "get_available_tariffs",
+      "expected_args": {},
+      "description": "Tarife listeleme — parametre gerektirmez"
+    },
+    {
+      "id": "TOOL-009",
+      "category": "tool_selection",
+      "customer_id": "cust-001",
+      "query": "Tarifemi Ekonomik 3GB'ye degistir",
+      "expected_tool": "change_tariff",
+      "expected_args": {"customer_id": "cust-001", "new_tariff_id": "tariff-005"},
+      "description": "Tarife degisikligi dogru tarife ID ile"
+    },
+    {
+      "id": "TOOL-010",
+      "category": "tool_selection",
+      "customer_id": "cust-005",
+      "query": "Fatura detaylarimi goster",
+      "expected_tool": "lookup_customer_bill",
+      "expected_args": {"customer_id": "cust-005"},
+      "description": "Fatura sorgulama dogru musteri ile"
+    },
+    {
+      "id": "TOOL-011",
+      "category": "tool_selection",
+      "customer_id": "cust-004",
+      "query": "Tarife onerir misin?",
+      "expected_tool": "recommend_tariff",
+      "expected_args": {"customer_id": "cust-004"},
+      "description": "Tarife onerisi emekli musteri icin"
+    },
+    {
+      "id": "TOOL-012",
+      "category": "tool_selection",
+      "customer_id": "cust-002",
+      "query": "Kullanim durumumu kontrol et",
+      "expected_tool": "check_usage_alerts",
+      "expected_args": {"customer_id": "cust-002"},
+      "description": "Kullanim uyarisi asim yapan musteri icin"
+    },
+
+    {
+      "id": "ACC-001",
+      "category": "response_accuracy",
+      "customer_id": "cust-001",
+      "query": "Son faturam kac TL?",
+      "expected_tool": "lookup_customer_bill",
+      "expected_values": {
+        "amount": ["403,65", "403.65"],
+        "payment_status": ["ödenmedi", "odenmedi", "ödenmemiş", "odenmemis", "ödenmemiştir"]
+      },
+      "description": "cust-001 son fatura: 403.65 TL, odenmemis"
+    },
+    {
+      "id": "ACC-002",
+      "category": "response_accuracy",
+      "customer_id": "cust-002",
+      "query": "Fatura tutarim nedir?",
+      "expected_tool": "lookup_customer_bill",
+      "expected_values": {
+        "amount": ["255,15", "255.15"],
+        "payment_status": ["ödenmedi", "odenmedi", "ödenmemiş", "odenmemis", "ödenmemiştir"]
+      },
+      "description": "cust-002 son fatura: 255.15 TL, odenmemis"
+    },
+    {
+      "id": "ACC-003",
+      "category": "response_accuracy",
+      "customer_id": "cust-004",
+      "query": "Son faturam ne kadar?",
+      "expected_tool": "lookup_customer_bill",
+      "expected_values": {
+        "amount": ["174,15", "174.15"],
+        "payment_status": ["ödenmiş", "odenmis", "ödendi", "odendi", "ödenmiştir"]
+      },
+      "description": "cust-004 son fatura: 174.15 TL, odenmis"
+    },
+    {
+      "id": "ACC-004",
+      "category": "response_accuracy",
+      "customer_id": "cust-001",
+      "query": "Kac GB internet kullandim?",
+      "expected_values": {
+        "data_used": ["18,5", "18.5"],
+        "data_limit": ["20"]
+      },
+      "description": "cust-001 kullanim: 18.5/20 GB"
+    },
+    {
+      "id": "ACC-005",
+      "category": "response_accuracy",
+      "customer_id": "cust-002",
+      "query": "Veri asimim var mi?",
+      "expected_values": {
+        "overage": ["3,2", "3.2"],
+        "data_used": ["8,2", "8.2"],
+        "data_limit": ["5"]
+      },
+      "description": "cust-002: 3.2 GB asim, 8.2/5 GB"
+    },
+    {
+      "id": "ACC-006",
+      "category": "response_accuracy",
+      "customer_id": "cust-003",
+      "query": "Hangi tarifeyi kullaniyorum?",
+      "expected_values": {
+        "tariff_name": ["Dijital Hayat"],
+        "tariff_price": ["249"]
+      },
+      "description": "cust-003: Dijital Hayat 15GB, 249 TL"
+    },
+    {
+      "id": "ACC-007",
+      "category": "response_accuracy",
+      "customer_id": "cust-005",
+      "query": "Son iki faturami karsilastir",
+      "expected_tool": "compare_bills",
+      "expected_values": {
+        "bill_1": ["302,40", "302.40"],
+        "bill_2": ["268,65", "268.65"]
+      },
+      "description": "cust-005 fatura karsilastirma: 302.40 vs 268.65"
+    },
+    {
+      "id": "ACC-008",
+      "category": "response_accuracy",
+      "customer_id": "cust-004",
+      "query": "Bu ay kac dakika konustum?",
+      "expected_values": {
+        "voice_used": ["420"],
+        "voice_limit": ["500"]
+      },
+      "description": "cust-004: 420/500 dakika"
+    },
+    {
+      "id": "ACC-009",
+      "category": "response_accuracy",
+      "customer_id": "cust-005",
+      "query": "Odenmemis faturam var mi?",
+      "expected_tool": "lookup_customer_bill",
+      "expected_values": {
+        "amount": ["268,65", "268.65"],
+        "payment_status": ["ödenmedi", "odenmedi", "ödenmemiş", "odenmemis"]
+      },
+      "description": "cust-005 odenmemis: 268.65 TL (2026-03)"
+    },
+    {
+      "id": "ACC-010",
+      "category": "response_accuracy",
+      "customer_id": "cust-003",
+      "query": "Son faturamda hangi kalemler var?",
+      "expected_tool": "lookup_customer_bill",
+      "expected_values": {
+        "tariff_item": ["Dijital Hayat"],
+        "package_item": ["Sosyal Medya"]
+      },
+      "description": "cust-003 fatura kalemleri: Dijital Hayat + Sosyal Medya Paketi"
+    },
+    {
+      "id": "ACC-011",
+      "category": "response_accuracy",
+      "customer_id": "cust-002",
+      "query": "Bu ay ne kadar konustum?",
+      "expected_values": {
+        "voice_used": ["320"],
+        "voice_limit": ["500"]
+      },
+      "description": "cust-002: 320/500 dakika"
+    },
+    {
+      "id": "ACC-012",
+      "category": "response_accuracy",
+      "customer_id": "cust-001",
+      "query": "Faturamin son odeme tarihi ne?",
+      "expected_tool": "lookup_customer_bill",
+      "expected_values": {
+        "due_date": ["2026-04-15", "15 Nisan", "15.04.2026", "15/04/2026"]
+      },
+      "description": "cust-001 son odeme tarihi: 2026-04-15"
+    },
+
+    {
+      "id": "HALLUC-001",
+      "category": "hallucination",
+      "customer_id": "cust-003",
+      "query": "Faturamda ne var?",
+      "expected_tool": "lookup_customer_bill",
+      "required_values": ["Dijital Hayat"],
+      "forbidden_values": ["Platinum", "Silver", "Ekonomik"],
+      "description": "cust-003 Dijital Hayat kullanıyor — baska tarife adı gecmemeli"
+    },
+    {
+      "id": "HALLUC-002",
+      "category": "hallucination",
+      "customer_id": "cust-004",
+      "query": "Son faturam ne kadar?",
+      "expected_tool": "lookup_customer_bill",
+      "required_values": ["174"],
+      "forbidden_values": ["403", "255", "376", "268", "309", "471", "302"],
+      "description": "cust-004 faturas: 174.15 TL — baska musterinin tutari olmamalı"
+    },
+    {
+      "id": "HALLUC-003",
+      "category": "hallucination",
+      "customer_id": "cust-002",
+      "query": "Hangi tarife kullaniyorum?",
+      "required_values": ["Silver"],
+      "forbidden_values": ["Gold", "Platinum", "Dijital Hayat", "Ekonomik"],
+      "description": "cust-002 Silver kullanıyor — baska tarife adı gecmemeli"
+    },
+    {
+      "id": "HALLUC-004",
+      "category": "hallucination",
+      "customer_id": "cust-005",
+      "query": "Hangi sehirde kayitliyim?",
+      "required_values": ["Antalya"],
+      "forbidden_values": ["İstanbul", "Istanbul", "Ankara", "İzmir", "Izmir", "Bursa"],
+      "description": "cust-005 Antalya — baska sehir olmamali"
+    },
+    {
+      "id": "HALLUC-005",
+      "category": "hallucination",
+      "customer_id": "cust-001",
+      "query": "Asim ücretim ne kadar?",
+      "required_values": [],
+      "forbidden_values": ["50", "60", "100", "25"],
+      "description": "cust-001 Mart faturas nda asim yok (0.0 GB overage) — asim tutari olmamalı"
+    },
+    {
+      "id": "HALLUC-006",
+      "category": "hallucination",
+      "customer_id": "cust-004",
+      "query": "Asim durumum nedir?",
+      "required_values": [],
+      "forbidden_values_in_context": true,
+      "forbidden_patterns": ["aşım.*GB", "asim.*GB", "aştı", "asti"],
+      "description": "cust-004 asim yok (2.2/5 GB) — asim oldugunu ima etmemeli"
+    },
+    {
+      "id": "HALLUC-007",
+      "category": "hallucination",
+      "customer_id": "cust-002",
+      "query": "Faturami goster",
+      "expected_tool": "lookup_customer_bill",
+      "required_values": ["255"],
+      "forbidden_values": ["Diamond", "Titanium", "Premium"],
+      "description": "Uydurma tarife/paket adi olmamalı"
+    },
+    {
+      "id": "HALLUC-008",
+      "category": "hallucination",
+      "customer_id": "cust-001",
+      "query": "Kac dakika konustum?",
+      "required_values": ["1250", "1.250"],
+      "forbidden_values": ["320", "980", "420", "700"],
+      "description": "cust-001 1250 dk — baska musterinin dakikasi olmamali"
+    },
+    {
+      "id": "HALLUC-009",
+      "category": "hallucination",
+      "customer_id": "cust-003",
+      "query": "Aktif paketlerim neler?",
+      "required_values": [],
+      "forbidden_values": ["Yurt Dışı", "Entertainment Plus", "Hafta Sonu"],
+      "description": "cust-003 aktif paketi yok — olmayan paket adi gecmemeli"
+    },
+    {
+      "id": "HALLUC-010",
+      "category": "hallucination",
+      "customer_id": "cust-005",
+      "query": "Fatura tutarim ne kadar?",
+      "expected_tool": "lookup_customer_bill",
+      "required_values": ["268"],
+      "forbidden_values": ["403", "255", "376", "174"],
+      "description": "cust-005: 268.65 TL — baska musterinin tutari olmamali"
+    },
+    {
+      "id": "HALLUC-011",
+      "category": "hallucination",
+      "customer_id": "cust-004",
+      "query": "Hangi tarife kullaniyorum?",
+      "required_values": ["Silver"],
+      "forbidden_values": ["Gold", "Platinum", "Dijital Hayat"],
+      "description": "cust-004 Silver kullanıyor"
+    },
+    {
+      "id": "HALLUC-012",
+      "category": "hallucination",
+      "customer_id": "cust-001",
+      "query": "Kac GB kullandim bu ay?",
+      "required_values": ["18"],
+      "forbidden_values": ["8.2", "8,2", "12.8", "12,8", "2.2", "2,2"],
+      "description": "cust-001: 18.5 GB — baska musterinin kullanimi olmamali"
+    },
+
+    {
+      "id": "RECOM-001",
+      "category": "recommendation_relevance",
+      "customer_id": "cust-002",
+      "query": "Bana uygun bir tarife onerir misin?",
+      "expected_tool_any": ["recommend_tariff", "get_personalized_recommendations"],
+      "relevance_criteria": {
+        "segment": "genc",
+        "should_upgrade": true,
+        "acceptable_tariffs": ["Gold 10GB", "Dijital Hayat", "tariff-002", "tariff-004"],
+        "unacceptable_tariffs": ["Silver 5GB", "Ekonomik 3GB"]
+      },
+      "description": "cust-002 (genc, 3.2GB asim): daha buyuk data paketine yonlendirmeli"
+    },
+    {
+      "id": "RECOM-002",
+      "category": "recommendation_relevance",
+      "customer_id": "cust-004",
+      "query": "Tarife onerir misiniz?",
+      "expected_tool_any": ["recommend_tariff", "get_personalized_recommendations"],
+      "relevance_criteria": {
+        "segment": "emekli",
+        "should_upgrade": false,
+        "acceptable_tariffs": ["Silver 5GB", "Ekonomik 3GB", "tariff-003", "tariff-005"],
+        "should_mention_savings": true
+      },
+      "description": "cust-004 (emekli, 2.2/5GB): mevcut yeterli veya daha ekonomik"
+    },
+    {
+      "id": "RECOM-003",
+      "category": "recommendation_relevance",
+      "customer_id": "cust-005",
+      "query": "Daha uygun bir tarife var mi?",
+      "expected_tool_any": ["recommend_tariff", "get_personalized_recommendations"],
+      "relevance_criteria": {
+        "segment": "aile",
+        "acceptable_tariffs": ["Gold 10GB", "Dijital Hayat", "tariff-002", "tariff-004"],
+        "should_mention_savings": true
+      },
+      "description": "cust-005 (aile, 8/10GB): mevcut uygun veya benzer seviyede"
+    },
+    {
+      "id": "RECOM-004",
+      "category": "recommendation_relevance",
+      "customer_id": "cust-002",
+      "query": "Ek paket onerir misin?",
+      "expected_tool_any": ["recommend_package", "get_personalized_package_recommendations"],
+      "relevance_criteria": {
+        "segment": "genc",
+        "acceptable_packages": ["Ek 10GB", "Sosyal Medya", "pkg-002", "pkg-003"],
+        "unacceptable_packages": ["Yurt Dışı"]
+      },
+      "description": "cust-002 (genc, data asimi): ek data veya sosyal medya paketi olmali"
+    },
+    {
+      "id": "RECOM-005",
+      "category": "recommendation_relevance",
+      "customer_id": "cust-001",
+      "query": "Hangi paketi onerebilirsin?",
+      "expected_tool_any": ["recommend_package", "get_personalized_package_recommendations"],
+      "relevance_criteria": {
+        "segment": "profesyonel",
+        "acceptable_packages": ["Ek 10GB", "Yurt Dışı", "Entertainment Plus", "pkg-001", "pkg-002", "pkg-004"]
+      },
+      "description": "cust-001 (profesyonel, 18.5/20GB): data veya premium paket"
+    },
+    {
+      "id": "RECOM-006",
+      "category": "recommendation_relevance",
+      "customer_id": "cust-004",
+      "query": "Bana uygun paket var mi?",
+      "expected_tool_any": ["recommend_package", "get_personalized_package_recommendations"],
+      "relevance_criteria": {
+        "segment": "emekli",
+        "acceptable_packages": ["Hafta Sonu", "Sosyal Medya", "pkg-003", "pkg-005"],
+        "unacceptable_packages": ["Yurt Dışı"]
+      },
+      "description": "cust-004 (emekli, dusuk kullanim): ekonomik/hafif paket"
+    },
+    {
+      "id": "RECOM-007",
+      "category": "recommendation_relevance",
+      "customer_id": "cust-003",
+      "query": "Tarife degisikligi onerir misiniz?",
+      "expected_tool_any": ["recommend_tariff", "get_personalized_recommendations"],
+      "relevance_criteria": {
+        "segment": "profesyonel",
+        "acceptable_tariffs": ["Dijital Hayat", "Platinum", "Gold 10GB", "tariff-001", "tariff-002", "tariff-004"],
+        "unacceptable_tariffs": ["Ekonomik 3GB", "Silver 5GB"]
+      },
+      "description": "cust-003 (kurumsal, 12.8/15GB): benzer veya ust seviye"
+    },
+    {
+      "id": "RECOM-008",
+      "category": "recommendation_relevance",
+      "customer_id": "cust-005",
+      "query": "Ek internet paketi onerir misin?",
+      "expected_tool_any": ["recommend_package", "get_personalized_package_recommendations"],
+      "relevance_criteria": {
+        "segment": "aile",
+        "acceptable_packages": ["Ek 10GB", "Hafta Sonu", "Sosyal Medya", "pkg-002", "pkg-003", "pkg-005"]
+      },
+      "description": "cust-005 (aile, 8/10GB): ek data veya hafta sonu paketi"
+    },
+    {
+      "id": "RECOM-009",
+      "category": "recommendation_relevance",
+      "customer_id": "cust-002",
+      "query": "Daha cok internet icin ne yapabilirim?",
+      "expected_tool_any": ["recommend_tariff", "recommend_package", "get_personalized_recommendations"],
+      "relevance_criteria": {
+        "segment": "genc",
+        "should_upgrade": true,
+        "acceptable_tariffs": ["Gold 10GB", "Dijital Hayat", "Platinum"],
+        "acceptable_packages": ["Ek 10GB"]
+      },
+      "description": "cust-002 (genc, 3.2GB asim): tarife veya paket artisi onerilmeli"
+    },
+    {
+      "id": "RECOM-010",
+      "category": "recommendation_relevance",
+      "customer_id": "cust-001",
+      "query": "Bana uygun tarife oner",
+      "expected_tool_any": ["recommend_tariff", "get_personalized_recommendations"],
+      "relevance_criteria": {
+        "segment": "profesyonel",
+        "acceptable_tariffs": ["Platinum", "Dijital Hayat", "tariff-001", "tariff-004"],
+        "unacceptable_tariffs": ["Silver 5GB", "Ekonomik 3GB"]
+      },
+      "description": "cust-001 (profesyonel, 18.5/20GB): ust seviye tarife"
+    },
+    {
+      "id": "RECOM-011",
+      "category": "recommendation_relevance",
+      "customer_id": "cust-003",
+      "query": "Faturami dusurmenin yolu var mi?",
+      "expected_tool_any": ["recommend_tariff", "get_personalized_recommendations"],
+      "relevance_criteria": {
+        "segment": "profesyonel",
+        "should_mention_savings": true,
+        "acceptable_tariffs": ["Gold 10GB", "Silver 5GB", "tariff-002", "tariff-003"]
+      },
+      "description": "cust-003 (12.8/15GB, 376.65 TL): daha ekonomik tarife onerilmeli"
+    },
+    {
+      "id": "RECOM-012",
+      "category": "recommendation_relevance",
+      "customer_id": "cust-005",
+      "query": "Paket onerir misin?",
+      "expected_tool_any": ["recommend_package", "get_personalized_package_recommendations"],
+      "relevance_criteria": {
+        "segment": "aile",
+        "acceptable_packages": ["Ek 10GB", "Sosyal Medya", "Hafta Sonu", "Entertainment Plus"]
+      },
+      "description": "cust-005 (aile): genel paket onerisi"
+    },
+
+    {
+      "id": "NLU-001",
+      "category": "turkish_nlu",
+      "customer_id": "cust-001",
+      "queries": [
+        "Faturami goster",
+        "Faturama bakabilir miyim?",
+        "Ne kadar borcum var?",
+        "Son fatura tutari nedir?"
+      ],
+      "expected_tool": "lookup_customer_bill",
+      "description": "Fatura sorgulama — 4 farkli Turkce ifade"
+    },
+    {
+      "id": "NLU-002",
+      "category": "turkish_nlu",
+      "customer_id": "cust-002",
+      "queries": [
+        "Tarife onerir misin?",
+        "Hangi tarife bana uygun?",
+        "Daha iyi bir tarife var mi?",
+        "Tarife degisikligi dusunuyorum"
+      ],
+      "expected_tool": "recommend_tariff",
+      "description": "Tarife onerisi — 4 farkli ifade"
+    },
+    {
+      "id": "NLU-003",
+      "category": "turkish_nlu",
+      "customer_id": "cust-003",
+      "queries": [
+        "Paketleri goster",
+        "Hangi paketler mevcut?",
+        "Ek paket secenekleri neler?",
+        "Paket listesini gorebilir miyim?"
+      ],
+      "expected_tool": "get_available_packages",
+      "description": "Paket listeleme — 4 farkli ifade"
+    },
+    {
+      "id": "NLU-004",
+      "category": "turkish_nlu",
+      "customer_id": "cust-004",
+      "queries": [
+        "Kullanim durumum nasil?",
+        "Limitlerimi asim var mi?",
+        "Bu ay ne kadar harcadim?",
+        "Internet ve dakika durumum nedir?"
+      ],
+      "expected_tool": "check_usage_alerts",
+      "description": "Kullanim kontrolu — 4 farkli ifade"
+    },
+    {
+      "id": "NLU-005",
+      "category": "turkish_nlu",
+      "customer_id": "cust-005",
+      "queries": [
+        "Faturalarimi karsilastir",
+        "Onceki faturayla kiyasla",
+        "Son iki fatura arasindaki fark ne?",
+        "Fatura degisimini goster"
+      ],
+      "expected_tool": "compare_bills",
+      "description": "Fatura karsilastirma — 4 farkli ifade"
+    },
+    {
+      "id": "NLU-006",
+      "category": "turkish_nlu",
+      "customer_id": "cust-002",
+      "queries": [
+        "Paket onerir misin?",
+        "Bana uygun paket var mi?",
+        "Ek paket tavsiye eder misin?",
+        "Hangi paketi secmeliyim?"
+      ],
+      "expected_tool": "recommend_package",
+      "description": "Paket onerisi — 4 farkli ifade"
+    },
+    {
+      "id": "NLU-007",
+      "category": "turkish_nlu",
+      "customer_id": "cust-001",
+      "queries": [
+        "Tarifeleri goster",
+        "Mevcut tarifeler neler?",
+        "Tarife seceneklerini listele",
+        "Hangi tarifeler var?"
+      ],
+      "expected_tool": "get_available_tariffs",
+      "description": "Tarife listeleme — 4 farkli ifade"
+    },
+    {
+      "id": "NLU-008",
+      "category": "turkish_nlu",
+      "customer_id": "cust-003",
+      "queries": [
+        "Selam!",
+        "Merhaba, nasilsiniz?",
+        "Iyi gunler"
+      ],
+      "expected_tool": null,
+      "description": "Selamlasma — tool cagirilmamali"
+    },
+    {
+      "id": "NLU-009",
+      "category": "turkish_nlu",
+      "customer_id": "cust-002",
+      "queries": [
+        "Sosyal Medya Paketi ekle",
+        "Sosyal medya paketini tanimla",
+        "Sosyal medya paketi istiyorum"
+      ],
+      "expected_tool": "activate_package",
+      "description": "Paket aktivasyonu — 3 farkli ifade"
+    },
+    {
+      "id": "NLU-010",
+      "category": "turkish_nlu",
+      "customer_id": "cust-001",
+      "queries": [
+        "Tarifemi degistir",
+        "Tarife degisikligi yap",
+        "Tarifemi yukseltmek istiyorum"
+      ],
+      "expected_tool": "change_tariff",
+      "description": "Tarife degisikligi — 3 farkli ifade"
+    },
+    {
+      "id": "NLU-011",
+      "category": "turkish_nlu",
+      "customer_id": "cust-005",
+      "queries": [
+        "Odenmemis faturam var mi?",
+        "Odeme yapmam gereken fatura var mi?",
+        "Borcum var mi?",
+        "Odemedigim fatura var mi?"
+      ],
+      "expected_tool": "lookup_customer_bill",
+      "description": "Odeme durumu — 4 farkli ifade"
+    },
+    {
+      "id": "NLU-012",
+      "category": "turkish_nlu",
+      "customer_id": "cust-004",
+      "queries": [
+        "Tarife onerir misiniz?",
+        "Daha uygun tarife var mi?",
+        "Faturami dusurmenin yolu var mi?"
+      ],
+      "expected_tool": "recommend_tariff",
+      "description": "Tarife onerisi — emekli musteri icin 3 farkli ifade"
+    }
+  ]
+}

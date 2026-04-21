@@ -1,8 +1,8 @@
 [
   {
     "id": "camp-001",
-    "name": "Bahar Kampanyasi",
-    "description": "Ilkbahara ozel tarife degisikligi kampanyasi. Gold veya Platinum tarifelerine geciste ilk 3 ay %20 indirim.",
+    "name": "Bahar Kampanyası",
+    "description": "İlkbahara özel tarife değişikliği kampanyası. Gold veya Platinum tarifelerine geçişte ilk 3 ay %20 indirim.",
     "discount_percent": 20,
     "bonus_data_gb": null,
     "valid_until": "2026-06-30",
@@ -11,8 +11,8 @@
   },
   {
     "id": "camp-002",
-    "name": "Dijital Destek Kampanyasi",
-    "description": "Dijital Hayat tarifesine geciste 5GB bonus internet hediye.",
+    "name": "Dijital Destek Kampanyası",
+    "description": "Dijital Hayat tarifesine geçişte 5GB bonus internet hediye.",
     "discount_percent": null,
     "bonus_data_gb": 5,
     "valid_until": "2026-05-31",
@@ -21,8 +21,8 @@
   },
   {
     "id": "camp-003",
-    "name": "Genc Turkcell Firsati",
-    "description": "25 yas altindaki musterilere ozel Silver ve Gold tarifelerde %15 indirim.",
+    "name": "Genç Umay Fırsatı",
+    "description": "25 yaş altındaki müşterilere özel Silver ve Gold tarifelerde %15 indirim.",
     "discount_percent": 15,
     "bonus_data_gb": null,
     "valid_until": "2026-12-31",

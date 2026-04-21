@@ -34,16 +34,16 @@ function ConversationStatusArea({ conversationState }: { conversationState: Conv
     switch (conversationState) {
       case "listening":
       case "connected":
-        return "border-turkcell-blue/20 bg-turkcell-blue/5";
+        return "border-umay-blue/20 bg-umay-blue/5";
       case "speech-detected":
-        return "border-green-200 bg-green-50";
+        return "border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/30";
       case "connecting":
       case "processing":
       case "playing":
       case "model-speaking":
       case "action-pending":
       default:
-        return "border-gray-200 bg-white";
+        return "border-border bg-card";
     }
   };
 
@@ -52,22 +52,22 @@ function ConversationStatusArea({ conversationState }: { conversationState: Conv
       case "listening":
         return (
           <>
-            <span className="w-2 h-2 rounded-full bg-turkcell-blue animate-breathing shrink-0" />
-            <span className="text-sm text-turkcell-blue">Konusmanizi bekliyorum...</span>
+            <span className="w-2 h-2 rounded-full bg-umay-blue animate-breathing shrink-0" />
+            <span className="text-sm text-umay-blue">Konuşmanızı bekliyorum...</span>
           </>
         );
       case "connected":
         return (
           <>
-            <Radio className="h-4 w-4 text-turkcell-blue animate-pulse shrink-0" />
-            <span className="text-sm text-turkcell-blue">Canli konusma aktif — konusabilirsiniz</span>
+            <Radio className="h-4 w-4 text-umay-blue animate-pulse shrink-0" />
+            <span className="text-sm text-umay-blue">Canlı konuşma aktif — konuşabilirsiniz</span>
           </>
         );
       case "connecting":
         return (
           <>
-            <Loader2 className="h-4 w-4 text-turkcell-blue animate-spin shrink-0" />
-            <span className="text-sm text-gray-500">Baglanti kuruluyor...</span>
+            <Loader2 className="h-4 w-4 text-umay-blue animate-spin shrink-0" />
+            <span className="text-sm text-muted-foreground">Bağlantı kuruluyor...</span>
           </>
         );
       case "speech-detected":
@@ -80,23 +80,23 @@ function ConversationStatusArea({ conversationState }: { conversationState: Conv
       case "processing":
         return (
           <>
-            <Loader2 className="h-4 w-4 text-turkcell-blue animate-spin shrink-0" />
-            <span className="text-sm text-gray-500">Yanitiniz hazirlaniyor...</span>
+            <Loader2 className="h-4 w-4 text-umay-blue animate-spin shrink-0" />
+            <span className="text-sm text-muted-foreground">Yanıtınız hazırlanıyor...</span>
           </>
         );
       case "playing":
       case "model-speaking":
         return (
           <>
-            <Volume2 className="h-4 w-4 text-turkcell-blue animate-pulse shrink-0" />
-            <span className="text-sm text-gray-500">Yanit okunuyor...</span>
+            <Volume2 className="h-4 w-4 text-umay-blue animate-pulse shrink-0" />
+            <span className="text-sm text-muted-foreground">Yanıt okunuyor...</span>
           </>
         );
       case "action-pending":
         return (
           <>
             <Loader2 className="h-4 w-4 text-yellow-500 animate-spin shrink-0" />
-            <span className="text-sm text-yellow-700">Islem onayiniz bekleniyor...</span>
+            <span className="text-sm text-yellow-700">İşlem onayınız bekleniyor...</span>
           </>
         );
       default:
@@ -153,22 +153,22 @@ function MessageInputInner({ voiceChat, conversation }: { voiceChat: VoiceChatPr
   const handleConversationToggle = () => {
     if (isConversationActive) {
       stopConversation();
-      useChatStore.getState().announce("Sesli konusma modu kapatildi.");
+      useChatStore.getState().announce("Sesli konuşma modu kapatıldı.");
     } else {
       if (isVADErrored) {
         useChatStore.getState().setError(
-          "Ses tanima modeli yuklenemedi. Sayfayi yenileyip tekrar deneyin."
+          "Ses tanıma modeli yüklenemedi. Sayfayı yenileyip tekrar deneyin."
         );
         return;
       }
       if (isVADLoading) {
         useChatStore.getState().setError(
-          "Ses tanima modeli yukleniyor, lutfen birka\u00e7 saniye bekleyin."
+          "Ses tanıma modeli yükleniyor, lütfen birkaç saniye bekleyin."
         );
         return;
       }
       startConversation();
-      useChatStore.getState().announce("Sesli konusma modu aktif.");
+      useChatStore.getState().announce("Sesli konuşma modu aktif.");
     }
   };
 
@@ -191,7 +191,7 @@ function MessageInputInner({ voiceChat, conversation }: { voiceChat: VoiceChatPr
   }, [isStreaming, isVoiceActive, isConversationActive]);
 
   return (
-    <div className="p-4 bg-white border-t border-gray-200 shrink-0" role="region" aria-label="Mesaj gonderme alani">
+    <div className="p-4 bg-card border-t border-border shrink-0" role="region" aria-label="Mesaj gönderme alanı">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-end gap-2">
           {voiceState === "recording" ? (
@@ -199,8 +199,8 @@ function MessageInputInner({ voiceChat, conversation }: { voiceChat: VoiceChatPr
           ) : isConversationActive ? (
             <ConversationStatusArea conversationState={conversationState} />
           ) : isVoiceActive ? (
-            <div className="flex-1 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500 opacity-50">
-              Mesajinizi yazin...
+            <div className="flex-1 rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground opacity-50">
+              Mesajınızı yazın...
             </div>
           ) : (
             <textarea
@@ -210,13 +210,13 @@ function MessageInputInner({ voiceChat, conversation }: { voiceChat: VoiceChatPr
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Mesajinizi yazin..."
+              placeholder="Mesajınızı yazın..."
               disabled={isStreaming}
               rows={1}
-              aria-label="Mesaj alani"
+              aria-label="Mesaj alanı"
               aria-describedby="input-hint"
               aria-disabled={isStreaming}
-              className="flex-1 resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-turkcell-dark placeholder:text-gray-500 focus:outline-none focus:border-turkcell-blue transition-colors disabled:opacity-50"
+              className="flex-1 resize-none rounded-xl border border-border bg-card px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-umay-blue transition-colors disabled:opacity-50"
             />
           )}
           <ConversationModeToggle
@@ -236,9 +236,9 @@ function MessageInputInner({ voiceChat, conversation }: { voiceChat: VoiceChatPr
           <button
             onClick={handleSend}
             disabled={!canSend || isVoiceActive || isConversationActive}
-            aria-label="Mesaj gonder"
+            aria-label="Mesaj gönder"
             aria-disabled={!canSend || isVoiceActive || isConversationActive}
-            className="h-12 w-12 rounded-xl bg-turkcell-blue text-white flex items-center justify-center hover:bg-turkcell-blue/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+            className="h-12 w-12 rounded-xl bg-umay-blue text-white flex items-center justify-center hover:bg-umay-blue/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
           >
             <Send className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -246,7 +246,7 @@ function MessageInputInner({ voiceChat, conversation }: { voiceChat: VoiceChatPr
         <VoiceStatusBanner voiceState={voiceState} conversationState={conversationState} />
       </div>
       <p id="input-hint" className="sr-only">
-        Gondermek icin Enter, yeni satir icin Shift+Enter tuslayiniz
+        Göndermek için Enter, yeni satır için Shift+Enter tuşlayınız
       </p>
     </div>
   );

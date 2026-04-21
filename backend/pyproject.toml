@@ -1,7 +1,7 @@
 [project]
-name = "turkcell-ai-gen-backend"
+name = "umay-ai-gen-backend"
 version = "0.1.0"
-description = "Turkcell AI-Gen Backend API"
+description = "Umay AI-Gen Backend API"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.115.0",
@@ -50,4 +50,5 @@ asyncio_mode = "auto"
 testpaths = ["tests"]
 markers = [
     "integration: marks tests requiring external services (deselect with '-m not integration')",
+    "ai_eval: marks AI evaluation tests requiring real Gemini API key (run with '-m ai_eval')",
 ]

@@ -8,9 +8,9 @@ export function ActionProcessingIndicator() {
       role="status"
       aria-live="assertive"
     >
-      <Loader2 className="h-5 w-5 text-turkcell-blue animate-spin" aria-hidden="true" />
-      <span className="text-sm text-turkcell-dark">
-        Islem yurutuluyor...
+      <Loader2 className="h-5 w-5 text-umay-blue animate-spin" aria-hidden="true" />
+      <span className="text-sm text-foreground">
+        İşlem yürütülüyor...
       </span>
     </div>
   );

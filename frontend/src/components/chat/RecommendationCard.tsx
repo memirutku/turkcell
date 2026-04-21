@@ -33,9 +33,9 @@ export function RecommendationCard({
 
   return (
     <Card
-      className={`mt-3 border-turkcell-blue/20 ${isTopPick ? "border-l-4 border-l-turkcell-yellow" : ""}`}
+      className={`mt-3 border-umay-blue/20 ${isTopPick ? "border-l-4 border-l-umay-yellow" : ""}`}
       role="region"
-      aria-label={`Tarife onerisi: ${recommendation.tariff_name}${isTopPick ? " - Onerilen" : ""}${savingsPositive ? `, aylik ${formatTL(recommendation.savings)} tasarruf` : ""}`}
+      aria-label={`Tarife önerisi: ${recommendation.tariff_name}${isTopPick ? " - Önerilen" : ""}${savingsPositive ? `, aylık ${formatTL(recommendation.savings)} tasarruf` : ""}`}
     >
       <CardHeader className="pb-2 px-4 pt-4">
         <div className="flex items-center justify-between">
@@ -44,13 +44,13 @@ export function RecommendationCard({
           </CardTitle>
           <div className="flex gap-1">
             {isTopPick && (
-              <Badge className="bg-turkcell-yellow text-turkcell-dark text-xs" aria-label="Onerilen tarife">
-                Onerilen
+              <Badge className="bg-umay-yellow text-umay-dark text-xs" aria-label="Önerilen tarife">
+                Önerilen
               </Badge>
             )}
             {savingsPositive && savings >= 30 && (
-              <Badge className="bg-green-100 text-green-700 text-xs" aria-label="En cok tasarruf saglayan tarife">
-                En Cok Tasarruf
+              <Badge className="bg-green-100 text-green-700 text-xs" aria-label="En çok tasarruf sağlayan tarife">
+                En Çok Tasarruf
               </Badge>
             )}
           </div>
@@ -61,9 +61,9 @@ export function RecommendationCard({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-sm font-semibold leading-snug">Ozellik</TableHead>
+              <TableHead className="text-sm font-semibold leading-snug">Özellik</TableHead>
               <TableHead className="text-sm font-semibold leading-snug">Mevcut Tarife</TableHead>
-              <TableHead className="text-sm font-semibold leading-snug">Onerilen Tarife</TableHead>
+              <TableHead className="text-sm font-semibold leading-snug">Önerilen Tarife</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -83,7 +83,7 @@ export function RecommendationCard({
               <TableCell className="text-sm">{recommendation.sms_count}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell className="text-sm font-semibold">Tahmini Aylik</TableCell>
+              <TableCell className="text-sm font-semibold">Tahmini Aylık</TableCell>
               <TableCell className="text-sm font-semibold">-</TableCell>
               <TableCell className="text-sm font-semibold">{formatTL(recommendation.projected_cost)}</TableCell>
             </TableRow>
@@ -94,12 +94,12 @@ export function RecommendationCard({
 
         {/* Savings callout */}
         {savingsPositive ? (
-          <div className="p-2 bg-green-50 rounded-lg text-green-800 text-sm font-medium" role="status" aria-label={`Aylik ${formatTL(recommendation.savings)} tasarruf`}>
-            <span aria-hidden="true">&#9660; </span>Aylik {formatTL(recommendation.savings)} tasarruf
+          <div className="p-2 bg-green-50 dark:bg-green-950/30 rounded-lg text-green-800 dark:text-green-300 text-sm font-medium" role="status" aria-label={`Aylık ${formatTL(recommendation.savings)} tasarruf`}>
+            <span aria-hidden="true">&#9660; </span>Aylık {formatTL(recommendation.savings)} tasarruf
           </div>
         ) : savings < 0 ? (
-          <div className="p-2 bg-red-50 rounded-lg text-red-800 text-sm font-medium" role="status" aria-label={`Aylik ${formatTL(Math.abs(savings).toFixed(2))} daha fazla`}>
-            <span aria-hidden="true">&#9650; </span>Aylik {formatTL(Math.abs(savings).toFixed(2))} daha fazla
+          <div className="p-2 bg-red-50 dark:bg-red-950/30 rounded-lg text-red-800 dark:text-red-300 text-sm font-medium" role="status" aria-label={`Aylık ${formatTL(Math.abs(savings).toFixed(2))} daha fazla`}>
+            <span aria-hidden="true">&#9650; </span>Aylık {formatTL(Math.abs(savings).toFixed(2))} daha fazla
           </div>
         ) : null}
 
@@ -109,7 +109,7 @@ export function RecommendationCard({
             <p className="text-sm font-semibold leading-snug mb-1">Neden bu tarife?</p>
             <ul className="list-disc list-inside space-y-0.5">
               {recommendation.reasons.map((reason, i) => (
-                <li key={i} className="text-sm leading-relaxed text-gray-700">
+                <li key={i} className="text-sm leading-relaxed text-muted-foreground">
                   {reason}
                 </li>
               ))}

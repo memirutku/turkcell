@@ -50,9 +50,9 @@ export async function streamChat(
 
   if (!response.ok) {
     if (response.status === 503) {
-      onError("Asistan su an kullanilamiyor. Lutfen daha sonra tekrar deneyin.");
+      onError("Asistan şu an kullanılamıyor. Lütfen daha sonra tekrar deneyin.");
     } else {
-      onError("Sunucu hatasi. Lutfen tekrar deneyin.");
+      onError("Sunucu hatası. Lütfen tekrar deneyin.");
     }
     return;
   }
@@ -89,7 +89,7 @@ export async function streamChat(
               onStructured(data as StructuredData);
             }
           } else if (currentEvent === "error") {
-            onError(data.message || "Bir hata olustu. Lutfen tekrar deneyin.");
+            onError(data.message || "Bir hata oluştu. Lütfen tekrar deneyin.");
             return;
           }
         } catch {
@@ -130,9 +130,9 @@ export async function streamAgentChat(
 
   if (!response.ok) {
     if (response.status === 503) {
-      onError("Asistan su an kullanilamiyor. Lutfen daha sonra tekrar deneyin.");
+      onError("Asistan şu an kullanılamıyor. Lütfen daha sonra tekrar deneyin.");
     } else {
-      onError("Sunucu hatasi. Lutfen tekrar deneyin.");
+      onError("Sunucu hatası. Lütfen tekrar deneyin.");
     }
     return;
   }
@@ -150,6 +150,7 @@ export async function streamAgentChat(
     buffer = lines.pop() || "";
 
     let currentEvent = "";
+    let receivedDone = false;
     for (const line of lines) {
       if (line.startsWith("event: ")) {
         currentEvent = line.slice(7).trim();
@@ -160,8 +161,7 @@ export async function streamAgentChat(
           if (currentEvent === "token" && data.content) {
             onToken(data.content);
           } else if (currentEvent === "done") {
-            onDone();
-            return;
+            receivedDone = true;
           } else if (currentEvent === "action_proposal") {
             onActionProposal(data as ActionProposal);
           } else if (currentEvent === "action_result") {
@@ -171,13 +171,17 @@ export async function streamAgentChat(
               onStructured(data as StructuredData);
             }
           } else if (currentEvent === "error") {
-            onError(data.message || "Bir hata olustu. Lutfen tekrar deneyin.");
+            onError(data.message || "Bir hata oluştu. Lütfen tekrar deneyin.");
             return;
           }
         } catch {
           // Skip malformed JSON lines
         }
       }
+    }
+    if (receivedDone) {
+      onDone();
+      return;
     }
   }
 
@@ -205,7 +209,7 @@ export async function confirmAgentAction(
   });
 
   if (!response.ok) {
-    onError("Onay islemi sirasinda bir sorun olustu. Lutfen tekrar deneyin.");
+    onError("Onay işlemi sırasında bir sorun oluştu. Lütfen tekrar deneyin.");
     return;
   }
 
@@ -222,6 +226,7 @@ export async function confirmAgentAction(
     buffer = lines.pop() || "";
 
     let currentEvent = "";
+    let receivedDone = false;
     for (const line of lines) {
       if (line.startsWith("event: ")) {
         currentEvent = line.slice(7).trim();
@@ -232,12 +237,11 @@ export async function confirmAgentAction(
           if (currentEvent === "token" && data.content) {
             onToken(data.content);
           } else if (currentEvent === "done") {
-            onDone();
-            return;
+            receivedDone = true;
           } else if (currentEvent === "action_result") {
             onActionResult(data as ActionResult);
           } else if (currentEvent === "error") {
-            onError(data.message || "Bir hata olustu. Lutfen tekrar deneyin.");
+            onError(data.message || "Bir hata oluştu. Lütfen tekrar deneyin.");
             return;
           }
         } catch {
@@ -245,7 +249,20 @@ export async function confirmAgentAction(
         }
       }
     }
+    if (receivedDone) {
+      onDone();
+      return;
+    }
   }
 
   onDone();
+}
+
+/**
+ * Fetch customer details from the backend (includes current tariff).
+ */
+export async function fetchCustomer(customerId: string): Promise<{ id: string; name: string; tariff: { name: string } | null }> {
+  const response = await fetch(`${API_BASE_URL}/api/bss/customers/${customerId}`);
+  if (!response.ok) throw new Error(`Customer fetch failed: ${response.status}`);
+  return response.json();
 }

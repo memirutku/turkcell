@@ -39,15 +39,15 @@ function ServiceCard({
   details?: Record<string, unknown>;
 }) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+    <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-700">{name}</h3>
+        <h3 className="text-sm font-semibold text-foreground">{name}</h3>
         <StatusBadge status={status} />
       </div>
       {details && (
         <div className="mt-2 space-y-1">
           {Object.entries(details).map(([key, value]) => (
-            <p key={key} className="text-xs text-gray-500">
+            <p key={key} className="text-xs text-muted-foreground">
               {key}: {String(value)}
             </p>
           ))}
@@ -79,7 +79,7 @@ export default function HealthPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Backend baglantisi kurulamadi"
+          : "Backend bağlantısı kurulamadı"
       );
       setHealth(null);
     } finally {
@@ -97,19 +97,19 @@ export default function HealthPage() {
     <main className="flex min-h-screen flex-col items-center justify-center p-8">
       {/* Header */}
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-turkcell-dark">
-          Turkcell{" "}
-          <span className="text-turkcell-blue">AI-Gen</span>
+        <h1 className="text-4xl font-bold text-foreground">
+          Umay{" "}
+          <span className="text-umay-blue">Umay</span>
         </h1>
-        <p className="mt-2 text-lg text-gray-600">
-          Dijital Asistan Altyapi Durumu
+        <p className="mt-2 text-lg text-muted-foreground">
+          Dijital Asistan Altyapı Durumu
         </p>
       </div>
 
       {/* Overall Status */}
       <div className="mb-8">
         {loading ? (
-          <div className="flex items-center gap-2 text-gray-500">
+          <div className="flex items-center gap-2 text-muted-foreground">
             <svg
               className="h-5 w-5 animate-spin"
               xmlns="http://www.w3.org/2000/svg"
@@ -134,7 +134,7 @@ export default function HealthPage() {
           </div>
         ) : error ? (
           <div className="rounded-lg bg-red-50 p-4 text-center">
-            <p className="text-red-800 font-medium">Backend Baglantisi Basarisiz</p>
+            <p className="text-red-800 font-medium">Backend Bağlantısı Başarısız</p>
             <p className="text-red-600 text-sm mt-1">{error}</p>
             <button
               onClick={checkHealth}
@@ -173,7 +173,7 @@ export default function HealthPage() {
             name="Mock BSS/OSS"
             status={health.services.mock_bss.status}
             details={{
-              musteriler: health.services.mock_bss.customers ?? 0,
+              müşteriler: health.services.mock_bss.customers ?? 0,
               tarifeler: health.services.mock_bss.tariffs ?? 0,
             }}
           />
@@ -182,16 +182,16 @@ export default function HealthPage() {
 
       {/* Version and refresh info */}
       {health && (
-        <div className="mt-6 text-center text-xs text-gray-400">
+        <div className="mt-6 text-center text-xs text-muted-foreground">
           <p>API Versiyon: {health.version}</p>
-          {lastUpdated && <p>Son guncelleme: {lastUpdated}</p>}
-          <p className="mt-1">Her 30 saniyede otomatik guncellenir</p>
+          {lastUpdated && <p>Son güncelleme: {lastUpdated}</p>}
+          <p className="mt-1">Her 30 saniyede otomatik güncellenir</p>
         </div>
       )}
 
       {/* Footer */}
-      <footer className="mt-12 text-center text-xs text-gray-400">
-        <p>Turkcell AI-Gen Dijital Asistan &copy; 2026</p>
+      <footer className="mt-12 text-center text-xs text-muted-foreground">
+        <p>Umay Umay Dijital Asistan &copy; 2026</p>
       </footer>
     </main>
   );

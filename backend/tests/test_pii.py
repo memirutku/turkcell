@@ -484,10 +484,10 @@ class TestPIILoggingFilter:
         pii_filter = PIILoggingFilter()
         record = logging.LogRecord(
             name="test", level=logging.INFO, pathname="", lineno=0,
-            msg="Email: ahmet@turkcell.com.tr", args=(), exc_info=None,
+            msg="Email: ahmet@umay.com.tr", args=(), exc_info=None,
         )
         pii_filter.filter(record)
-        assert "ahmet@turkcell.com.tr" not in record.msg
+        assert "ahmet@umay.com.tr" not in record.msg
         assert "[EMAIL]" in record.msg
 
     def test_sanitizes_args_tuple(self):

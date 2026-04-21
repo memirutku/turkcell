@@ -36,7 +36,7 @@ export function ChatContainer() {
   );
 
   return (
-    <div className="flex flex-col h-screen bg-turkcell-gray">
+    <div className="flex flex-col h-screen bg-background">
       <ChatHeader />
 
       {/* Message area */}

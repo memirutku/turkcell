@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { Message, StructuredData, ActionProposal, ActionResult, RecommendationPayload } from "@/types";
-import { streamChat, streamAgentChat, confirmAgentAction } from "@/lib/api";
+import { streamChat, streamAgentChat, confirmAgentAction, fetchCustomer } from "@/lib/api";
 
-const SESSION_STORAGE_KEY = "turkcell-chat-session-id";
+const SESSION_STORAGE_KEY = "umay-chat-session-id";
 
 function getOrCreateSessionId(): string {
   if (typeof window !== "undefined") {
@@ -26,7 +26,9 @@ interface ChatStore {
   activeThreadId: string | null;
   srAnnouncement: string;
   liveConfirmCallback: ((approved: boolean) => void) | null;
+  customerTariffs: Record<string, string>;
   announce: (text: string) => void;
+  refreshCustomerTariff: (customerId: string) => Promise<void>;
   addMessage: (role: "user" | "assistant", content: string) => string; // returns message id
   appendToLastMessage: (token: string) => void;
   setStreaming: (streaming: boolean) => void;
@@ -53,6 +55,20 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   activeThreadId: null,
   srAnnouncement: "",
   liveConfirmCallback: null,
+  customerTariffs: {},
+
+  refreshCustomerTariff: async (customerId) => {
+    try {
+      const customer = await fetchCustomer(customerId);
+      if (customer.tariff?.name) {
+        set((state) => ({
+          customerTariffs: { ...state.customerTariffs, [customerId]: customer.tariff!.name },
+        }));
+      }
+    } catch (err) {
+      console.error("[ChatStore] refreshCustomerTariff error:", err);
+    }
+  },
 
   announce: (text) => {
     set({ srAnnouncement: text });
@@ -213,6 +229,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
             type: "action_result",
             payload: result,
           });
+          if (result.success) {
+            const cid = get().customerId;
+            if (cid) get().refreshCustomerTariff(cid);
+          }
         },
       );
     } catch (err) {
@@ -276,6 +296,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
               type: "action_result",
               payload: result,
             });
+            if (result.success) {
+              const cid = get().customerId;
+              if (cid) get().refreshCustomerTariff(cid);
+            }
           },
           (structuredData) => {
             const { addStructuredData } = get();

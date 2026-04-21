@@ -42,16 +42,16 @@ class TestBillingContext:
         assert result is not None
         assert "2026-01" in result or "2026-02" in result or "2026-03" in result
         # Check that line item descriptions appear
-        assert "Platinum Esneyebilen 20GB Tarife Ucreti" in result
+        assert "Platinum Esneyebilen 20GB Tarife Ücreti" in result
 
     def test_line_item_categories_turkish(self, billing_service):
         """Output maps 'base' -> 'Ana Ucret', 'overage' -> 'Asim Ucreti', 'tax' -> 'Vergi'."""
         result = billing_service.get_customer_context("cust-001")
         assert result is not None
-        assert "Ana Ucret" in result
+        assert "Ana Ücret" in result
         assert "Vergi" in result
         # cust-001 has overage in 2026-02
-        assert "Asim Ucreti" in result
+        assert "Aşım Ücreti" in result
 
     def test_currency_formatting(self, billing_service):
         """Amounts formatted with comma decimal separator and TL suffix."""
@@ -135,25 +135,25 @@ class TestBillingPrompts:
         """BILLING_SYSTEM_PROMPT contains 'Fatura Analiz Kurallari' section."""
         from app.prompts.billing_prompts import BILLING_SYSTEM_PROMPT
 
-        assert "Fatura Analiz Kurallari" in BILLING_SYSTEM_PROMPT
+        assert "Fatura Analiz Kuralları" in BILLING_SYSTEM_PROMPT
 
     def test_billing_prompt_prioritizes_customer_data(self):
         """BILLING_SYSTEM_PROMPT contains instruction to prioritize customer data over RAG."""
         from app.prompts.billing_prompts import BILLING_SYSTEM_PROMPT
 
-        assert "musteri bilgilerindeki gercek verileri kullan" in BILLING_SYSTEM_PROMPT
+        assert "müşteri bilgilerindeki gerçek verileri kullan" in BILLING_SYSTEM_PROMPT
 
     def test_billing_prompt_has_security_guardrails(self):
         """BILLING_SYSTEM_PROMPT preserves GUVENLIK section from existing prompt."""
         from app.prompts.billing_prompts import BILLING_SYSTEM_PROMPT
 
-        assert "GUVENLIK" in BILLING_SYSTEM_PROMPT
+        assert "GÜVENLİK" in BILLING_SYSTEM_PROMPT
 
-    def test_billing_prompt_has_turkcell_identity(self):
-        """BILLING_SYSTEM_PROMPT identifies as Turkcell Asistan."""
+    def test_billing_prompt_has_umay_identity(self):
+        """BILLING_SYSTEM_PROMPT identifies as Umay Asistan."""
         from app.prompts.billing_prompts import BILLING_SYSTEM_PROMPT
 
-        assert "Turkcell Asistan" in BILLING_SYSTEM_PROMPT
+        assert "Umay Asistan" in BILLING_SYSTEM_PROMPT
 
     def test_billing_prompt_has_empathy_rules(self):
         """BILLING_SYSTEM_PROMPT includes empathy instructions."""
@@ -281,7 +281,7 @@ class TestBillingChatIntegration:
         system_msg = captured_messages[0]
         assert isinstance(system_msg, SystemMessage)
         assert "Musteri Bilgileri" in system_msg.content
-        assert "Fatura Analiz Kurallari" in system_msg.content
+        assert "Fatura Analiz Kuralları" in system_msg.content
 
     @patch("app.services.chat_service.MemoryService")
     @patch("app.services.chat_service.RAGService")

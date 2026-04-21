@@ -26,78 +26,78 @@ class TariffIdRequest(BaseModel):
 
 @router.post("/tariff-recommendations")
 async def get_personalized_tariff_recommendations(body: CustomerRequest, request: Request):
-    """Musterinin demografik profili, kullanim kaliplari, kayip riski ve
-    piyasa verilerine gore kisisellestirilmis tarife onerileri olusturur.
-    Basit tarife karsilastirmasinin otesinde, musterinin yasam tarzina en
-    uygun tarife seceneklerini coklu faktor analiziyle sirayla sunar."""
+    """Müşterinin demografik profili, kullanım kalıpları, kayıp riski ve
+    piyasa verilerine göre kişiselleştirilmiş tarife önerileri oluşturur.
+    Basit tarife karşılaştırmasının ötesinde, müşterinin yaşam tarzına en
+    uygun tarife seçeneklerini çoklu faktör analiziyle sırayla sunar."""
     engine = request.app.state.personalization_engine
     result = engine.get_personalized_tariff_recommendations(body.customer_id, body.top_n)
     if not result:
         return JSONResponse(
             status_code=404,
-            content={"error": f"Musteri bulunamadi: {body.customer_id}"},
+            content={"error": f"Müşteri bulunamadı: {body.customer_id}"},
         )
     return result.model_dump()
 
 
 @router.post("/package-recommendations")
 async def get_personalized_package_recommendations(body: CustomerRequest, request: Request):
-    """Musterinin kullanim kaliplarina, demografik profiline ve uygulama
-    kullanim dagilimina gore kisisellestirilmis ek paket onerileri yapar.
-    Ornegin sosyal medya agirlikli kullanan genc musteriye sosyal medya
-    paketi, is seyahati yapan profesyonele yurt disi paketi onerir."""
+    """Müşterinin kullanım kalıplarına, demografik profiline ve uygulama
+    kullanım dağılımına göre kişiselleştirilmiş ek paket önerileri yapar.
+    Örneğin sosyal medya ağırlıklı kullanan genç müşteriye sosyal medya
+    paketi, iş seyahati yapan profesyonele yurt dışı paketi önerir."""
     engine = request.app.state.personalization_engine
     result = engine.get_personalized_package_recommendations(body.customer_id, body.top_n)
     if not result:
         return JSONResponse(
             status_code=404,
-            content={"error": f"Musteri bulunamadi: {body.customer_id}"},
+            content={"error": f"Müşteri bulunamadı: {body.customer_id}"},
         )
     return result.model_dump()
 
 
 @router.post("/customer-risk-profile")
 async def get_customer_risk_profile(body: CustomerIdRequest, request: Request):
-    """Musterinin kayip (churn) olasiligini, musteri yasam boyu degerini
-    (CLV), sadakat puanini ve ust satim/capraz satis potansiyelini analiz
-    eder. Musteri kaybi onleme veya memnuniyet artirma stratejileri icin
-    kullanilir."""
+    """Müşterinin kayıp (churn) olasılığını, müşteri yaşam boyu değerini
+    (CLV), sadakat puanını ve üst satım/çapraz satış potansiyelini analiz
+    eder. Müşteri kaybı önleme veya memnuniyet artırma stratejileri için
+    kullanılır."""
     engine = request.app.state.personalization_engine
     result = engine._churn_risk.get_risk_profile(body.customer_id)
     if not result:
         return JSONResponse(
             status_code=404,
-            content={"error": f"Musteri bulunamadi: {body.customer_id}"},
+            content={"error": f"Müşteri bulunamadı: {body.customer_id}"},
         )
     return result.model_dump()
 
 
 @router.post("/usage-pattern-analysis")
 async def get_usage_pattern_analysis(body: CustomerIdRequest, request: Request):
-    """Musterinin zaman bazli kullanim kaliplarini analiz eder: hafta ici/
-    hafta sonu kullanim farkini, saatlik yogunluk dagilimini, aylik trend
-    analizini, en cok kullanilan uygulama kategorilerini ve mevsimsel
-    degisimleri raporlar."""
+    """Müşterinin zaman bazlı kullanım kalıplarını analiz eder: hafta içi/
+    hafta sonu kullanım farkını, saatlik yoğunluk dağılımını, aylık trend
+    analizini, en çok kullanılan uygulama kategorilerini ve mevsimsel
+    değişimleri raporlar."""
     engine = request.app.state.personalization_engine
     result = engine._usage_pattern.get_usage_pattern(body.customer_id)
     if not result:
         return JSONResponse(
             status_code=404,
-            content={"error": f"Musteri bulunamadi veya kullanim verisi yok: {body.customer_id}"},
+            content={"error": f"Müşteri bulunamadı veya kullanım verisi yok: {body.customer_id}"},
         )
     return result.model_dump()
 
 
 @router.post("/market-comparison")
 async def get_market_comparison(body: TariffIdRequest, request: Request):
-    """Belirtilen Turkcell tarifesini Vodafone ve Turk Telekom'un benzer
-    tarifeleriyle karsilastirir. Fiyat, veri, dakika ve SMS limitlerini
-    kiyaslayarak Turkcell'in piyasa konumunu gosterir."""
+    """Belirtilen Umay tarifesini rakip operatörlerin benzer
+    tarifeleriyle karşılaştırır. Fiyat, veri, dakika ve SMS limitlerini
+    kıyaslayarak Umay'in piyasa konumunu gösterir."""
     engine = request.app.state.personalization_engine
     result = engine._market_data.get_market_comparison(body.tariff_id)
     if not result:
         return JSONResponse(
             status_code=404,
-            content={"error": f"Tarife bulunamadi: {body.tariff_id}"},
+            content={"error": f"Tarife bulunamadı: {body.tariff_id}"},
         )
     return result.model_dump()

@@ -1,4 +1,4 @@
-"""POST /api/chat SSE streaming endpoint for Turkcell AI assistant."""
+"""POST /api/chat SSE streaming endpoint for Umay AI assistant."""
 
 import json
 import logging
@@ -14,7 +14,7 @@ router = APIRouter()
 
 @router.post("/chat")
 async def chat_stream(body: ChatRequest, request: Request):
-    """Stream a chat response from the Turkcell AI assistant via SSE.
+    """Stream a chat response from the Umay AI assistant via SSE.
 
     Accepts a user message and session ID, then streams LLM response tokens
     as Server-Sent Events with event types: token, done, error.

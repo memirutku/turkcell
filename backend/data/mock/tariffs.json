@@ -6,8 +6,8 @@
     "voice_minutes": 2000,
     "sms_count": 1000,
     "monthly_price_tl": "299.00",
-    "description": "Turkcell'in en kapsamli tarife paketi. Yuksek veri limiti, sinirli dakika ve SMS ile tum iletisim ihtiyaclarinizi karsilar.",
-    "features": ["20GB yuksek hizli internet", "2000 dakika tum yonlere", "1000 SMS", "Platinum musterilere ozel firsatlar", "Yurt disi 1GB hediye"],
+    "description": "Umay'in en kapsamlı tarife paketi. Yüksek veri limiti, sınırlı dakika ve SMS ile tüm iletişim ihtiyaçlarınızı karşılar.",
+    "features": ["20GB yüksek hızlı internet", "2000 dakika tüm yönlere", "1000 SMS", "Platinum müşterilere özel fırsatlar", "Yurt dışı 1GB hediye"],
     "is_active": true
   },
   {
@@ -17,8 +17,8 @@
     "voice_minutes": 1000,
     "sms_count": 500,
     "monthly_price_tl": "199.00",
-    "description": "Orta duzeyde kullanim icin ideal. Dengeli veri, dakika ve SMS hakki sunar.",
-    "features": ["10GB yuksek hizli internet", "1000 dakika tum yonlere", "500 SMS", "BiP mesajlasma ucretsiz"],
+    "description": "Orta düzeyde kullanım için ideal. Dengeli veri, dakika ve SMS hakkı sunar.",
+    "features": ["10GB yüksek hızlı internet", "1000 dakika tüm yönlere", "500 SMS", "BiP mesajlaşma ücretsiz"],
     "is_active": true
   },
   {
@@ -28,8 +28,8 @@
     "voice_minutes": 500,
     "sms_count": 250,
     "monthly_price_tl": "129.00",
-    "description": "Hafif kullanicilar icin ekonomik tarife. Temel iletisim ihtiyaclarini karsilar.",
-    "features": ["5GB yuksek hizli internet", "500 dakika tum yonlere", "250 SMS"],
+    "description": "Hafif kullanıcılar için ekonomik tarife. Temel iletişim ihtiyaçlarını karşılar.",
+    "features": ["5GB yüksek hızlı internet", "500 dakika tüm yönlere", "250 SMS"],
     "is_active": true
   },
   {
@@ -39,8 +39,8 @@
     "voice_minutes": 1500,
     "sms_count": 750,
     "monthly_price_tl": "249.00",
-    "description": "Dijital yasam tarzi icin tasarlandi. Sosyal medya ve streaming icin ekstra veri iceriri.",
-    "features": ["15GB yuksek hizli internet", "1500 dakika tum yonlere", "750 SMS", "Sosyal medya paketi dahil", "TV+ 3 ay hediye"],
+    "description": "Dijital yaşam tarzı için tasarlandı. Sosyal medya ve streaming için ekstra veri içerir.",
+    "features": ["15GB yüksek hızlı internet", "1500 dakika tüm yönlere", "750 SMS", "Sosyal medya paketi dahil", "TV+ 3 ay hediye"],
     "is_active": true
   },
   {
@@ -50,8 +50,41 @@
     "voice_minutes": 300,
     "sms_count": 100,
     "monthly_price_tl": "79.00",
-    "description": "En uygun fiyatli tarife. Temel arama ve mesajlasma icin yeterli.",
-    "features": ["3GB internet", "300 dakika tum yonlere", "100 SMS"],
+    "description": "En uygun fiyatlı tarife. Temel arama ve mesajlaşma için yeterli.",
+    "features": ["3GB internet", "300 dakika tüm yönlere", "100 SMS"],
+    "is_active": true
+  },
+  {
+    "id": "tariff-006",
+    "name": "Platinum Pro 40GB",
+    "data_gb": 40,
+    "voice_minutes": 3000,
+    "sms_count": 1000,
+    "monthly_price_tl": "399.00",
+    "description": "Yoğun internet kullanıcıları için üst düzey tarife. 40GB veri, 3000 dakika ve tüm Platinum ayrıcalıkları.",
+    "features": ["40GB yüksek hızlı internet", "3000 dakika tüm yönlere", "1000 SMS", "Platinum ayrıcalıkları", "Yurt dışı 3GB hediye", "TV+ ve Fizy dahil"],
+    "is_active": true
+  },
+  {
+    "id": "tariff-007",
+    "name": "Platinum Max 60GB",
+    "data_gb": 60,
+    "voice_minutes": 5000,
+    "sms_count": 2000,
+    "monthly_price_tl": "499.00",
+    "description": "Sınırsıza en yakın tarife. 60GB veri, 5000 dakika ve premium içerik paketleri dahil.",
+    "features": ["60GB yüksek hızlı internet", "5000 dakika tüm yönlere", "2000 SMS", "Tüm Platinum ayrıcalıkları", "Yurt dışı 5GB hediye", "TV+, Fizy ve BiP Premium dahil", "Öncelikli müşteri hizmetleri"],
+    "is_active": true
+  },
+  {
+    "id": "tariff-008",
+    "name": "Dijital İş 30GB",
+    "data_gb": 30,
+    "voice_minutes": 2500,
+    "sms_count": 1000,
+    "monthly_price_tl": "349.00",
+    "description": "İş profesyonelleri için tasarlandı. Yüksek veri limiti, bulut depolama ve güvenli bağlantı.",
+    "features": ["30GB yüksek hızlı internet", "2500 dakika tüm yönlere", "1000 SMS", "10GB bulut depolama", "Güvenli VPN erişimi", "Microsoft 365 Basic dahil"],
     "is_active": true
   }
 ]

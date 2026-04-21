@@ -33,6 +33,49 @@ from app.services.rag_service import RAGService
 
 logger = logging.getLogger(__name__)
 
+# Map raw tool names to frontend-compatible action_type values
+_ACTION_TYPE_MAP = {
+    "activate_package": "package_activation",
+    "change_tariff": "tariff_change",
+}
+
+
+def _map_action_type(tool_name: str) -> str:
+    return _ACTION_TYPE_MAP.get(tool_name, tool_name)
+
+
+def _build_friendly_details(
+    name: str, args: dict[str, Any], mock_bss: MockBSSService
+) -> dict[str, str]:
+    """Build user-friendly detail dict for action proposals (no raw IDs)."""
+    if name == "activate_package":
+        package_id = args.get("package_id", "")
+        package = mock_bss.get_package(package_id) if hasattr(mock_bss, "get_package") else None
+        if package:
+            return {
+                "Paket": package.name,
+                "Ücret": f"{package.price_tl} TL",
+                "Süre": f"{package.duration_days} gün",
+            }
+        return {"Paket": package_id}
+
+    if name == "change_tariff":
+        customer_id = args.get("customer_id", "")
+        new_tariff_id = args.get("new_tariff_id", "")
+        customer = mock_bss.get_customer(customer_id)
+        new_tariff = mock_bss.get_tariff(new_tariff_id) if hasattr(mock_bss, "get_tariff") else None
+        details: dict[str, str] = {}
+        if customer and customer.tariff:
+            details["Mevcut Tarife"] = customer.tariff.name
+        if new_tariff:
+            details["Yeni Tarife"] = new_tariff.name
+            details["Aylık Ücret"] = f"{new_tariff.monthly_price_tl} TL"
+        else:
+            details["Yeni Tarife"] = new_tariff_id
+        return details
+
+    return {}
+
 
 @dataclass
 class PendingToolCall:
@@ -82,6 +125,7 @@ class GeminiLiveService:
         pii_service: PIIMaskingService | None = None,
         memory_service: MemoryService | None = None,
         customer_memory_service=None,
+        personalization_engine=None,
     ) -> None:
         self._client = genai.Client(api_key=settings.gemini_api_key)
         self._model = settings.gemini_live_model
@@ -92,6 +136,7 @@ class GeminiLiveService:
         self._pii = pii_service
         self._memory = memory_service
         self._customer_memory = customer_memory_service
+        self._personalization_engine = personalization_engine
 
     @asynccontextmanager
     async def create_session(
@@ -158,12 +203,29 @@ class GeminiLiveService:
         if live_session.is_closed:
             return
 
-        greeting_text = "Merhaba"
+        display_name = ""
+        if live_session.customer_id:
+            customer = self._mock_bss.get_customer(live_session.customer_id)
+            if customer:
+                name_parts = customer.name.split()
+                display_name = name_parts[0]
+
+        if display_name:
+            greeting_text = (
+                f"Merhaba {display_name}! Ben Umay müşteri hizmetleri asistanıyım. "
+                f"Size nasıl yardımcı olabilirim?"
+            )
+        else:
+            greeting_text = (
+                "Merhaba! Ben Umay müşteri hizmetleri asistanıyım. "
+                "Size nasıl yardımcı olabilirim?"
+            )
+
         if live_session.customer_id:
             alerts = self._mock_bss.get_proactive_alerts(live_session.customer_id)
             if alerts:
                 alert_lines = [a["message"] for a in alerts]
-                greeting_text += ". Musteri uyarilari: " + " | ".join(alert_lines)
+                greeting_text += " Müşteri uyarıları: " + " | ".join(alert_lines)
 
         await live_session.session.send_realtime_input(text=greeting_text)
 
@@ -247,40 +309,72 @@ class GeminiLiveService:
                             name = fc.name
                             args = dict(fc.args) if fc.args else {}
 
-                            if is_action_tool(name):
-                                # Gate behind confirmation
-                                description = build_action_description(
-                                    name, args, self._mock_bss
-                                )
-                                live_session.pending_tool_call = PendingToolCall(
-                                    function_call=fc,
-                                    name=name,
-                                    args=args,
-                                    description=description,
-                                )
+                            # Propose action: yield info card (no buttons)
+                            if name == "propose_action":
+                                action_type = args.get("action_type", "tariff_change")
+                                proposal_name = args.get("name", "")
+                                price = args.get("price", "")
+                                features = args.get("features", "")
+                                description = f"{proposal_name} — {price}"
+                                details = {"Tarife/Paket": proposal_name, "Fiyat": price}
+                                if features:
+                                    details["Özellikler"] = features
                                 yield {
                                     "type": "action_proposal",
                                     "data": {
-                                        "action_type": name,
+                                        "action_type": action_type,
                                         "description": description,
-                                        "details": args,
+                                        "details": details,
                                     },
                                 }
-                            else:
-                                # Safe tool — auto-execute and respond
-                                result = await dispatch_tool(
-                                    name, args, self._mock_bss, self._rag,
-                                    customer_memory_service=self._customer_memory,
-                                )
-                                await live_session.session.send_tool_response(
-                                    function_responses=[
-                                        types.FunctionResponse(
-                                            name=name,
-                                            id=fc.id,
-                                            response={"result": result},
-                                        ),
-                                    ],
-                                )
+
+                            # Auto-execute all tools (model handles confirmation via voice)
+                            result = await dispatch_tool(
+                                name, args, self._mock_bss, self._rag,
+                                personalization_engine=self._personalization_engine,
+                                customer_memory_service=self._customer_memory,
+                            )
+
+                            # Action tools: yield result card for frontend UI
+                            if is_action_tool(name):
+                                try:
+                                    result_data = json.loads(result)
+                                except json.JSONDecodeError:
+                                    result_data = {"result": result}
+                                action_type = _map_action_type(name)
+                                success = result_data.get("success", "error" not in result_data)
+                                result_desc = result_data.get("message_tr", build_action_description(name, args, self._mock_bss))
+                                friendly = {}
+                                if result_data.get("transaction_id"):
+                                    friendly["İşlem No"] = result_data["transaction_id"]
+                                if name == "change_tariff" and result_data.get("new_tariff"):
+                                    t = result_data["new_tariff"]
+                                    friendly["Yeni Tarife"] = t.get("name", "")
+                                    friendly["Aylık Ücret"] = f"{t.get('monthly_price_tl', '')} TL"
+                                elif name == "activate_package" and result_data.get("package"):
+                                    p = result_data["package"]
+                                    friendly["Paket"] = p.get("name", "")
+                                    friendly["Ücret"] = f"{p.get('price_tl', '')} TL"
+                                    friendly["Süre"] = f"{p.get('duration_days', '')} gün"
+                                yield {
+                                    "type": "action_result",
+                                    "data": {
+                                        "success": success,
+                                        "action_type": action_type,
+                                        "description": result_desc,
+                                        "details": friendly,
+                                    },
+                                }
+
+                            await live_session.session.send_tool_response(
+                                function_responses=[
+                                    types.FunctionResponse(
+                                        name=name,
+                                        id=fc.id,
+                                        response={"result": result},
+                                    ),
+                                ],
+                            )
 
                 logger.debug(
                     "receive() iterator completed (turn ended), re-entering: session=%s",
@@ -312,6 +406,7 @@ class GeminiLiveService:
         if approved:
             result_str = await dispatch_tool(
                 pending.name, pending.args, self._mock_bss, self._rag,
+                personalization_engine=self._personalization_engine,
                 customer_memory_service=self._customer_memory,
             )
             try:
@@ -319,22 +414,39 @@ class GeminiLiveService:
             except json.JSONDecodeError:
                 result_data = {"result": result_str}
 
+            action_type = _map_action_type(pending.name)
+            success = result_data.get("success", "error" not in result_data)
+            result_desc = result_data.get("message_tr", pending.description)
+            # Build user-friendly details from result
+            friendly = {}
+            if result_data.get("transaction_id"):
+                friendly["Islem No"] = result_data["transaction_id"]
+            if pending.name == "change_tariff" and result_data.get("new_tariff"):
+                t = result_data["new_tariff"]
+                friendly["Yeni Tarife"] = t.get("name", "")
+                friendly["Aylik Ucret"] = f"{t.get('monthly_price_tl', '')} TL"
+            elif pending.name == "activate_package" and result_data.get("package"):
+                p = result_data["package"]
+                friendly["Paket"] = p.get("name", "")
+                friendly["Ucret"] = f"{p.get('price_tl', '')} TL"
+                friendly["Sure"] = f"{p.get('duration_days', '')} gun"
             yield {
                 "type": "action_result",
                 "data": {
-                    "success": "error" not in result_data,
-                    "action_type": pending.name,
-                    "description": pending.description,
-                    "details": result_data,
+                    "success": success,
+                    "action_type": action_type,
+                    "description": result_desc,
+                    "details": friendly,
                 },
             }
             tool_response_content = result_str
         else:
+            action_type = _map_action_type(pending.name)
             yield {
                 "type": "action_result",
                 "data": {
                     "success": False,
-                    "action_type": pending.name,
+                    "action_type": action_type,
                     "description": "Islem kullanici tarafindan iptal edildi.",
                     "details": {},
                 },
@@ -380,7 +492,7 @@ class GeminiLiveService:
                     # We're already in an async context, use a simple approach
                     rag_context = "(RAG baglami oturum sirasinda arac cagrisi ile alinacaktir)"
                 else:
-                    results = loop.run_until_complete(self._rag.search("Turkcell genel bilgi", top_k=5))
+                    results = loop.run_until_complete(self._rag.search("Umay genel bilgi", top_k=5))
                     rag_context = "\n".join(r["content"] for r in results)
             except Exception:
                 logger.debug("Initial RAG fetch failed, will use tool-based retrieval")
@@ -444,14 +556,26 @@ class GeminiLiveService:
         # Add Live API specific instructions
         system_text += """
 
-## Sesli Asistan Kurallari
-- Turkce konusuyorsun. Yanit dilini her zaman Turkce tut.
-- Kisa ve oz yanitlar ver. Sesli konusmada uzun paragraflardan kacin.
-- Kisisel bilgileri (TC Kimlik, telefon, IBAN vb.) ASLA sesli olarak tekrarlama.
-- Islem onay gerektiren durumlarda kullanicidan acik onay al.
-- Konusma basladiginda kendini kisaca tanit ve nasil yardimci olabileceginizi sor. Ornek: "Merhaba! Ben Turkcell dijital asistaniyim. Fatura, tarife veya teknik destek konularinda size yardimci olabilirim. Nasil yardimci olabilirim?"
-- Musteri hakkinda uyarilar (odenmemis fatura, asim, limit yakinligi) varsa, selamlamada bunlari nazikce belirt ve cozum oner.
-- Asim durumunda kullaniciya uygun paket veya tarife onerisi yapabilecegini bildir.
+## Sesli Asistan Kuralları
+- Türkçe konuşuyorsun. Yanıt dilini her zaman Türkçe tut.
+- Kısa ve öz yanıtlar ver. Sesli konuşmada uzun paragraflardan kaçın.
+- Kişisel bilgileri (TC Kimlik, telefon, IBAN vb.) ASLA sesli olarak tekrarlama.
+- Konuşma başladığında kendini kısaca tanıt ve nasıl yardımcı olabileceğini sor. Örnek: "Merhaba [Müşteri Adı]! Ben Umay müşteri hizmetleri asistanıyım. Fatura, tarife veya teknik destek konularında size yardımcı olabilirim. Nasıl yardımcı olabilirim?"
+- Müşteri hakkında uyarılar (ödenmemiş fatura, aşım, limit yakınlığı) varsa, selamlamada bunları nazikçe belirt ve çözüm öner.
+- Aşım durumunda kullanıcıya uygun paket veya tarife önerisi yapabileceğini bildir.
+- Müşteri paket önerisi istediğinde, paketleri sunduktan sonra tarife değişikliği de teklif et: "Tarifenizi de gözden geçirmek ister misiniz?"
+- Müşteri paket veya tarife önerisi istediğinde, kullanım verisine dayanarak neden bu öneriyi yaptığını açıkla. Örneğin: "İnternet kullanımınız yüksek, bu yüzden size daha fazla internet içeren paketleri getiriyorum."
+
+## Tarife/Paket Değişikliği Onay Akışı (ÇOK KRİTİK)
+Tarife değişikliği veya paket aktivasyonu gibi işlemlerde aşağıdaki adımları SIRASI İLE takip et:
+
+1. **Bilgi kartı göster**: Önce `propose_action` aracını çağır. Bu araç ekranda bilgi kartı gösterir. Parametreler: action_type ("tariff_change" veya "package_activation"), name (tarife/paket adı), price (fiyat), features (özellikler).
+2. **Sesli onay al**: "Bu tarifeye/pakete geçmek ister misiniz?" diye sor. change_tariff veya activate_package aracını çağırmadan ÖNCE müşterinin sesli onayını MUTLAKA bekle.
+3. **Onay gelirse tool çağır**: Müşteri "evet", "olur", "yapalım", "tamam", "onaylıyorum" gibi onay verdiyse, ilgili aracı (change_tariff veya activate_package) HEMEN çağır. Sadece sözlü olarak "değiştiriyorum" deme — gerçek işlem aracını çalıştır.
+4. **Sonucu bildir**: İşlem başarılıysa "Yeni [tarife/paket adı] hayırlı olsun!" de ve kısaca tanıt. Başarısızsa nedenini açıkla.
+5. **Devam et**: "Başka bir isteğiniz var mı?" diye sor.
+
+YASAK: Müşteri henüz onay vermeden change_tariff veya activate_package aracını çağırma. Önce propose_action çağır, sesli onay al, sonra işlem aracını çağır.
 """
 
         if history_context:

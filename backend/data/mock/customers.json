@@ -1,13 +1,20 @@
 [
   {
     "id": "cust-001",
-    "name": "Ahmet Yilmaz",
+    "name": "Ahmet Yılmaz",
     "tc_kimlik_no": "12345678901",
     "phone_number": "05321234567",
     "email": "ahmet.yilmaz@email.com",
-    "tariff_id": "tariff-001",
+    "tariff_id": "tariff-006",
     "registration_date": "2023-06-15",
-    "address_city": "Istanbul",
+    "address_city": "İstanbul",
+    "birth_date": "1985-03-15",
+    "occupation": "yazilim_muhendisi",
+    "segment": "profesyonel",
+    "contract_type": "bireysel",
+    "active_packages": [
+      "pkg-002"
+    ],
     "bills": [
       {
         "id": "bill-001-202601",
@@ -20,9 +27,21 @@
         "oiv_amount_tl": "44.85",
         "total_amount_tl": "403.65",
         "line_items": [
-          {"description": "Platinum Esneyebilen 20GB Tarife Ucreti", "amount_tl": "299.00", "category": "base"},
-          {"description": "KDV (%20)", "amount_tl": "59.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "44.85", "category": "tax"}
+          {
+            "description": "Platinum Esneyebilen 20GB Tarife Ücreti",
+            "amount_tl": "299.00",
+            "category": "base"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "59.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "44.85",
+            "category": "tax"
+          }
         ],
         "is_paid": true
       },
@@ -37,10 +56,26 @@
         "oiv_amount_tl": "52.35",
         "total_amount_tl": "471.15",
         "line_items": [
-          {"description": "Platinum Esneyebilen 20GB Tarife Ucreti", "amount_tl": "299.00", "category": "base"},
-          {"description": "3GB Asim Ucreti", "amount_tl": "50.00", "category": "overage"},
-          {"description": "KDV (%20)", "amount_tl": "69.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "52.35", "category": "tax"}
+          {
+            "description": "Platinum Esneyebilen 20GB Tarife Ücreti",
+            "amount_tl": "299.00",
+            "category": "base"
+          },
+          {
+            "description": "3GB Aşım Ücreti",
+            "amount_tl": "50.00",
+            "category": "overage"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "69.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "52.35",
+            "category": "tax"
+          }
         ],
         "is_paid": true
       },
@@ -55,9 +90,21 @@
         "oiv_amount_tl": "44.85",
         "total_amount_tl": "403.65",
         "line_items": [
-          {"description": "Platinum Esneyebilen 20GB Tarife Ucreti", "amount_tl": "299.00", "category": "base"},
-          {"description": "KDV (%20)", "amount_tl": "59.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "44.85", "category": "tax"}
+          {
+            "description": "Platinum Esneyebilen 20GB Tarife Ücreti",
+            "amount_tl": "299.00",
+            "category": "base"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "59.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "44.85",
+            "category": "tax"
+          }
         ],
         "is_paid": false
       }
@@ -84,6 +131,11 @@
     "tariff_id": "tariff-003",
     "registration_date": "2024-01-20",
     "address_city": "Ankara",
+    "birth_date": "2002-08-22",
+    "occupation": "universite_ogrencisi",
+    "segment": "genc",
+    "contract_type": "bireysel",
+    "active_packages": [],
     "bills": [
       {
         "id": "bill-002-202601",
@@ -96,10 +148,26 @@
         "oiv_amount_tl": "26.85",
         "total_amount_tl": "241.65",
         "line_items": [
-          {"description": "Silver 5GB Tarife Ucreti", "amount_tl": "129.00", "category": "base"},
-          {"description": "2GB Asim Ucreti", "amount_tl": "50.00", "category": "overage"},
-          {"description": "KDV (%20)", "amount_tl": "35.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "26.85", "category": "tax"}
+          {
+            "description": "Silver 5GB Tarife Ücreti",
+            "amount_tl": "129.00",
+            "category": "base"
+          },
+          {
+            "description": "2GB Aşım Ücreti",
+            "amount_tl": "50.00",
+            "category": "overage"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "35.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "26.85",
+            "category": "tax"
+          }
         ],
         "is_paid": true
       },
@@ -114,10 +182,26 @@
         "oiv_amount_tl": "34.35",
         "total_amount_tl": "309.15",
         "line_items": [
-          {"description": "Silver 5GB Tarife Ucreti", "amount_tl": "129.00", "category": "base"},
-          {"description": "5GB Asim Ucreti", "amount_tl": "100.00", "category": "overage"},
-          {"description": "KDV (%20)", "amount_tl": "45.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "34.35", "category": "tax"}
+          {
+            "description": "Silver 5GB Tarife Ücreti",
+            "amount_tl": "129.00",
+            "category": "base"
+          },
+          {
+            "description": "5GB Aşım Ücreti",
+            "amount_tl": "100.00",
+            "category": "overage"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "45.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "34.35",
+            "category": "tax"
+          }
         ],
         "is_paid": true
       },
@@ -132,10 +216,26 @@
         "oiv_amount_tl": "28.35",
         "total_amount_tl": "255.15",
         "line_items": [
-          {"description": "Silver 5GB Tarife Ucreti", "amount_tl": "129.00", "category": "base"},
-          {"description": "3GB Asim Ucreti", "amount_tl": "60.00", "category": "overage"},
-          {"description": "KDV (%20)", "amount_tl": "37.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "28.35", "category": "tax"}
+          {
+            "description": "Silver 5GB Tarife Ücreti",
+            "amount_tl": "129.00",
+            "category": "base"
+          },
+          {
+            "description": "3GB Aşım Ücreti",
+            "amount_tl": "60.00",
+            "category": "overage"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "37.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "28.35",
+            "category": "tax"
+          }
         ],
         "is_paid": false
       }
@@ -161,7 +261,12 @@
     "email": "mehmet.kaya@email.com",
     "tariff_id": "tariff-004",
     "registration_date": "2022-09-10",
-    "address_city": "Izmir",
+    "address_city": "İzmir",
+    "birth_date": "1972-11-05",
+    "occupation": "isletme_sahibi",
+    "segment": "profesyonel",
+    "contract_type": "kurumsal",
+    "active_packages": [],
     "bills": [
       {
         "id": "bill-003-202601",
@@ -174,9 +279,21 @@
         "oiv_amount_tl": "37.35",
         "total_amount_tl": "336.15",
         "line_items": [
-          {"description": "Dijital Hayat 15GB Tarife Ucreti", "amount_tl": "249.00", "category": "base"},
-          {"description": "KDV (%20)", "amount_tl": "49.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "37.35", "category": "tax"}
+          {
+            "description": "Dijital Hayat 15GB Tarife Ücreti",
+            "amount_tl": "249.00",
+            "category": "base"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "49.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "37.35",
+            "category": "tax"
+          }
         ],
         "is_paid": true
       },
@@ -191,9 +308,21 @@
         "oiv_amount_tl": "37.35",
         "total_amount_tl": "336.15",
         "line_items": [
-          {"description": "Dijital Hayat 15GB Tarife Ucreti", "amount_tl": "249.00", "category": "base"},
-          {"description": "KDV (%20)", "amount_tl": "49.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "37.35", "category": "tax"}
+          {
+            "description": "Dijital Hayat 15GB Tarife Ücreti",
+            "amount_tl": "249.00",
+            "category": "base"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "49.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "37.35",
+            "category": "tax"
+          }
         ],
         "is_paid": true
       },
@@ -208,10 +337,26 @@
         "oiv_amount_tl": "41.85",
         "total_amount_tl": "376.65",
         "line_items": [
-          {"description": "Dijital Hayat 15GB Tarife Ucreti", "amount_tl": "249.00", "category": "base"},
-          {"description": "Ek Paket: Sosyal Medya Paketi", "amount_tl": "30.00", "category": "base"},
-          {"description": "KDV (%20)", "amount_tl": "55.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "41.85", "category": "tax"}
+          {
+            "description": "Dijital Hayat 15GB Tarife Ücreti",
+            "amount_tl": "249.00",
+            "category": "base"
+          },
+          {
+            "description": "Ek Paket: Sosyal Medya Paketi",
+            "amount_tl": "30.00",
+            "category": "base"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "55.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "41.85",
+            "category": "tax"
+          }
         ],
         "is_paid": false
       }
@@ -231,13 +376,18 @@
   },
   {
     "id": "cust-004",
-    "name": "Fatma Ozturk",
+    "name": "Fatma Öztürk",
     "tc_kimlik_no": "56789012345",
     "phone_number": "05361234567",
     "email": "fatma.ozturk@email.com",
     "tariff_id": "tariff-003",
     "registration_date": "2020-03-10",
     "address_city": "Bursa",
+    "birth_date": "1958-06-20",
+    "occupation": "emekli",
+    "segment": "emekli",
+    "contract_type": "bireysel",
+    "active_packages": [],
     "bills": [
       {
         "id": "bill-004-202601",
@@ -250,9 +400,21 @@
         "oiv_amount_tl": "19.35",
         "total_amount_tl": "174.15",
         "line_items": [
-          {"description": "Silver 5GB Tarife Ucreti", "amount_tl": "129.00", "category": "base"},
-          {"description": "KDV (%20)", "amount_tl": "25.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "19.35", "category": "tax"}
+          {
+            "description": "Silver 5GB Tarife Ücreti",
+            "amount_tl": "129.00",
+            "category": "base"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "25.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "19.35",
+            "category": "tax"
+          }
         ],
         "is_paid": true
       },
@@ -267,9 +429,21 @@
         "oiv_amount_tl": "19.35",
         "total_amount_tl": "174.15",
         "line_items": [
-          {"description": "Silver 5GB Tarife Ucreti", "amount_tl": "129.00", "category": "base"},
-          {"description": "KDV (%20)", "amount_tl": "25.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "19.35", "category": "tax"}
+          {
+            "description": "Silver 5GB Tarife Ücreti",
+            "amount_tl": "129.00",
+            "category": "base"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "25.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "19.35",
+            "category": "tax"
+          }
         ],
         "is_paid": true
       },
@@ -284,9 +458,21 @@
         "oiv_amount_tl": "19.35",
         "total_amount_tl": "174.15",
         "line_items": [
-          {"description": "Silver 5GB Tarife Ucreti", "amount_tl": "129.00", "category": "base"},
-          {"description": "KDV (%20)", "amount_tl": "25.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "19.35", "category": "tax"}
+          {
+            "description": "Silver 5GB Tarife Ücreti",
+            "amount_tl": "129.00",
+            "category": "base"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "25.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "19.35",
+            "category": "tax"
+          }
         ],
         "is_paid": true
       }
@@ -306,13 +492,18 @@
   },
   {
     "id": "cust-005",
-    "name": "Ayse Yildiz",
+    "name": "Ayşe Yıldız",
     "tc_kimlik_no": "67890123456",
     "phone_number": "05441234567",
     "email": "ayse.yildiz@email.com",
     "tariff_id": "tariff-002",
     "registration_date": "2023-09-01",
     "address_city": "Antalya",
+    "birth_date": "1990-01-10",
+    "occupation": "ogretmen",
+    "segment": "aile",
+    "contract_type": "bireysel",
+    "active_packages": [],
     "bills": [
       {
         "id": "bill-005-202601",
@@ -325,9 +516,21 @@
         "oiv_amount_tl": "29.85",
         "total_amount_tl": "268.65",
         "line_items": [
-          {"description": "Gold 10GB Tarife Ucreti", "amount_tl": "199.00", "category": "base"},
-          {"description": "KDV (%20)", "amount_tl": "39.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "29.85", "category": "tax"}
+          {
+            "description": "Gold 10GB Tarife Ücreti",
+            "amount_tl": "199.00",
+            "category": "base"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "39.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "29.85",
+            "category": "tax"
+          }
         ],
         "is_paid": true
       },
@@ -342,10 +545,26 @@
         "oiv_amount_tl": "33.60",
         "total_amount_tl": "302.40",
         "line_items": [
-          {"description": "Gold 10GB Tarife Ucreti", "amount_tl": "199.00", "category": "base"},
-          {"description": "1GB Asim Ucreti", "amount_tl": "25.00", "category": "overage"},
-          {"description": "KDV (%20)", "amount_tl": "44.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "33.60", "category": "tax"}
+          {
+            "description": "Gold 10GB Tarife Ücreti",
+            "amount_tl": "199.00",
+            "category": "base"
+          },
+          {
+            "description": "1GB Aşım Ücreti",
+            "amount_tl": "25.00",
+            "category": "overage"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "44.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "33.60",
+            "category": "tax"
+          }
         ],
         "is_paid": true
       },
@@ -360,9 +579,21 @@
         "oiv_amount_tl": "29.85",
         "total_amount_tl": "268.65",
         "line_items": [
-          {"description": "Gold 10GB Tarife Ucreti", "amount_tl": "199.00", "category": "base"},
-          {"description": "KDV (%20)", "amount_tl": "39.80", "category": "tax"},
-          {"description": "OIV (%15)", "amount_tl": "29.85", "category": "tax"}
+          {
+            "description": "Gold 10GB Tarife Ücreti",
+            "amount_tl": "199.00",
+            "category": "base"
+          },
+          {
+            "description": "KDV (%20)",
+            "amount_tl": "39.80",
+            "category": "tax"
+          },
+          {
+            "description": "Özel İletişim Vergisi (%15)",
+            "amount_tl": "29.85",
+            "category": "tax"
+          }
         ],
         "is_paid": false
       }

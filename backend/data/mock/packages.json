@@ -1,12 +1,12 @@
 [
   {
     "id": "pkg-001",
-    "name": "Akilli Yurt Disi Paketi",
+    "name": "Akıllı Yurt Dışı Paketi",
     "category": "yurt_disi",
     "price_tl": "149.00",
     "duration_days": 30,
-    "description": "Yurt disinda rahat iletisim. 5GB data, 100 dakika arama ve 50 SMS iceriri.",
-    "features": ["5GB yurt disi data", "100 dakika yurt disi arama", "50 SMS", "40+ ulkede gecerli"],
+    "description": "Yurt dışında rahat iletişim. 5GB data, 100 dakika arama ve 50 SMS içerir.",
+    "features": ["5GB yurt dışı data", "100 dakika yurt dışı arama", "50 SMS", "40+ ülkede geçerli"],
     "is_active": true
   },
   {
@@ -15,8 +15,8 @@
     "category": "ek_data",
     "price_tl": "49.00",
     "duration_days": 30,
-    "description": "Mevcut tarifenize ek 10GB yuksek hizli internet.",
-    "features": ["10GB ek internet", "Tum tarifelere uyumlu", "Aninda aktif"],
+    "description": "Mevcut tarifenize ek 10GB yüksek hızlı internet.",
+    "features": ["10GB ek internet", "Tüm tarifelere uyumlu", "Anında aktif"],
     "is_active": true
   },
   {
@@ -25,8 +25,8 @@
     "category": "sosyal_medya",
     "price_tl": "29.00",
     "duration_days": 30,
-    "description": "Instagram, Twitter, TikTok ve YouTube icin sinirsiz kullanim.",
-    "features": ["Sinirsiz sosyal medya", "Instagram, Twitter, TikTok", "YouTube dahil", "Tarifenizden yemez"],
+    "description": "Instagram, Twitter, TikTok ve YouTube için sınırsız kullanım.",
+    "features": ["Sınırsız sosyal medya", "Instagram, Twitter, TikTok", "YouTube dahil", "Tarifenizden yemez"],
     "is_active": true
   },
   {
@@ -35,8 +35,8 @@
     "category": "eglence",
     "price_tl": "39.00",
     "duration_days": 30,
-    "description": "TV+, Fizy ve BiP ozel iceriklerine erisim.",
-    "features": ["TV+ erisimi", "Fizy Premium", "BiP ozel icerikler", "Reklamsiz deneyim"],
+    "description": "TV+, Fizy ve BiP özel içeriklerine erişim.",
+    "features": ["TV+ erişimi", "Fizy Premium", "BiP özel içerikler", "Reklamsız deneyim"],
     "is_active": true
   },
   {
@@ -45,8 +45,38 @@
     "category": "ek_data",
     "price_tl": "19.00",
     "duration_days": 7,
-    "description": "Hafta sonu 5GB ek internet. Cumartesi-Pazar gecerli.",
+    "description": "Hafta sonu 5GB ek internet. Cumartesi-Pazar geçerli.",
     "features": ["5GB hafta sonu interneti", "Cumartesi 00:00 - Pazar 23:59", "Her hafta yenilenir"],
+    "is_active": true
+  },
+  {
+    "id": "pkg-006",
+    "name": "Ek 20GB Internet Paketi",
+    "category": "ek_data",
+    "price_tl": "79.00",
+    "duration_days": 30,
+    "description": "Yoğun internet kullanıcıları için 20GB ek internet paketi.",
+    "features": ["20GB ek internet", "Tüm tarifelere uyumlu", "Anında aktif", "4.5G hızında"],
+    "is_active": true
+  },
+  {
+    "id": "pkg-007",
+    "name": "Ek 30GB Süper Internet Paketi",
+    "category": "ek_data",
+    "price_tl": "99.00",
+    "duration_days": 30,
+    "description": "En yüksek ek internet paketi. Video izleme ve dosya indirme için ideal.",
+    "features": ["30GB ek internet", "Tüm tarifelere uyumlu", "Anında aktif", "4.5G hızında", "Hız sınırlaması yok"],
+    "is_active": true
+  },
+  {
+    "id": "pkg-008",
+    "name": "Bulut Depolama Paketi",
+    "category": "bulut_depolama",
+    "price_tl": "34.00",
+    "duration_days": 30,
+    "description": "Umay Bulut'ta 50GB depolama alanı. Dosyalarınızı güvenle saklayın.",
+    "features": ["50GB bulut depolama", "Otomatik yedekleme", "Tüm cihazlardan erişim", "Dosya paylaşımı"],
     "is_active": true
   }
 ]

@@ -9,7 +9,7 @@ interface MessageBubbleProps {
 
 export function MessageBubble({ message }: MessageBubbleProps) {
   const isUser = message.role === "user";
-  const senderLabel = isUser ? "Siz" : "Turkcell Asistan";
+  const senderLabel = isUser ? "Siz" : "Umay Umay";
   const timeStr = new Date(message.timestamp).toLocaleTimeString("tr-TR", {
     hour: "2-digit",
     minute: "2-digit",
@@ -28,19 +28,19 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         <div
           className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
             isUser
-              ? "bg-turkcell-blue text-white"
-              : "bg-turkcell-yellow text-turkcell-dark"
+              ? "bg-umay-blue text-white"
+              : "bg-umay-yellow text-umay-dark"
           }`}
           aria-hidden="true"
         >
-          {isUser ? "S" : "T"}
+          {isUser ? "S" : "U"}
         </div>
 
         {/* Bubble */}
         <div className={`max-w-[80%] sm:max-w-[80%] md:max-w-[75%] rounded-2xl px-4 py-2 ${
           isUser
-            ? "bg-turkcell-blue text-white rounded-tr-sm"
-            : "bg-white border border-gray-200 text-turkcell-dark rounded-tl-sm"
+            ? "bg-umay-blue text-white rounded-tr-sm"
+            : "bg-card border border-border text-foreground rounded-tl-sm"
         }`}>
           {isUser ? (
             <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
@@ -49,7 +49,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
               <MarkdownRenderer content={message.content} />
               {message.isStreaming && (
                 <span
-                  className="inline-block w-0.5 h-4 bg-turkcell-blue animate-pulse ml-1 align-middle"
+                  className="inline-block w-0.5 h-4 bg-umay-blue animate-pulse ml-1 align-middle"
                   aria-hidden="true"
                 />
               )}

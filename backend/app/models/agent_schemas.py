@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 
 
 class AgentState(TypedDict):
-    """State for the Turkcell agent workflow."""
+    """State for the Umay agent workflow."""
 
     messages: Annotated[list[BaseMessage], add_messages]
     customer_id: str | None

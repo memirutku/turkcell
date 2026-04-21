@@ -36,6 +36,7 @@ SAFE_TOOLS = {
     "get_market_comparison",
     "get_customer_memory",
     "save_customer_memory",
+    "propose_action",
 }
 
 
@@ -45,15 +46,15 @@ def get_live_tool_declarations() -> list[types.FunctionDeclaration]:
         types.FunctionDeclaration(
             name="search_knowledge_base",
             description=(
-                "Turkcell bilgi tabaninda arama yapar. Tarife, paket, kampanya, "
-                "teknik destek konularinda detayli bilgi bulmak icin kullan."
+                "Umay bilgi tabanında arama yapar. Tarife, paket, kampanya, "
+                "teknik destek konularında detaylı bilgi bulmak için kullan."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "query": types.Schema(
                         type=types.Type.STRING,
-                        description="Turkce arama sorgusu",
+                        description="Türkçe arama sorgusu",
                     ),
                 },
                 required=["query"],
@@ -62,15 +63,15 @@ def get_live_tool_declarations() -> list[types.FunctionDeclaration]:
         types.FunctionDeclaration(
             name="lookup_customer_bill",
             description=(
-                "Musterinin fatura bilgilerini sorgular. Fatura detaylarini, "
-                "tutarlarini ve odeme durumunu gosterir."
+                "Müşterinin fatura bilgilerini sorgular. Fatura detaylarını, "
+                "tutarlarını ve ödeme durumunu gösterir."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "customer_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Musteri ID'si (ornek: cust-001)",
+                        description="Müşteri ID'si (örnek: cust-001)",
                     ),
                 },
                 required=["customer_id"],
@@ -79,31 +80,31 @@ def get_live_tool_declarations() -> list[types.FunctionDeclaration]:
         types.FunctionDeclaration(
             name="get_available_packages",
             description=(
-                "Mevcut ek paketleri listeler. Tum aktif paketlerin adini, "
-                "fiyatini ve ozelliklerini gosterir."
+                "Mevcut ek paketleri listeler. Tüm aktif paketlerin adını, "
+                "fiyatını ve özelliklerini gösterir."
             ),
         ),
         types.FunctionDeclaration(
             name="get_available_tariffs",
             description=(
-                "Mevcut tarifeleri listeler. Tum aktif tarifelerin adini, fiyatini, "
-                "veri/arama/SMS limitlerini gosterir."
+                "Mevcut tarifeleri listeler. Tüm aktif tarifelerin adını, fiyatını, "
+                "veri/arama/SMS limitlerini gösterir."
             ),
         ),
         types.FunctionDeclaration(
             name="recommend_tariff",
             description=(
-                "Musterinin kullanim ve fatura verilerine gore en uygun tarife onerisi yapar. "
-                "Son 3 ayin asim ucretlerini ve guncel kullanimini analiz ederek tasarruf "
-                "saglayacak tarifeleri sirayla onerir. Musteri tarife degisikligi veya "
-                "tasarruf hakkinda sorular sordigunda bu araci kullan."
+                "Müşterinin kullanım ve fatura verilerine göre en uygun tarife önerisi yapar. "
+                "Son 3 ayın aşım ücretlerini ve güncel kullanımını analiz ederek tasarruf "
+                "sağlayacak tarifeleri sırayla önerir. Müşteri tarife değişikliği veya "
+                "tasarruf hakkında sorular sorduğunda bu aracı kullan."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "customer_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Musteri ID'si (ornek: cust-001)",
+                        description="Müşteri ID'si (örnek: cust-001)",
                     ),
                 },
                 required=["customer_id"],
@@ -112,16 +113,16 @@ def get_live_tool_declarations() -> list[types.FunctionDeclaration]:
         types.FunctionDeclaration(
             name="compare_bills",
             description=(
-                "Musterinin son 2 faturasini karsilastirir. Toplam tutar degisimini, "
-                "asim ucretlerindeki farki ve artis/azalis nedenlerini gosterir. "
-                "Musteri fatura degisimini, artisini veya azalisini sordugunda kullan."
+                "Müşterinin son 2 faturasını karşılaştırır. Toplam tutar değişimini, "
+                "aşım ücretlerindeki farkı ve artış/azalış nedenlerini gösterir. "
+                "Müşteri fatura değişimini, artışını veya azalışını sorduğunda kullan."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "customer_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Musteri ID'si (ornek: cust-001)",
+                        description="Müşteri ID'si (örnek: cust-001)",
                     ),
                 },
                 required=["customer_id"],
@@ -130,16 +131,16 @@ def get_live_tool_declarations() -> list[types.FunctionDeclaration]:
         types.FunctionDeclaration(
             name="check_usage_alerts",
             description=(
-                "Musterinin kullanim durumunu kontrol eder: odenmemis fatura, veri/konusma "
-                "asimi, limite yakin kullanim gibi uyarilari listeler. Musteri hesap durumunu, "
-                "kullanimini veya uyarilari sordugunda kullan."
+                "Müşterinin kullanım durumunu kontrol eder: ödenmemiş fatura, veri/konuşma "
+                "aşımı, limite yakın kullanım gibi uyarıları listeler. Müşteri hesap durumunu, "
+                "kullanımını veya uyarıları sorduğunda kullan."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "customer_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Musteri ID'si (ornek: cust-001)",
+                        description="Müşteri ID'si (örnek: cust-001)",
                     ),
                 },
                 required=["customer_id"],
@@ -148,16 +149,16 @@ def get_live_tool_declarations() -> list[types.FunctionDeclaration]:
         types.FunctionDeclaration(
             name="recommend_package",
             description=(
-                "Musterinin kullanimina gore uygun ek paket onerir. Veri asimi veya yuksek "
-                "kullanim durumunda tasarruf saglayacak paketleri sirayla sunar. "
-                "Musteri paket onerisi veya ek paket sordugunda kullan."
+                "Müşterinin kullanımına göre uygun ek paket önerir. Veri aşımı veya yüksek "
+                "kullanım durumunda tasarruf sağlayacak paketleri sırayla sunar. "
+                "Müşteri paket önerisi veya ek paket sorduğunda kullan."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "customer_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Musteri ID'si (ornek: cust-001)",
+                        description="Müşteri ID'si (örnek: cust-001)",
                     ),
                 },
                 required=["customer_id"],
@@ -166,19 +167,20 @@ def get_live_tool_declarations() -> list[types.FunctionDeclaration]:
         types.FunctionDeclaration(
             name="activate_package",
             description=(
-                "Musteri icin ek paket aktiflestirir. Paket tanimlama islemi yapar. "
-                "Bu araci SADECE kullanici acikca bir paket tanimlamak istediginde kullan."
+                "Müşteri için ek paket aktifleştirir. Paket tanımlama işlemi yapar. "
+                "Kullanıcı paket tanımlamak istediğinde veya önerilen paketi onayladığında "
+                "('olur', 'yapalım', 'tamam', 'evet' gibi) bu aracı kullan."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "customer_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Musteri ID'si (ornek: cust-001)",
+                        description="Müşteri ID'si (örnek: cust-001)",
                     ),
                     "package_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Aktif edilecek paket ID'si (ornek: pkg-002)",
+                        description="Aktif edilecek paket ID'si (örnek: pkg-002)",
                     ),
                 },
                 required=["customer_id", "package_id"],
@@ -187,19 +189,20 @@ def get_live_tool_declarations() -> list[types.FunctionDeclaration]:
         types.FunctionDeclaration(
             name="change_tariff",
             description=(
-                "Musterinin mevcut tarifesini degistirir. Tarife degisikligi islemi yapar. "
-                "Bu araci SADECE kullanici acikca tarifesini degistirmek istediginde kullan."
+                "Müşterinin mevcut tarifesini değiştirir. Tarife değişikliği işlemi yapar. "
+                "Kullanıcı tarifesini değiştirmek istediğinde veya önerilen tarife değişikliğini "
+                "onayladığında ('olur', 'yapalım', 'tamam', 'evet' gibi) bu aracı kullan."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "customer_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Musteri ID'si",
+                        description="Müşteri ID'si",
                     ),
                     "new_tariff_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Yeni tarife ID'si (ornek: tariff-003)",
+                        description="Yeni tarife ID'si (örnek: tariff-003)",
                     ),
                 },
                 required=["customer_id", "new_tariff_id"],
@@ -209,21 +212,21 @@ def get_live_tool_declarations() -> list[types.FunctionDeclaration]:
         types.FunctionDeclaration(
             name="get_personalized_recommendations",
             description=(
-                "Musterinin demografik profili, kullanim kaliplari, kayip riski ve piyasa "
-                "verilerine gore coklu faktor analiziyle kisisellestirilmis tarife onerileri yapar. "
-                "Detayli analiz, profil bazli oneri veya 'tum faktorleri degerlendir' gibi "
-                "isteklerde bu araci kullan."
+                "Müşterinin demografik profili, kullanım kalıpları, kayıp riski ve piyasa "
+                "verilerine göre çoklu faktör analiziyle kişiselleştirilmiş tarife önerileri yapar. "
+                "Detaylı analiz, profil bazlı öneri veya 'tüm faktörleri değerlendir' gibi "
+                "isteklerde bu aracı kullan."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "customer_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Musteri ID'si (ornek: cust-001)",
+                        description="Müşteri ID'si (örnek: cust-001)",
                     ),
                     "top_n": types.Schema(
                         type=types.Type.INTEGER,
-                        description="En fazla kac oneri donecegi (varsayilan: 3)",
+                        description="En fazla kaç öneri döneceği (varsayılan: 3)",
                     ),
                 },
                 required=["customer_id"],
@@ -232,19 +235,19 @@ def get_live_tool_declarations() -> list[types.FunctionDeclaration]:
         types.FunctionDeclaration(
             name="get_personalized_package_recommendations",
             description=(
-                "Musterinin kullanim kaliplarina, demografik profiline ve uygulama kullanim "
-                "dagilimina gore kisisellestirilmis ek paket onerileri yapar."
+                "Müşterinin kullanım kalıplarına, demografik profiline ve uygulama kullanım "
+                "dağılımına göre kişiselleştirilmiş ek paket önerileri yapar."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "customer_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Musteri ID'si (ornek: cust-001)",
+                        description="Müşteri ID'si (örnek: cust-001)",
                     ),
                     "top_n": types.Schema(
                         type=types.Type.INTEGER,
-                        description="En fazla kac oneri donecegi (varsayilan: 3)",
+                        description="En fazla kaç öneri döneceği (varsayılan: 3)",
                     ),
                 },
                 required=["customer_id"],
@@ -253,15 +256,15 @@ def get_live_tool_declarations() -> list[types.FunctionDeclaration]:
         types.FunctionDeclaration(
             name="get_customer_risk_profile",
             description=(
-                "Musterinin kayip (churn) olasiligini, musteri yasam boyu degerini (CLV), "
-                "sadakat puanini ve ust satim/capraz satis potansiyelini analiz eder."
+                "Müşterinin kayıp (churn) olasılığını, müşteri yaşam boyu değerini (CLV), "
+                "sadakat puanını ve üst satım/çapraz satış potansiyelini analiz eder."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "customer_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Musteri ID'si (ornek: cust-001)",
+                        description="Müşteri ID'si (örnek: cust-001)",
                     ),
                 },
                 required=["customer_id"],
@@ -270,15 +273,15 @@ def get_live_tool_declarations() -> list[types.FunctionDeclaration]:
         types.FunctionDeclaration(
             name="get_usage_pattern_analysis",
             description=(
-                "Musterinin zaman bazli kullanim kaliplarini analiz eder: hafta ici/hafta sonu "
-                "kullanim farki, saatlik yogunluk, aylik trend, uygulama kategorileri."
+                "M��şterinin zaman bazlı kullanım kalıplarını analiz eder: hafta içi/hafta sonu "
+                "kullanım farkı, saatlik yoğunluk, aylık trend, uygulama kategorileri."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "customer_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Musteri ID'si (ornek: cust-001)",
+                        description="Müşteri ID'si (örnek: cust-001)",
                     ),
                 },
                 required=["customer_id"],
@@ -287,34 +290,65 @@ def get_live_tool_declarations() -> list[types.FunctionDeclaration]:
         types.FunctionDeclaration(
             name="get_market_comparison",
             description=(
-                "Belirtilen Turkcell tarifesini Vodafone ve Turk Telekom'un benzer "
-                "tarifeleriyle karsilastirir. Fiyat, veri, dakika ve SMS limitlerini kiyaslar."
+                "Belirtilen Umay tarifesini rakip operatörlerin benzer "
+                "tarifeleriyle karşılaştırır. Fiyat, veri, dakika ve SMS limitlerini kıyaslar."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "tariff_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Tarife ID'si (ornek: tariff-001)",
+                        description="Tarife ID'si (örnek: tariff-001)",
                     ),
                 },
                 required=["tariff_id"],
+            ),
+        ),
+        # --- Propose action (visual info card before voice confirmation) ---
+        types.FunctionDeclaration(
+            name="propose_action",
+            description=(
+                "Müşteriye tarife veya paket değişikliği önermeden ÖNCE bu aracı çağır. "
+                "Ekranda bilgi kartı gösterir. Bu aracı çağırdıktan sonra müşteriye sesli "
+                "olarak onay sorusunu sor. Müşteri onaylarsa ilgili işlem aracını çağır."
+            ),
+            parameters=types.Schema(
+                type=types.Type.OBJECT,
+                properties={
+                    "action_type": types.Schema(
+                        type=types.Type.STRING,
+                        description="İşlem türü: 'tariff_change' veya 'package_activation'",
+                    ),
+                    "name": types.Schema(
+                        type=types.Type.STRING,
+                        description="Tarife veya paket adı",
+                    ),
+                    "price": types.Schema(
+                        type=types.Type.STRING,
+                        description="Fiyat bilgisi (örnek: '299 TL/ay')",
+                    ),
+                    "features": types.Schema(
+                        type=types.Type.STRING,
+                        description="Kısa özellik özeti (örnek: '50GB internet, 1000dk konuşma')",
+                    ),
+                },
+                required=["action_type", "name", "price"],
             ),
         ),
         # --- Customer memory tools ---
         types.FunctionDeclaration(
             name="get_customer_memory",
             description=(
-                "Musterinin onceki etkilesim hafizasini getirir. Onceki konusmalardan "
-                "ogreniilen tercihleri, cozulmemis sorunlari ve yapilan islemleri gosterir. "
-                "Musteri ile konusmaya baslarken bu araci kullanarak onceki deneyimi hatirla."
+                "Müşterinin önceki etkileşim hafızasını getirir. Önceki konuşmalardan "
+                "öğrenilen tercihleri, çözülmemiş sorunları ve yapılan işlemleri gösterir. "
+                "Müşteri ile konuşmaya başlarken bu aracı kullanarak önceki deneyimi hatırla."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "customer_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Musteri ID'si (ornek: cust-001)",
+                        description="Müşteri ID'si (örnek: cust-001)",
                     ),
                 },
                 required=["customer_id"],
@@ -323,44 +357,44 @@ def get_live_tool_declarations() -> list[types.FunctionDeclaration]:
         types.FunctionDeclaration(
             name="save_customer_memory",
             description=(
-                "Musteri ile yapilan konusmanin ozetini kaydeder. Konusulan konulari, "
-                "gerceklestirilen islemleri, cozulmemis sorunlari ve ogreniilen tercihleri "
-                "saklar. Anlamli konusmalar sonrasinda otomatik olarak cagrilmalidir."
+                "Müşteri ile yapılan konuşmanın özetini kaydeder. Konuşulan konuları, "
+                "gerçekleştirilen işlemleri, çözülmemiş sorunları ve öğrenilen tercihleri "
+                "saklar. Anlamlı konuşmalar sonrasında otomatik olarak çağrılmalıdır."
             ),
             parameters=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
                     "customer_id": types.Schema(
                         type=types.Type.STRING,
-                        description="Musteri ID'si (ornek: cust-001)",
+                        description="Müşteri ID'si (örnek: cust-001)",
                     ),
                     "summary": types.Schema(
                         type=types.Type.STRING,
-                        description="Etkilesim ozeti (Turkce)",
+                        description="Etkileşim özeti (Türkçe)",
                     ),
                     "topics": types.Schema(
                         type=types.Type.ARRAY,
                         items=types.Schema(type=types.Type.STRING),
-                        description="Konusulan konular",
+                        description="Konuşulan konular",
                     ),
                     "actions_taken": types.Schema(
                         type=types.Type.ARRAY,
                         items=types.Schema(type=types.Type.STRING),
-                        description="Gerceklestirilen islemler",
+                        description="Gerçekleştirilen işlemler",
                     ),
                     "unresolved_issues": types.Schema(
                         type=types.Type.ARRAY,
                         items=types.Schema(type=types.Type.STRING),
-                        description="Cozulmemis sorunlar",
+                        description="Çözülmemiş sorunlar",
                     ),
                     "preferences_learned": types.Schema(
                         type=types.Type.ARRAY,
                         items=types.Schema(type=types.Type.STRING),
-                        description="Ogreniilen tercihler",
+                        description="Öğrenilen tercihler",
                     ),
                     "sentiment": types.Schema(
                         type=types.Type.STRING,
-                        description="Musteri duygu durumu: olumlu/notr/olumsuz",
+                        description="Müşteri duygu durumu: olumlu/nötr/olumsuz",
                     ),
                 },
                 required=["customer_id", "summary"],
@@ -388,7 +422,7 @@ async def dispatch_tool(
     """
     if name == "search_knowledge_base":
         if rag_service is None:
-            return json.dumps({"error": "RAG servisi mevcut degil"}, ensure_ascii=False)
+            return json.dumps({"error": "RAG servisi mevcut değil"}, ensure_ascii=False)
         query = args.get("query", "")
         results = await rag_service.search(query, top_k=5)
         return json.dumps(
@@ -402,7 +436,7 @@ async def dispatch_tool(
         customer = mock_bss.get_customer(customer_id)
         if not customer:
             return json.dumps(
-                {"error": f"Musteri bulunamadi: {customer_id}"},
+                {"error": f"Müşteri bulunamadı: {customer_id}"},
                 ensure_ascii=False,
             )
         bills = mock_bss.get_customer_bills(customer_id)
@@ -497,14 +531,26 @@ async def dispatch_tool(
         return json.dumps(result, ensure_ascii=False)
 
     # --- MCP-backed personalization tools ---
-    if personalization_engine is not None:
+    _personalization_tools = {
+        "get_personalized_recommendations",
+        "get_personalized_package_recommendations",
+        "get_customer_risk_profile",
+        "get_usage_pattern_analysis",
+        "get_market_comparison",
+    }
+    if name in _personalization_tools:
+        if personalization_engine is None:
+            return json.dumps(
+                {"error": "Kişiselleştirme servisi şu an kullanılamıyor. Basit öneri araçlarını deneyin."},
+                ensure_ascii=False,
+            )
         pe = personalization_engine
         if name == "get_personalized_recommendations":
             customer_id = args.get("customer_id", "")
             top_n = args.get("top_n", 3)
             result = pe.get_personalized_tariff_recommendations(customer_id, top_n)
             if not result:
-                return json.dumps({"error": f"Musteri bulunamadi: {customer_id}"}, ensure_ascii=False)
+                return json.dumps({"error": f"Müşteri bulunamadı: {customer_id}"}, ensure_ascii=False)
             return result.model_dump_json()
 
         if name == "get_personalized_package_recommendations":
@@ -512,38 +558,51 @@ async def dispatch_tool(
             top_n = args.get("top_n", 3)
             result = pe.get_personalized_package_recommendations(customer_id, top_n)
             if not result:
-                return json.dumps({"error": f"Musteri bulunamadi: {customer_id}"}, ensure_ascii=False)
+                return json.dumps({"error": f"Müşteri bulunamadı: {customer_id}"}, ensure_ascii=False)
             return result.model_dump_json()
 
         if name == "get_customer_risk_profile":
             customer_id = args.get("customer_id", "")
             result = pe._churn_risk.get_risk_profile(customer_id)
             if not result:
-                return json.dumps({"error": f"Musteri bulunamadi: {customer_id}"}, ensure_ascii=False)
+                return json.dumps({"error": f"Müşteri bulunamadı: {customer_id}"}, ensure_ascii=False)
             return result.model_dump_json()
 
         if name == "get_usage_pattern_analysis":
             customer_id = args.get("customer_id", "")
             result = pe._usage_pattern.get_usage_pattern(customer_id)
             if not result:
-                return json.dumps({"error": f"Kullanim verisi yok: {customer_id}"}, ensure_ascii=False)
+                return json.dumps({"error": f"Kullanım verisi yok: {customer_id}"}, ensure_ascii=False)
             return result.model_dump_json()
 
         if name == "get_market_comparison":
             tariff_id = args.get("tariff_id", "")
             result = pe._market_data.get_market_comparison(tariff_id)
             if not result:
-                return json.dumps({"error": f"Tarife bulunamadi: {tariff_id}"}, ensure_ascii=False)
+                return json.dumps({"error": f"Tarife bulunamadı: {tariff_id}"}, ensure_ascii=False)
             return result.model_dump_json()
 
+    # --- Propose action (info card only, no execution) ---
+    if name == "propose_action":
+        return json.dumps(
+            {"status": "proposed", "message": "Öneri kartı kullanıcıya gösterildi."},
+            ensure_ascii=False,
+        )
+
     # --- Customer memory tools ---
-    if customer_memory_service is not None:
+    _memory_tools = {"get_customer_memory", "save_customer_memory"}
+    if name in _memory_tools:
+        if customer_memory_service is None:
+            return json.dumps(
+                {"error": "Müşteri hafıza servisi şu an kullanılamıyor."},
+                ensure_ascii=False,
+            )
         if name == "get_customer_memory":
             customer_id = args.get("customer_id", "")
             result = await customer_memory_service.get_memory(customer_id)
             if not result:
                 return json.dumps(
-                    {"message": f"Musteri {customer_id} icin onceki etkilesim kaydi bulunamadi."},
+                    {"message": f"Müşteri {customer_id} için önceki etkileşim kaydı bulunamadı."},
                     ensure_ascii=False,
                 )
             return result.model_dump_json()
@@ -564,12 +623,12 @@ async def dispatch_tool(
                 actions_taken=args.get("actions_taken", []),
                 unresolved_issues=args.get("unresolved_issues", []),
                 preferences_learned=args.get("preferences_learned", []),
-                sentiment=args.get("sentiment", "notr"),
+                sentiment=args.get("sentiment", "nötr"),
             )
             result = await customer_memory_service.save_interaction(customer_id, record)
             return result.model_dump_json()
 
-    return json.dumps({"error": f"Bilinmeyen arac: {name}"}, ensure_ascii=False)
+    return json.dumps({"error": f"Bilinmeyen araç: {name}"}, ensure_ascii=False)
 
 
 def build_action_description(name: str, args: dict[str, Any], mock_bss: MockBSSService) -> str:
@@ -580,9 +639,9 @@ def build_action_description(name: str, args: dict[str, Any], mock_bss: MockBSSS
         if package:
             return (
                 f"{package.name} paketi ({package.price_tl} TL, "
-                f"{package.duration_days} gun) tanimlanacak."
+                f"{package.duration_days} gün) tanımlanacak."
             )
-        return f"Paket {package_id} tanimlanacak."
+        return f"Paket {package_id} tanımlanacak."
 
     if name == "change_tariff":
         tariff_id = args.get("new_tariff_id", "")
@@ -590,8 +649,8 @@ def build_action_description(name: str, args: dict[str, Any], mock_bss: MockBSSS
         if tariff:
             return (
                 f"Tarife {tariff.name} ({tariff.monthly_price_tl} TL/ay) "
-                f"olarak degistirilecek."
+                f"olarak değiştirilecek."
             )
-        return f"Tarife {tariff_id} olarak degistirilecek."
+        return f"Tarife {tariff_id} olarak değiştirilecek."
 
-    return f"{name} islemi gerceklestirilecek."
+    return f"{name} işlemi gerçekleştirilecek."

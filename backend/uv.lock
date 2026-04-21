@@ -3036,7 +3036,7 @@ wheels = [
 ]
 
 [[package]]
-name = "turkcell-ai-gen-backend"
+name = "umay-ai-gen-backend"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

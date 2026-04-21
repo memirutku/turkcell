@@ -29,17 +29,17 @@ export function VoiceButton({ voiceState, onClick, disabled, isVoiceSupported, c
 
   const getAriaLabel = () => {
     if (isDisabledOrUnsupported && voiceState === "idle") {
-      return "Metin yaniti devam ediyor";
+      return "Metin yanıtı devam ediyor";
     }
     switch (voiceState) {
       case "idle":
-        return "Ses kaydi baslat";
+        return "Ses kaydı başlat";
       case "recording":
-        return "Ses kaydini durdur";
+        return "Ses kaydını durdur";
       case "processing":
-        return "Ses isleniyor";
+        return "Ses işleniyor";
       case "playing":
-        return "Sesli yanit oynatuluyor";
+        return "Sesli yanıt oynatılıyor";
     }
   };
 
@@ -49,7 +49,7 @@ export function VoiceButton({ voiceState, onClick, disabled, isVoiceSupported, c
       case "idle":
         return "Ses ile soru sorun";
       case "recording":
-        return "Kaydi durdurmak icin tiklayin";
+        return "Kaydı durdurmak için tıklayın";
       default:
         return undefined;
     }
@@ -57,17 +57,17 @@ export function VoiceButton({ voiceState, onClick, disabled, isVoiceSupported, c
 
   const getStyles = () => {
     if (isDisabledOrUnsupported) {
-      return "text-gray-300 bg-white border border-gray-200 opacity-50 cursor-not-allowed";
+      return "text-muted-foreground/50 bg-card border border-border opacity-50 cursor-not-allowed";
     }
     switch (voiceState) {
       case "idle":
-        return "text-gray-500 bg-white border border-gray-200 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300 cursor-pointer";
+        return "text-muted-foreground bg-card border border-border hover:text-foreground hover:bg-muted cursor-pointer";
       case "recording":
         return "text-white bg-red-500 ring-4 ring-red-500/30 animate-pulse cursor-pointer";
       case "processing":
-        return "text-turkcell-blue bg-white border border-gray-200 cursor-not-allowed";
+        return "text-umay-blue bg-card border border-border cursor-not-allowed";
       case "playing":
-        return "text-turkcell-blue bg-turkcell-blue/10 border border-turkcell-blue/20 cursor-not-allowed";
+        return "text-umay-blue bg-umay-blue/10 border border-umay-blue/20 cursor-not-allowed";
     }
   };
 

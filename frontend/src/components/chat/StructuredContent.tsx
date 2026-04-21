@@ -31,7 +31,7 @@ export function StructuredContent({ data }: StructuredContentProps) {
 function ActionProposalContent({ proposal }: { proposal: ActionProposal }) {
   const { confirmAction, isActionProcessing, pendingAction } = useChatStore();
 
-  // Only show buttons if this is the active pending action
+  // Only show buttons if this is the active pending action (text chat mode)
   const isActive = pendingAction?.thread_id === proposal.thread_id;
 
   if (isActive && isActionProcessing) {
@@ -57,12 +57,13 @@ function ActionProposalContent({ proposal }: { proposal: ActionProposal }) {
     );
   }
 
-  // Already confirmed/rejected -- show as disabled
+  // No active pending action — info card only (live voice mode or already handled)
   return (
     <ActionConfirmationCard
       proposal={proposal}
       onConfirm={() => {}}
-      isProcessing={true}
+      isProcessing={false}
+      hideButtons
     />
   );
 }
@@ -71,12 +72,12 @@ function RecommendationContent({ payload }: { payload: RecommendationPayload }) 
   const { usage_summary, recommendations, current_tariff } = payload;
 
   return (
-    <section className="space-y-3" aria-label="Tarife onerisi ve kullanim ozeti">
+    <section className="space-y-3" aria-label="Tarife önerisi ve kullanım özeti">
       {/* Usage summary card */}
-      <Card className="border-turkcell-blue/20" role="region" aria-label="Kullanim ozeti">
+      <Card className="border-umay-blue/20" role="region" aria-label="Kullanım özeti">
         <CardHeader className="pb-2 px-4 pt-4">
           <CardTitle className="text-base font-semibold leading-snug">
-            Kullanim Ozeti
+            Kullanım Özeti
           </CardTitle>
         </CardHeader>
         <CardContent className="px-4 pb-4 space-y-3">

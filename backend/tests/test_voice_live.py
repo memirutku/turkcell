@@ -45,7 +45,7 @@ class TestFunctionDeclarations:
 
     def test_declaration_count(self):
         decls = get_live_tool_declarations()
-        assert len(decls) == 6
+        assert len(decls) == 17
 
     def test_all_tools_have_names(self):
         decls = get_live_tool_declarations()
@@ -55,8 +55,19 @@ class TestFunctionDeclarations:
             "lookup_customer_bill",
             "get_available_packages",
             "get_available_tariffs",
+            "recommend_tariff",
+            "compare_bills",
+            "check_usage_alerts",
+            "recommend_package",
             "activate_package",
             "change_tariff",
+            "get_personalized_recommendations",
+            "get_personalized_package_recommendations",
+            "get_customer_risk_profile",
+            "get_usage_pattern_analysis",
+            "get_market_comparison",
+            "get_customer_memory",
+            "save_customer_memory",
         }
         assert names == expected
 
@@ -79,7 +90,7 @@ class TestToolDispatch:
         customer = MagicMock()
         customer.name = "Test Musteri"
         tariff = MagicMock()
-        tariff.name = "Turkcell Gold"
+        tariff.name = "Umay Gold"
         customer.tariff = tariff
         bss.get_customer.return_value = customer
         bss.get_customer_bills.return_value = []
@@ -161,7 +172,7 @@ class TestToolDispatch:
     async def test_dispatch_search_knowledge_base_with_rag(self, mock_bss):
         rag = MagicMock()
         rag.search = AsyncMock(return_value=[
-            {"content": "Turkcell tarife bilgisi", "metadata": {"source": "faq.pdf"}, "score": 0.95}
+            {"content": "Umay tarife bilgisi", "metadata": {"source": "faq.pdf"}, "score": 0.95}
         ])
         result = await dispatch_tool(
             "search_knowledge_base",
@@ -214,7 +225,7 @@ class TestActionDescription:
     def test_change_tariff_with_details(self):
         mock_bss = MagicMock()
         mock_bss.get_tariff.return_value = MagicMock(
-            name="Turkcell Platinum",
+            name="Umay Platinum",
             monthly_price_tl=299.90,
         )
         desc = build_action_description(
@@ -222,7 +233,7 @@ class TestActionDescription:
             {"customer_id": "cust-001", "new_tariff_id": "tariff-003"},
             mock_bss,
         )
-        assert "Turkcell Platinum" in desc
+        assert "Umay Platinum" in desc
 
     def test_unknown_action(self):
         mock_bss = MagicMock()

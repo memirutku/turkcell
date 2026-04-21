@@ -74,6 +74,7 @@ class Customer(BaseModel):
     occupation: str | None = None
     segment: str | None = None
     contract_type: str = "bireysel"
+    active_packages: list[str] = []
 
 
 class Campaign(BaseModel):

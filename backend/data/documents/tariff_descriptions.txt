@@ -1,6 +1,6 @@
 Platinum Esneyebilen 20GB Tarife
 
-Turkcell'in en kapsamlı tarife paketi olan Platinum Esneyebilen 20GB, aylık 299 TL fiyatıyla sunulmaktadır. Bu tarife, 20GB yüksek hızlı internet, tüm yönlere 2000 dakika konuşma ve 1000 adet SMS hakkı içermektedir. Platinum müşterilere özel fırsatlar ve yurt dışı 1GB hediye internet avantajı da bu tarifenin sunduğu ek ayrıcalıklar arasındadır. Fiyata KDV (%20) ve ÖİV (%10) dahildir.
+Umay'in en kapsamlı tarife paketi olan Platinum Esneyebilen 20GB, aylık 299 TL fiyatıyla sunulmaktadır. Bu tarife, 20GB yüksek hızlı internet, tüm yönlere 2000 dakika konuşma ve 1000 adet SMS hakkı içermektedir. Platinum müşterilere özel fırsatlar ve yurt dışı 1GB hediye internet avantajı da bu tarifenin sunduğu ek ayrıcalıklar arasındadır. Fiyata KDV (%20) ve ÖİV (%10) dahildir.
 
 Platinum Tarife Hangi Kullanıcıya Uygun?
 
@@ -20,7 +20,7 @@ Gold 10GB tarife, orta düzeyde internet ve konuşma kullanan bireysel aboneler 
 
 Gold Tarife Aşım Durumu
 
-Gold 10GB tarifenizde 10GB internet kotanız dolduğunda internet hızınız 512 Kbps'e düşürülür. Hız düşümü sonrasında temel internet işlemlerini (mesajlaşma, e-posta) yapabilirsiniz ancak video izleme veya büyük dosya indirme gibi işlemler zorlaşır. Ek internet paketi almak için Turkcell uygulamasından veya *123# kısa kodundan işlem yapabilirsiniz. Konuşma dakikası aşımında dakika başına 0,45 TL ücret faturanıza yansıtılır.
+Gold 10GB tarifenizde 10GB internet kotanız dolduğunda internet hızınız 512 Kbps'e düşürülür. Hız düşümü sonrasında temel internet işlemlerini (mesajlaşma, e-posta) yapabilirsiniz ancak video izleme veya büyük dosya indirme gibi işlemler zorlaşır. Ek internet paketi almak için Umay uygulamasından veya *123# kısa kodundan işlem yapabilirsiniz. Konuşma dakikası aşımında dakika başına 0,45 TL ücret faturanıza yansıtılır.
 
 Silver 5GB Tarife
 
@@ -48,7 +48,7 @@ Dijital Hayat 15GB tarifenizde internet kotanız bittiğinde hız 1 Mbps seviyes
 
 Ekonomik 3GB Tarife
 
-Ekonomik 3GB tarife, Turkcell'in en uygun fiyatlı tarife seçeneği olup aylık sadece 79 TL'dir. Bu paket 3GB internet, tüm yönlere 300 dakika konuşma ve 100 adet SMS hakkı sunmaktadır. Temel arama ve mesajlaşma ihtiyaçlarını karşılamak için yeterli olan bu tarife, minimum maliyetle iletişimde kalmak isteyen kullanıcılara hitap eder. Tüm fiyatlara KDV ve ÖİV dahildir.
+Ekonomik 3GB tarife, Umay'in en uygun fiyatlı tarife seçeneği olup aylık sadece 79 TL'dir. Bu paket 3GB internet, tüm yönlere 300 dakika konuşma ve 100 adet SMS hakkı sunmaktadır. Temel arama ve mesajlaşma ihtiyaçlarını karşılamak için yeterli olan bu tarife, minimum maliyetle iletişimde kalmak isteyen kullanıcılara hitap eder. Tüm fiyatlara KDV ve ÖİV dahildir.
 
 Ekonomik Tarife Hangi Kullanıcıya Uygun?
 
@@ -72,8 +72,8 @@ Silver 129 TL ile Ekonomik 79 TL arasında 50 TL fark vardır ancak haklar açı
 
 KDV ve ÖİV Bilgilendirmesi
 
-Tüm Turkcell tarifeleri için belirtilen fiyatlara KDV (%20 Katma Değer Vergisi) ve ÖİV (%10 Özel İletişim Vergisi) dahildir. Faturanızda bu vergi kalemleri ayrı olarak gösterilir. Örneğin 299 TL'lik Platinum tarifede vergiler dahil toplam tutar 299 TL'dir. Vergi öncesi tutar yaklaşık 230 TL civarındadır. Aşım ücretlerine de aynı vergi oranları uygulanır.
+Tüm Umay tarifeleri için belirtilen fiyatlara KDV (%20 Katma Değer Vergisi) ve ÖİV (%10 Özel İletişim Vergisi) dahildir. Faturanızda bu vergi kalemleri ayrı olarak gösterilir. Örneğin 299 TL'lik Platinum tarifede vergiler dahil toplam tutar 299 TL'dir. Vergi öncesi tutar yaklaşık 230 TL civarındadır. Aşım ücretlerine de aynı vergi oranları uygulanır.
 
 Tarife Değişikliği Genel Bilgi
 
-Mevcut tarifenizi değiştirmek istediğinizde Turkcell uygulaması, online işlem merkezi, *123# kısa kodu veya müşteri hizmetlerini arayarak işlem yapabilirsiniz. Tarife yükseltme işlemi anında geçerli olur. Tarife düşürme işlemi ise bir sonraki fatura döneminin başında aktifleşir. Taahhütlü tarifelerde süre dolmadan değişiklik yapılması durumunda cayma bedeli uygulanabilir. Kampanyalı geçiş yapıldığında kampanya koşullarına dikkat edilmelidir.
+Mevcut tarifenizi değiştirmek istediğinizde Umay uygulaması, online işlem merkezi, *123# kısa kodu veya müşteri hizmetlerini arayarak işlem yapabilirsiniz. Tarife yükseltme işlemi anında geçerli olur. Tarife düşürme işlemi ise bir sonraki fatura döneminin başında aktifleşir. Taahhütlü tarifelerde süre dolmadan değişiklik yapılması durumunda cayma bedeli uygulanabilir. Kampanyalı geçiş yapıldığında kampanya koşullarına dikkat edilmelidir.

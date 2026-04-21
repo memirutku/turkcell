@@ -27,35 +27,35 @@ export function ConversationModeToggle({
   };
 
   const getAriaLabel = () => {
-    if (isVADErrored) return "Ses tanima modeli yuklenemedi";
-    if (isVADLoading) return "Ses tanima modeli yukleniyor";
-    if (disabled && !isActive) return "Metin yaniti devam ediyor";
-    if (isActive) return "Serbest konusma modunu kapat";
-    return "Serbest konusma modunu baslat";
+    if (isVADErrored) return "Ses tanıma modeli yüklenemedi";
+    if (isVADLoading) return "Ses tanıma modeli yükleniyor";
+    if (disabled && !isActive) return "Metin yanıtı devam ediyor";
+    if (isActive) return "Serbest konuşma modunu kapat";
+    return "Serbest konuşma modunu başlat";
   };
 
   const getTitle = () => {
-    if (isVADErrored) return "Ses tanima modeli yuklenemedi — sayfayi yenileyin";
-    if (isVADLoading) return "Ses tanima modeli yukleniyor...";
+    if (isVADErrored) return "Ses tanıma modeli yüklenemedi — sayfayı yenileyin";
+    if (isVADLoading) return "Ses tanıma modeli yükleniyor...";
     if (disabled) return undefined;
-    if (isActive) return "Serbest konusma modunu kapatin";
-    return "Serbest konusma modunu baslatin";
+    if (isActive) return "Serbest konuşma modunu kapatın";
+    return "Serbest konuşma modunu başlatın";
   };
 
   const getStyles = () => {
     if (isVADErrored && !isActive) {
-      return "text-red-400 bg-white border border-red-200 cursor-pointer";
+      return "text-red-400 bg-card border border-red-200 dark:border-red-800 cursor-pointer";
     }
     if (isVADLoading && !isActive) {
-      return "text-gray-400 bg-white border border-gray-200 cursor-wait";
+      return "text-muted-foreground bg-card border border-border cursor-wait";
     }
     if (disabled && !isActive) {
-      return "text-gray-300 bg-white border border-gray-200 opacity-50 cursor-not-allowed";
+      return "text-muted-foreground/50 bg-card border border-border opacity-50 cursor-not-allowed";
     }
     if (isActive) {
-      return "text-white bg-turkcell-blue ring-2 ring-turkcell-blue/30 cursor-pointer";
+      return "text-white bg-umay-blue ring-2 ring-umay-blue/30 cursor-pointer";
     }
-    return "text-gray-500 bg-white border border-gray-200 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300 cursor-pointer";
+    return "text-muted-foreground bg-card border border-border hover:text-foreground hover:bg-muted cursor-pointer";
   };
 
   return (

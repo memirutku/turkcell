@@ -16,7 +16,7 @@ class MarketDataService:
         self._mock_bss = mock_bss
 
     def get_market_comparison(self, tariff_id: str) -> MarketComparison | None:
-        """Compare a Turkcell tariff against competitor offerings."""
+        """Compare a Umay tariff against competitor offerings."""
         tariff = self._mock_bss.get_tariff(tariff_id)
         if not tariff:
             return None
@@ -25,8 +25,8 @@ class MarketDataService:
         if not market_data or "competitors" not in market_data:
             return None
 
-        turkcell_price = float(tariff.monthly_price_tl)
-        turkcell_data = tariff.data_gb
+        umay_price = float(tariff.monthly_price_tl)
+        umay_data = tariff.data_gb
 
         # Find comparable competitor tariffs (within +/-40% data range)
         comparable: list[CompetitorTariff] = []
@@ -34,7 +34,7 @@ class MarketDataService:
             operator = competitor["operator"]
             for ct in competitor["tariffs"]:
                 ct_data = ct["data_gb"]
-                if turkcell_data * 0.6 <= ct_data <= turkcell_data * 1.4:
+                if umay_data * 0.6 <= ct_data <= umay_data * 1.4:
                     comparable.append(
                         CompetitorTariff(
                             operator=operator,
@@ -49,7 +49,7 @@ class MarketDataService:
         if not comparable:
             return MarketComparison(
                 tariff_name=tariff.name,
-                turkcell_price_tl=tariff.monthly_price_tl,
+                umay_price_tl=tariff.monthly_price_tl,
                 competitors=[],
                 market_position="ortalama",
                 price_competitiveness_score=0.5,
@@ -61,7 +61,7 @@ class MarketDataService:
 
         # Score: 1.0 = cheapest, 0.0 = most expensive
         if avg_competitor_price > 0:
-            score = 1.0 - (turkcell_price - avg_competitor_price) / avg_competitor_price
+            score = 1.0 - (umay_price - avg_competitor_price) / avg_competitor_price
             score = max(0.0, min(1.0, score))
         else:
             score = 0.5
@@ -75,7 +75,7 @@ class MarketDataService:
 
         return MarketComparison(
             tariff_name=tariff.name,
-            turkcell_price_tl=tariff.monthly_price_tl,
+            umay_price_tl=tariff.monthly_price_tl,
             competitors=comparable,
             market_position=position,
             price_competitiveness_score=round(score, 2),

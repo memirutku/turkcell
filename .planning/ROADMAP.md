@@ -184,13 +184,13 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Infrastructure & Foundation | 0/3 | Planned | - |
-| 2. Turkish Embedding & RAG Pipeline | 0/2 | Not started | - |
-| 3. Core Chat & LLM Integration | 2/3 | In progress (checkpoint pending) | - |
-| 4. PII Masking & KVKK Compliance | 1/2 | In progress | - |
-| 5. Billing & Tariff Q&A | 0/2 | Not started | - |
+| 1. Infrastructure & Foundation | 3/3 | Complete | 2026-03-31 |
+| 2. Turkish Embedding & RAG Pipeline | 2/2 | Complete | 2026-03-31 |
+| 3. Core Chat & LLM Integration | 3/3 | Complete | 2026-03-31 |
+| 4. PII Masking & KVKK Compliance | 2/2 | Complete | 2026-03-31 |
+| 5. Billing & Tariff Q&A | 2/2 | Complete | 2026-03-31 |
 | 6. Personalized Recommendations & Rich UI | 2/2 | Complete | 2026-03-31 |
-| 7. Voice Input & Output | 2/3 | In Progress|  |
-| 8. Full Voice Conversation | 1/2 | In progress | - |
-| 9. Agentic Capabilities | 3/3 | Complete   | 2026-04-01 |
-| 10. Accessibility & Hardening | 3/2 | Complete    | 2026-04-01 |
+| 7. Voice Input & Output | 3/3 | Complete | 2026-04-01 |
+| 8. Full Voice Conversation | 2/2 | Complete | 2026-04-01 |
+| 9. Agentic Capabilities | 3/3 | Complete | 2026-04-01 |
+| 10. Accessibility & Hardening | 3/3 | Complete | 2026-04-01 |

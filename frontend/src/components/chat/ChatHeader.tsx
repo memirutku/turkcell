@@ -1,6 +1,8 @@
 "use client";
 import { useChatStore } from "@/stores/chatStore";
 import { CustomerSelector } from "./CustomerSelector";
+import { ThemeToggle } from "./ThemeToggle";
+import { Plus } from "lucide-react";
 
 export function ChatHeader() {
   const resetSession = useChatStore((s) => s.resetSession);
@@ -16,27 +18,27 @@ export function ChatHeader() {
 
   return (
     <header
-      className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4 shrink-0"
+      className="h-14 bg-card border-b border-border flex items-center justify-between px-4 shrink-0"
       role="banner"
-      aria-label="Turkcell Asistan baslik"
+      aria-label="Umay Umay başlık"
     >
       <div className="flex items-center gap-3">
-        <div
-          className="h-8 w-8 rounded-full bg-turkcell-yellow flex items-center justify-center text-sm font-bold text-turkcell-dark"
-          aria-hidden="true"
-        >
-          T
-        </div>
-        <h1 className="text-xl font-semibold text-turkcell-dark">Turkcell Asistan</h1>
+        <img src="/umay-logo.gif" alt="Umay" className="h-8 w-auto object-contain" />
+        <h1 className="text-xl text-foreground">
+          <span className="font-normal">Umay</span>{" "}
+          <span className="font-bold">Umay</span>
+        </h1>
       </div>
-      <nav className="flex items-center gap-3" aria-label="Sohbet islemleri">
+      <nav className="flex items-center gap-2" aria-label="Sohbet işlemleri">
         <CustomerSelector />
+        <ThemeToggle />
         <button
           onClick={handleNewChat}
-          className="text-sm text-turkcell-blue hover:text-turkcell-blue/80 transition-colors font-medium rounded-md px-2 py-1"
-          aria-label="Yeni sohbet baslat"
+          className="flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 transition-colors font-medium rounded-md px-2 py-1"
+          aria-label="Yeni sohbet başlat"
         >
-          Yeni Sohbet
+          <Plus className="h-4 w-4" aria-hidden="true" />
+          <span className="hidden sm:inline">Yeni Sohbet</span>
         </button>
       </nav>
     </header>
