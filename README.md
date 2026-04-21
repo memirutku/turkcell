@@ -37,6 +37,14 @@ This project includes an MCP server exposed at `/mcp` for personalized telecom r
 - Focus area: tariff/package recommendations, usage insights, and customer risk-style signals
 - Integration: used both inside assistant flows and as an external MCP-compatible endpoint
 
+#### Full MCP Tool List
+
+- `get_personalized_tariff_recommendations` (`/tariff-recommendations`): personalized tariff suggestions by customer profile and usage
+- `get_personalized_package_recommendations` (`/package-recommendations`): personalized add-on package suggestions
+- `get_customer_risk_profile` (`/customer-risk-profile`): churn risk, loyalty, and value-oriented customer risk profile
+- `get_usage_pattern_analysis` (`/usage-pattern-analysis`): time-based and category-based usage pattern analysis
+- `get_market_comparison` (`/market-comparison`): compare a selected Umay tariff with competitor-like market offers
+
 ### Tech Stack
 
 - **Frontend**: Next.js 14, React 18, TypeScript, Tailwind CSS, Zustand
@@ -163,6 +171,14 @@ Projede `/mcp` endpoint’i üzerinden çalışan bir MCP sunucusu bulunur ve ki
 - Amaç: asistanın kişiselleştirme mantığını standart araç arayüzüyle sunmak
 - Odak: tarife/paket önerileri, kullanım analizi ve müşteri risk sinyalleri
 - Entegrasyon: hem asistan akışları içinde hem de dışarıdan MCP uyumlu erişim için kullanılabilir
+
+#### Tam MCP Tool Listesi
+
+- `get_personalized_tariff_recommendations` (`/tariff-recommendations`): müşteri profili ve kullanımına göre kişiselleştirilmiş tarife önerileri
+- `get_personalized_package_recommendations` (`/package-recommendations`): kişiselleştirilmiş ek paket önerileri
+- `get_customer_risk_profile` (`/customer-risk-profile`): churn riski, sadakat ve değer odaklı müşteri risk profili
+- `get_usage_pattern_analysis` (`/usage-pattern-analysis`): zaman ve kategori bazlı kullanım davranışı analizi
+- `get_market_comparison` (`/market-comparison`): seçilen bir Umay tarifesini rakip benzeri piyasa teklifleriyle karşılaştırma
 
 ### Teknoloji Yığını
 
