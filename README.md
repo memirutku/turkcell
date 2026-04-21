@@ -7,6 +7,14 @@
 Umay AI-Gen is a voice and text AI assistant project built for telecom customer-service scenarios.  
 It includes a FastAPI backend, a Next.js frontend, and supporting services orchestrated with Docker Compose.
 
+### Demo Notice
+
+This repository is a **competition demo/prototype** and is shared publicly for portfolio and technical showcase purposes.
+
+### Support
+
+If you find this project useful, **please consider starring the repository**.
+
 ### Competition Background
 
 This project was developed for Turkcell's "Yarının Teknoloji Liderleri" competition and reached the semi-finals.
@@ -109,8 +117,7 @@ pnpm lint
 
 ### License
 
-This project was built as a competition/prototype project.  
-You can add a license text (e.g., MIT) if you want to publish it under an open-source license.
+This project was built as a competition/prototype project.
 
 ---
 
@@ -118,6 +125,14 @@ You can add a license text (e.g., MIT) if you want to publish it under an open-s
 
 Umay AI-Gen, telekom müşteri hizmetleri senaryoları için geliştirilmiş, sesli ve metin tabanlı bir yapay zeka asistanı projesidir.  
 Proje; FastAPI tabanlı bir backend, Next.js tabanlı bir frontend ve Docker Compose ile orkestre edilen yardımcı servislerden oluşur.
+
+### Demo Notu
+
+Bu repo bir **yarışma demosu/prototipi** olarak geliştirilmiştir ve portföy ile teknik paylaşım amaçlı public olarak yayınlanmıştır.
+
+### Destek
+
+Projeyi faydalı bulduysanız, **repo'yu yıldızlamayı unutmayın**.
 
 ### Yarışma Geçmişi
 
@@ -221,6 +236,5 @@ pnpm lint
 
 ### Lisans
 
-Bu proje yarışma/prototip amaçlı geliştirilmiştir.  
-Lisanslamak isterseniz uygun bir lisans metni (ör. MIT) ekleyebilirsiniz.
+Bu proje yarışma/prototip amaçlı geliştirilmiştir.
 
