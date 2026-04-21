@@ -42,36 +42,45 @@ This project was developed for Turkcell's "Yarının Teknoloji Liderleri" compet
 
 - Competition page: [Yarının Teknoloji Liderleri Yarışması](https://www.turkcell.com.tr/yarininteknolojiliderleri/)
 
-### Key Features
+### Stack (short)
 
-- Text-based chat with streaming responses
-- Real-time voice interaction (Live Voice mode)
-- RAG pipeline with Milvus vector database
-- Personalization and recommendation flow (MCP endpoint support)
-- One-command local environment with Docker Compose
+| Area                    | Choices                                                                 |
+| ----------------------- | ----------------------------------------------------------------------- |
+| Frontend                | Next.js 14, React 18, TypeScript, Tailwind CSS, Zustand                 |
+| Backend                 | FastAPI, Python 3.12+, LangChain/LangGraph, Google GenAI SDK            |
+| Data & infrastructure  | Milvus, Redis, MinIO, Etcd, Traefik                                    |
+| Realtime & safety       | SSE streaming, WebSocket, Presidio (PII masking)                        |
+| Public integration      | App via Traefik; MCP tools served under `/mcp`                                        |
+
+### Key features
+
+| Feature                         | What it is                                                              |
+| ------------------------------- | ----------------------------------------------------------------------- |
+| Text chat + streaming            | Server-sent streaming chat responses from the FastAPI layer             |
+| Live Voice                       | Real-time voice interaction (Google Live / `GEMINI_LIVE_ENABLED`)        |
+| RAG (Milvus)                    | Document-backed answers via a Milvus vector store                       |
+| Personalization                | Profile and usage-based flows; tool calls exposed through MCP         |
+| Local environment              | `docker compose up` brings the full stack (see Quick Start)             |
 
 ### MCP (Model Context Protocol)
 
-This project includes an MCP server exposed at `/mcp` for personalized telecom recommendations and analysis.
+MCP is exposed for personalized telecom recommendations and analysis.
 
-- Purpose: provide standardized tool access for personalization logic used by the assistant
-- Focus area: tariff/package recommendations, usage insights, and customer risk-style signals
-- Integration: used both inside assistant flows and as an external MCP-compatible endpoint
+| Aspect        | Details                                                                                |
+| ------------- | -------------------------------------------------------------------------------------- |
+| Purpose       | Standardized tool access for assistant-side personalization and recommendation logic   |
+| Focus area   | Tariff/package fit, usage insights, customer risk–style signals                        |
+| Integration  | Invoked from assistant flows and available as an MCP-compatible HTTP surface         |
 
-#### Full MCP Tool List
+#### Full MCP tool list
 
-- `get_personalized_tariff_recommendations` (`/tariff-recommendations`): personalized tariff suggestions by customer profile and usage
-- `get_personalized_package_recommendations` (`/package-recommendations`): personalized add-on package suggestions
-- `get_customer_risk_profile` (`/customer-risk-profile`): churn risk, loyalty, and value-oriented customer risk profile
-- `get_usage_pattern_analysis` (`/usage-pattern-analysis`): time-based and category-based usage pattern analysis
-- `get_market_comparison` (`/market-comparison`): compare a selected Umay tariff with competitor-like market offers
-
-### Tech Stack
-
-- **Frontend**: Next.js 14, React 18, TypeScript, Tailwind CSS, Zustand
-- **Backend**: FastAPI, Python 3.12+, LangChain/LangGraph, Google GenAI SDK
-- **Data & Infrastructure**: Milvus, Redis, MinIO, Etcd, Traefik
-- **Other**: SSE streaming, WebSocket, Presidio (PII masking)
+| Tool (name)                                 | Route                     | What it does                                                         |
+| ------------------------------------------- | ------------------------- | -------------------------------------------------------------------- |
+| `get_personalized_tariff_recommendations`  | `/tariff-recommendations` | Suggests tariffs from profile + usage                                |
+| `get_personalized_package_recommendations` | `/package-recommendations` | Suggests add-on packages                                            |
+| `get_customer_risk_profile`                 | `/customer-risk-profile`  | Churn, loyalty, and value-oriented risk view                         |
+| `get_usage_pattern_analysis`                 | `/usage-pattern-analysis` | Time- and category-based usage patterns                            |
+| `get_market_comparison`                     | `/market-comparison`      | Compare a selected Umay tariff to competitor-like market offers     |
 
 ### Project Structure
 
@@ -94,9 +103,11 @@ cp .env.example .env
 
 2) Check at least these values in `.env`:
 
-- `GEMINI_API_KEY=` (if empty, related AI features are disabled)
-- `NEXT_PUBLIC_API_URL=http://localhost:8000`
-- `GEMINI_LIVE_ENABLED=false` (set `true` to enable voice mode)
+| Variable                 | Default / example              | Meaning                                                |
+| ------------------------ | ----------------------------- | ------------------------------------------------------ |
+| `GEMINI_API_KEY`         | empty                         | If empty, Gemini-powered features are limited/disabled  |
+| `NEXT_PUBLIC_API_URL`    | `http://localhost:8000`       | URL the browser uses to call the API                   |
+| `GEMINI_LIVE_ENABLED`    | `false`                       | Set to `true` to enable real-time (Live) voice mode   |
 
 3) Start services:
 
@@ -104,19 +115,23 @@ cp .env.example .env
 docker compose up --build
 ```
 
-4) Open the app:
+4) Open the app (local):
 
-- App: `http://localhost`
-- Frontend (direct): `http://localhost:3000`
-- Backend API (direct): `http://localhost:8000`
-- Traefik dashboard: `http://localhost:8080`
+| What              | URL                     |
+| ----------------- | ----------------------- |
+| App (Traefik)     | `http://localhost`      |
+| Frontend (direct) | `http://localhost:3000` |
+| Backend (direct)  | `http://localhost:8000` |
+| Traefik dashboard | `http://localhost:8080` |
 
-### API and Health Check
+### API and health (reference)
 
-- Health endpoint: `GET /api/health`
-- Chat endpoints: `/api/...`
-- WebSocket endpoints: `/ws/...`
-- MCP endpoint: `/mcp`
+| Kind        | Path / prefix | Notes                    |
+| ----------- | ------------- | ------------------------ |
+| Health      | `GET /api/health` | Liveness/health check |
+| Chat / REST | `/api/...`    | App-specific HTTP routes |
+| WebSocket   | `/ws/...`     | Streaming and live features |
+| MCP         | `/mcp`        | Model Context Protocol tools and metadata |
 
 Example:
 
@@ -181,36 +196,45 @@ Bu proje, Turkcell'in Yarının Teknoloji Liderleri yarışması kapsamında gel
 
 - Yarışma sayfası: [Yarının Teknoloji Liderleri Yarışması](https://www.turkcell.com.tr/yarininteknolojiliderleri/)
 
-### Öne Çıkan Özellikler
+### Yığın (özet)
 
-- Metin tabanlı sohbet ve akış (streaming) yanıtları
-- Gerçek zamanlı sesli etkileşim (Live Voice modu)
-- RAG altyapısı (Milvus vektör veritabanı)
-- Kişiselleştirme ve öneri akışı (MCP endpoint desteği)
-- Docker Compose ile tek komutta ayağa kaldırılabilen local geliştirme ortamı
+| Alan                    | Seçimler                                                                 |
+| ----------------------- | ------------------------------------------------------------------------ |
+| Ön uç (frontend)      | Next.js 14, React 18, TypeScript, Tailwind CSS, Zustand                 |
+| Arka uç (backend)       | FastAPI, Python 3.12+, LangChain/LangGraph, Google GenAI SDK            |
+| Veri ve altyapı        | Milvus, Redis, MinIO, Etcd, Traefik                                    |
+| Gerçek zaman ve güvenlik | SSE akışı, WebSocket, Presidio (PII maskeleme)                        |
+| Dışa açılan entegrasyon  | Uygulama Traefik üzerinden; MCP araçları `/mcp` altında                  |
+
+### Öne çıkan özellikler
+
+| Özellik                 | Açıklama                                                                |
+| ----------------------- | ----------------------------------------------------------------------- |
+| Metin sohbet + akış     | Sunucu tarafında akışlı (streaming) sohbet yanıtları                    |
+| Live Voice              | Gerçek zamanlı ses (Google Live / `GEMINI_LIVE_ENABLED`)                 |
+| RAG (Milvus)            | Milvus vektör veritabanı ile belge destekli yanıtlar                    |
+| Kişiselleştirme         | Profil ve kullanıma dayalı akışlar; araçlar MCP üzerinden               |
+| Yerel ortam            | `docker compose up` ile tüm yığın (Hızlı Başlangıç’a bakın)             |
 
 ### MCP (Model Context Protocol)
 
-Projede `/mcp` endpoint’i üzerinden çalışan bir MCP sunucusu bulunur ve kişiselleştirilmiş telekom önerileri/analizleri için kullanılır.
+MCP, kişiselleştirilmiş telekom önerileri ve analizleri için kullanılır.
 
-- Amaç: asistanın kişiselleştirme mantığını standart araç arayüzüyle sunmak
-- Odak: tarife/paket önerileri, kullanım analizi ve müşteri risk sinyalleri
-- Entegrasyon: hem asistan akışları içinde hem de dışarıdan MCP uyumlu erişim için kullanılabilir
+| Boyut         | Açıklama                                                                               |
+| ------------- | -------------------------------------------------------------------------------------- |
+| Amaç          | Asistan tarafındaki kişiselleştirme/öneri mantığı için standart araç sözleşmesi         |
+| Odak         | Tarife ve paket uyumu, kullanım içgörüleri, müşteri riski tarzı sinyaller                |
+| Entegrasyon  | Asistan akışlarının yanında, dışarıdan MCP uyumlu HTTP yüzeyi olarak da erişilebilir    |
 
-#### Tam MCP Tool Listesi
+#### Tam MCP araç listesi
 
-- `get_personalized_tariff_recommendations` (`/tariff-recommendations`): müşteri profili ve kullanımına göre kişiselleştirilmiş tarife önerileri
-- `get_personalized_package_recommendations` (`/package-recommendations`): kişiselleştirilmiş ek paket önerileri
-- `get_customer_risk_profile` (`/customer-risk-profile`): churn riski, sadakat ve değer odaklı müşteri risk profili
-- `get_usage_pattern_analysis` (`/usage-pattern-analysis`): zaman ve kategori bazlı kullanım davranışı analizi
-- `get_market_comparison` (`/market-comparison`): seçilen bir Umay tarifesini rakip benzeri piyasa teklifleriyle karşılaştırma
-
-### Teknoloji Yığını
-
-- **Frontend**: Next.js 14, React 18, TypeScript, Tailwind CSS, Zustand
-- **Backend**: FastAPI, Python 3.12+, LangChain/LangGraph, Google GenAI SDK
-- **Veri & Altyapı**: Milvus, Redis, MinIO, Etcd, Traefik
-- **Diğer**: SSE streaming, WebSocket, Presidio (PII maskeleme)
+| Araç (ad)                                 | Rota                        | Ne yapar                                                                 |
+| ---------------------------------------- | --------------------------- | ------------------------------------------------------------------------ |
+| `get_personalized_tariff_recommendations` | `/tariff-recommendations`  | Profil + kullanıma göre tarife önerileri                                 |
+| `get_personalized_package_recommendations` | `/package-recommendations` | Ek paket önerileri                                                      |
+| `get_customer_risk_profile`              | `/customer-risk-profile`   | Churn, sadakat ve değer odaklı risk görünümü                            |
+| `get_usage_pattern_analysis`             | `/usage-pattern-analysis`  | Zaman ve kategori bazlı kullanım kalıbı                                 |
+| `get_market_comparison`                 | `/market-comparison`       | Seçilen Umay tarifesini piyasadaki benzer tekliflerle kıyaslama         |
 
 ### Proje Yapısı
 
@@ -233,9 +257,11 @@ cp .env.example .env
 
 2) `.env` içinde en az aşağıdaki alanları kontrol et:
 
-- `GEMINI_API_KEY=` (boşsa ilgili AI özellikleri devre dışı kalır)
-- `NEXT_PUBLIC_API_URL=http://localhost:8000`
-- `GEMINI_LIVE_ENABLED=false` (sesli modu açmak için `true`)
+| Değişken                 | Varsayılan / örnek           | Anlamı                                                      |
+| ------------------------ | ----------------------------- | ---------------------------------------------------------- |
+| `GEMINI_API_KEY`         | boş                           | Boşsa Gemini tabanlı özellikler sınırlı veya kapalı olabilir |
+| `NEXT_PUBLIC_API_URL`    | `http://localhost:8000`       | Tarayıcının API’ye giderken kullandığı adres                 |
+| `GEMINI_LIVE_ENABLED`    | `false`                       | Gerçek zamanlı (Live) ses için `true` yapın                 |
 
 3) Servisleri başlat:
 
@@ -243,19 +269,23 @@ cp .env.example .env
 docker compose up --build
 ```
 
-4) Uygulamayı aç:
+4) Uygulamayı aç (lokal):
 
-- Uygulama: `http://localhost`
-- Frontend (doğrudan): `http://localhost:3000`
-- Backend API (doğrudan): `http://localhost:8000`
-- Traefik paneli: `http://localhost:8080`
+| Ne                    | Adres                    |
+| --------------------- | ------------------------ |
+| Uygulama (Traefik)   | `http://localhost`       |
+| Ön uç (doğrudan)     | `http://localhost:3000` |
+| Arka uç (doğrudan)   | `http://localhost:8000`  |
+| Traefik paneli       | `http://localhost:8080`  |
 
-### API ve Sağlık Kontrolü
+### API ve sağlık (özet)
 
-- Sağlık endpointi: `GET /api/health`
-- Sohbet endpointleri: `/api/...`
-- WebSocket endpointleri: `/ws/...`
-- MCP endpointi: `/mcp`
+| Tür          | Yol / önek    | Not                                     |
+| ------------ | ------------- | ---------------------------------------- |
+| Sağlık      | `GET /api/health` | Canlılık / health kontrolü         |
+| Sohbet / REST | `/api/...`  | Uygulamaya özel HTTP yolları          |
+| WebSocket  | `/ws/...`     | Akış ve canlı özellikler                 |
+| MCP        | `/mcp`        | Model Context Protocol araçları ve metadata |
 
 Örnek:
 
