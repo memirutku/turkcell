@@ -29,6 +29,14 @@ This project was developed for Turkcell's "Yarının Teknoloji Liderleri" compet
 - Personalization and recommendation flow (MCP endpoint support)
 - One-command local environment with Docker Compose
 
+### MCP (Model Context Protocol)
+
+This project includes an MCP server exposed at `/mcp` for personalized telecom recommendations and analysis.
+
+- Purpose: provide standardized tool access for personalization logic used by the assistant
+- Focus area: tariff/package recommendations, usage insights, and customer risk-style signals
+- Integration: used both inside assistant flows and as an external MCP-compatible endpoint
+
 ### Tech Stack
 
 - **Frontend**: Next.js 14, React 18, TypeScript, Tailwind CSS, Zustand
@@ -147,6 +155,14 @@ Bu proje, Turkcell'in Yarının Teknoloji Liderleri yarışması kapsamında gel
 - RAG altyapısı (Milvus vektör veritabanı)
 - Kişiselleştirme ve öneri akışı (MCP endpoint desteği)
 - Docker Compose ile tek komutta ayağa kaldırılabilen local geliştirme ortamı
+
+### MCP (Model Context Protocol)
+
+Projede `/mcp` endpoint’i üzerinden çalışan bir MCP sunucusu bulunur ve kişiselleştirilmiş telekom önerileri/analizleri için kullanılır.
+
+- Amaç: asistanın kişiselleştirme mantığını standart araç arayüzüyle sunmak
+- Odak: tarife/paket önerileri, kullanım analizi ve müşteri risk sinyalleri
+- Entegrasyon: hem asistan akışları içinde hem de dışarıdan MCP uyumlu erişim için kullanılabilir
 
 ### Teknoloji Yığını
 
