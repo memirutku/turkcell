@@ -1,116 +1,6 @@
 # Umay AI-Gen
 
-## TR
-
-Umay AI-Gen, telekom müşteri hizmetleri senaryoları için geliştirilmiş, sesli ve metin tabanlı bir yapay zeka asistanı projesidir.  
-Proje; FastAPI tabanlı bir backend, Next.js tabanlı bir frontend ve Docker Compose ile orkestre edilen yardımcı servislerden oluşur.
-
-### Yarışma Geçmişi
-
-Bu proje, Turkcell'in Yarının Teknoloji Liderleri yarışması kapsamında geliştirilmiştir ve yarı finale yükselmiştir.
-
-- Yarışma sayfası: [Yarının Teknoloji Liderleri Yarışması](https://www.turkcell.com.tr/yarininteknolojiliderleri/)
-
-### Öne Çıkan Özellikler
-
-- Metin tabanlı sohbet ve akış (streaming) yanıtları
-- Gerçek zamanlı sesli etkileşim (Live Voice modu)
-- RAG altyapısı (Milvus vektör veritabanı)
-- Kişiselleştirme ve öneri akışı (MCP endpoint desteği)
-- Docker Compose ile tek komutta ayağa kaldırılabilen local geliştirme ortamı
-
-### Teknoloji Yığını
-
-- **Frontend**: Next.js 14, React 18, TypeScript, Tailwind CSS, Zustand
-- **Backend**: FastAPI, Python 3.12+, LangChain/LangGraph, Google GenAI SDK
-- **Veri & Altyapı**: Milvus, Redis, MinIO, Etcd, Traefik
-- **Diğer**: SSE streaming, WebSocket, Presidio (PII maskeleme)
-
-### Proje Yapısı
-
-```text
-.
-├── backend/          # FastAPI uygulaması, servisler, testler
-├── frontend/         # Next.js uygulaması
-├── traefik/          # Reverse proxy ayarları
-├── docker-compose.yml
-└── .env.example
-```
-
-### Hızlı Başlangıç (Docker ile)
-
-1) Ortam değişkenlerini hazırla:
-
-```bash
-cp .env.example .env
-```
-
-2) `.env` içinde en az aşağıdaki alanları kontrol et:
-
-- `GEMINI_API_KEY=` (boşsa ilgili AI özellikleri devre dışı kalır)
-- `NEXT_PUBLIC_API_URL=http://localhost:8000`
-- `GEMINI_LIVE_ENABLED=false` (sesli modu açmak için `true`)
-
-3) Servisleri başlat:
-
-```bash
-docker compose up --build
-```
-
-4) Uygulamayı aç:
-
-- Uygulama: `http://localhost`
-- Frontend (doğrudan): `http://localhost:3000`
-- Backend API (doğrudan): `http://localhost:8000`
-- Traefik paneli: `http://localhost:8080`
-
-### API ve Sağlık Kontrolü
-
-- Sağlık endpointi: `GET /api/health`
-- Sohbet endpointleri: `/api/...`
-- WebSocket endpointleri: `/ws/...`
-- MCP endpointi: `/mcp`
-
-Örnek:
-
-```bash
-curl http://localhost:8000/api/health
-```
-
-### Geliştirme Notları
-
-- Docker Compose üzerinde hot-reload davranışı sınırlı olabilir; değişikliklerden sonra yeniden build gerekebilir.
-- Frontend bağımlılıkları `frontend/package.json`, backend bağımlılıkları `backend/pyproject.toml` içindedir.
-- Test ve değerlendirme dosyaları `backend/tests` ve `backend/eval` altındadır.
-
-### Lokal Test Komutları
-
-Backend testleri:
-
-```bash
-cd backend
-pytest
-```
-
-Frontend lint:
-
-```bash
-cd frontend
-pnpm lint
-```
-
-### Güvenlik ve Public Paylaşım
-
-- Gerçek API anahtarlarını (`.env`) repoya commit etmeyin.
-- Public paylaşım öncesi secret taraması yapın.
-- Örnek yapılandırma için `.env.example` kullanın.
-
-### Lisans
-
-Bu proje yarışma/prototip amaçlı geliştirilmiştir.  
-Lisanslamak isterseniz uygun bir lisans metni (ör. MIT) ekleyebilirsiniz.
-
----
+[EN](#en) | [TR](#tr)
 
 ## EN
 
@@ -221,4 +111,116 @@ pnpm lint
 
 This project was built as a competition/prototype project.  
 You can add a license text (e.g., MIT) if you want to publish it under an open-source license.
+
+---
+
+## TR
+
+Umay AI-Gen, telekom müşteri hizmetleri senaryoları için geliştirilmiş, sesli ve metin tabanlı bir yapay zeka asistanı projesidir.  
+Proje; FastAPI tabanlı bir backend, Next.js tabanlı bir frontend ve Docker Compose ile orkestre edilen yardımcı servislerden oluşur.
+
+### Yarışma Geçmişi
+
+Bu proje, Turkcell'in Yarının Teknoloji Liderleri yarışması kapsamında geliştirilmiştir ve yarı finale yükselmiştir.
+
+- Yarışma sayfası: [Yarının Teknoloji Liderleri Yarışması](https://www.turkcell.com.tr/yarininteknolojiliderleri/)
+
+### Öne Çıkan Özellikler
+
+- Metin tabanlı sohbet ve akış (streaming) yanıtları
+- Gerçek zamanlı sesli etkileşim (Live Voice modu)
+- RAG altyapısı (Milvus vektör veritabanı)
+- Kişiselleştirme ve öneri akışı (MCP endpoint desteği)
+- Docker Compose ile tek komutta ayağa kaldırılabilen local geliştirme ortamı
+
+### Teknoloji Yığını
+
+- **Frontend**: Next.js 14, React 18, TypeScript, Tailwind CSS, Zustand
+- **Backend**: FastAPI, Python 3.12+, LangChain/LangGraph, Google GenAI SDK
+- **Veri & Altyapı**: Milvus, Redis, MinIO, Etcd, Traefik
+- **Diğer**: SSE streaming, WebSocket, Presidio (PII maskeleme)
+
+### Proje Yapısı
+
+```text
+.
+├── backend/          # FastAPI uygulaması, servisler, testler
+├── frontend/         # Next.js uygulaması
+├── traefik/          # Reverse proxy ayarları
+├── docker-compose.yml
+└── .env.example
+```
+
+### Hızlı Başlangıç (Docker ile)
+
+1) Ortam değişkenlerini hazırla:
+
+```bash
+cp .env.example .env
+```
+
+2) `.env` içinde en az aşağıdaki alanları kontrol et:
+
+- `GEMINI_API_KEY=` (boşsa ilgili AI özellikleri devre dışı kalır)
+- `NEXT_PUBLIC_API_URL=http://localhost:8000`
+- `GEMINI_LIVE_ENABLED=false` (sesli modu açmak için `true`)
+
+3) Servisleri başlat:
+
+```bash
+docker compose up --build
+```
+
+4) Uygulamayı aç:
+
+- Uygulama: `http://localhost`
+- Frontend (doğrudan): `http://localhost:3000`
+- Backend API (doğrudan): `http://localhost:8000`
+- Traefik paneli: `http://localhost:8080`
+
+### API ve Sağlık Kontrolü
+
+- Sağlık endpointi: `GET /api/health`
+- Sohbet endpointleri: `/api/...`
+- WebSocket endpointleri: `/ws/...`
+- MCP endpointi: `/mcp`
+
+Örnek:
+
+```bash
+curl http://localhost:8000/api/health
+```
+
+### Geliştirme Notları
+
+- Docker Compose üzerinde hot-reload davranışı sınırlı olabilir; değişikliklerden sonra yeniden build gerekebilir.
+- Frontend bağımlılıkları `frontend/package.json`, backend bağımlılıkları `backend/pyproject.toml` içindedir.
+- Test ve değerlendirme dosyaları `backend/tests` ve `backend/eval` altındadır.
+
+### Lokal Test Komutları
+
+Backend testleri:
+
+```bash
+cd backend
+pytest
+```
+
+Frontend lint:
+
+```bash
+cd frontend
+pnpm lint
+```
+
+### Güvenlik ve Public Paylaşım
+
+- Gerçek API anahtarlarını (`.env`) repoya commit etmeyin.
+- Public paylaşım öncesi secret taraması yapın.
+- Örnek yapılandırma için `.env.example` kullanın.
+
+### Lisans
+
+Bu proje yarışma/prototip amaçlı geliştirilmiştir.  
+Lisanslamak isterseniz uygun bir lisans metni (ör. MIT) ekleyebilirsiniz.
 
